@@ -20,6 +20,7 @@ proc checkRequiredFiles { origin_dir} {
   set files [list \
  "[file normalize "$origin_dir/src/fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
+ "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -172,6 +173,7 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
 set_property -name "top" -value "fixed_predictor" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -203,6 +205,34 @@ set obj [get_filesets sim_1]
 
 # Set 'sim_1' fileset properties
 set obj [get_filesets sim_1]
+set_property -name "top" -value "fixed_predictor" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
+set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
+
+# Create 'full_simulation' fileset (if not found)
+if {[string equal [get_filesets -quiet full_simulation] ""]} {
+  create_fileset -simset full_simulation
+}
+
+# Set 'full_simulation' fileset object
+set obj [get_filesets full_simulation]
+set files [list \
+ [file normalize "${origin_dir}/sim/TB_full_sim.vhd"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'full_simulation' fileset file properties for remote files
+set file "$origin_dir/sim/TB_full_sim.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+
+# Set 'full_simulation' fileset file properties for local files
+# None
+
+# Set 'full_simulation' fileset properties
+set obj [get_filesets full_simulation]
 set_property -name "top" -value "fixed_predictor" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
