@@ -20,8 +20,9 @@ proc checkRequiredFiles { origin_dir} {
   set files [list \
  "[file normalize "$origin_dir/src/fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
- "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_fixed_predictor.vhd"]"\
+ "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
+ "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -147,7 +148,9 @@ set_property -name "simulator.xsim_gcc_version" -value "6.2.0" -objects $obj
 set_property -name "simulator.xsim_version" -value "2022.2" -objects $obj
 set_property -name "simulator_language" -value "Mixed" -objects $obj
 set_property -name "sim_compile_state" -value "1" -objects $obj
+set_property -name "source_mgmt_mode" -value "DisplayOnly" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "54" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
 if {[string equal [get_filesets -quiet sources_1] ""]} {
@@ -210,34 +213,6 @@ set_property -name "top" -value "fixed_predictor" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
-# Create 'full_simulation' fileset (if not found)
-if {[string equal [get_filesets -quiet full_simulation] ""]} {
-  create_fileset -simset full_simulation
-}
-
-# Set 'full_simulation' fileset object
-set obj [get_filesets full_simulation]
-set files [list \
- [file normalize "${origin_dir}/sim/TB_full_sim.vhd"] \
-]
-add_files -norecurse -fileset $obj $files
-
-# Set 'full_simulation' fileset file properties for remote files
-set file "$origin_dir/sim/TB_full_sim.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-
-# Set 'full_simulation' fileset file properties for local files
-# None
-
-# Set 'full_simulation' fileset properties
-set obj [get_filesets full_simulation]
-set_property -name "top" -value "fixed_predictor" -objects $obj
-set_property -name "top_auto_set" -value "0" -objects $obj
-set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
-
 # Create 'block_tests' fileset (if not found)
 if {[string equal [get_filesets -quiet block_tests] ""]} {
   create_fileset -simset block_tests
@@ -263,6 +238,37 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 # Set 'block_tests' fileset properties
 set obj [get_filesets block_tests]
 set_property -name "top" -value "fixed_predictor" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
+set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
+
+# Create 'full_simulation' fileset (if not found)
+if {[string equal [get_filesets -quiet full_simulation] ""]} {
+  create_fileset -simset full_simulation
+}
+
+# Set 'full_simulation' fileset object
+set obj [get_filesets full_simulation]
+set files [list \
+ [file normalize "${origin_dir}/sim/TB_full_sim.vhd"] \
+ [file normalize "${origin_dir}/sim_cfg/TB_full_sim_behav.wcfg"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'full_simulation' fileset file properties for remote files
+set file "$origin_dir/sim/TB_full_sim.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+
+# Set 'full_simulation' fileset file properties for local files
+# None
+
+# Set 'full_simulation' fileset properties
+set obj [get_filesets full_simulation]
+set_property -name "source_set" -value "" -objects $obj
+set_property -name "top" -value "TB_full_sim" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
 # Set 'utils_1' fileset object
