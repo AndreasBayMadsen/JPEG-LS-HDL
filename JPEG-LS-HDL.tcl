@@ -30,10 +30,12 @@ proc checkRequiredFiles { origin_dir} {
   set files [list \
  "[file normalize "$origin_dir/src/fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/src/context_modeller.vhd"]"\
+ "[file normalize "$origin_dir/src/collector.vhd"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
  "[file normalize "$origin_dir/sim/tb_context_modeller.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_fixed_predictor.vhd"]"\
+ "[file normalize "$origin_dir/sim/TB_collector.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
   ]
@@ -182,6 +184,7 @@ set obj [get_filesets sources_1]
 set files [list \
  [file normalize "${origin_dir}/src/fixed_predictor.vhd"] \
  [file normalize "${origin_dir}/src/context_modeller.vhd"] \
+ [file normalize "${origin_dir}/src/collector.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -192,6 +195,11 @@ set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 set file "$origin_dir/src/context_modeller.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/collector.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -271,6 +279,7 @@ set obj [get_filesets block_tests]
 set files [list \
  [file normalize "${origin_dir}/sim/tb_context_modeller.vhd"] \
  [file normalize "${origin_dir}/sim/TB_fixed_predictor.vhd"] \
+ [file normalize "${origin_dir}/sim/TB_collector.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -285,12 +294,18 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
+set file "$origin_dir/sim/TB_collector.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 
 # Set 'block_tests' fileset file properties for local files
 # None
 
 # Set 'block_tests' fileset properties
 set obj [get_filesets block_tests]
+set_property -name "source_set" -value "" -objects $obj
 set_property -name "top" -value "fixed_predictor" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
