@@ -26,50 +26,62 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
 
+
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
 entity fixed_predictor is
-    Port ( clk :        in  STD_LOGIC;
-           last_data :  in STD_LOGIC;
-           A :          in  unsigned    (7 downto 0);
-           B :          in  unsigned    (7 downto 0);
-           C :          in  unsigned    (7 downto 0);
-           x_pred :     out unsigned    (7 downto 0);
-           done :       out STD_LOGIC);
+
+    generic ( 
+        data_width :    integer := 8);
+    Port ( 
+        pclk :           in  STD_LOGIC;
+        last_data :     in  STD_LOGIC;
+        A :             in  unsigned    (data_width - 1 downto 0);
+        B :             in  unsigned    (data_width - 1 downto 0);
+        C :             in  unsigned    (data_width - 1 downto 0);
+           
+        x_pred :        out unsigned    (data_width - 1 downto 0);
+        done :          out STD_LOGIC);
 end fixed_predictor;
 
 architecture Behavioral of fixed_predictor is
 
-    signal x_temp :         unsigned    (7 downto 0)    := (others=>'0');
-    signal largest_temp :   unsigned    (7 downto 0)    := (others=>'0');
-    signal smallest_temp :  unsigned    (7 downto 0)    := (others=>'0');
+    subtype data_type is unsigned (data_width - 1 downto 0);
+
+    signal x_temp :         data_type   := (others=>'0');
+    signal largest_temp :   data_type   := (others=>'0');
+    signal smallest_temp :  data_type   := (others=>'0');
+    signal last_temp :      std_logic;
 
 begin
 
+    process(A, B)
+    begin
+        if A < B then
+            smallest_temp <= A;
+            largest_temp <= B;
+        else
+            smallest_temp <= B;
+            largest_temp <= A;
+        end if;
+    end process;
 
-process(clk)
-begin
-
-
-smallest_temp <= A when A < B else B;
+    x_temp <= smallest_temp when C >= largest_temp else 
+         largest_temp when C <= smallest_temp else 
+         A + B - C;
     
-
-    x_temp <= A when (C > B and C > A) else 
-	 "0100" when a = "01" else 
-	 "0010" when a = "10" else 
-	 "0001" when a = "11";
-
-
-
-    if rising_edge(clk) then
+    last_temp <= last_data;
+    
+    process(pclk)
+    begin
+        if rising_edge(pclk) then
+            x_pred <= x_temp;
+            done <= last_temp;
             
-    
-    end if;
-
-end process;
-
+        end if;
+    end process;
 
 end Behavioral;
