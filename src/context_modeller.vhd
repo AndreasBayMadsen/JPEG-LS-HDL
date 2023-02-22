@@ -33,18 +33,23 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity context_modeller is
     generic ( 
-        data_width :    integer := 8;
-        k_width :       integer := 5);
+        data_width  :   integer := 8;
+        k_width     :   integer := 5;
+        n_size      :   integer := 6;
+        a_size      :   integer := 15;
+        b_size      :   integer := 9;
+        c_size      :   integer := 8
+        );
     Port (
         pclk :          in  STD_LOGIC; 
         clk :           in  STD_LOGIC;
-        last_data :     in  STD_LOGIC;
+        valid_data:     in  STD_LOGIC;
+        neg_error_flag: in  STD_LOGIC;
         idx :           in  STD_LOGIC_VECTOR    (8 downto 0);
         error :         in  signed              (data_width - 1 downto 0);
          
         error_bias :    out signed              (data_width - 1 downto 0);
-        k :             out STD_LOGIC_VECTOR    (k_width - 1 downto 0);
-        done :          out STD_LOGIC);
+        k :             out unsigned            (k_width - 1 downto 0));
 end context_modeller;
 
 architecture Behavioral of context_modeller is

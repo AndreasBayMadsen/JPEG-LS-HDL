@@ -21,7 +21,7 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/src/fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/src/context_modeller.vhd"]"\
  "[file normalize "$origin_dir/src/collector.vhd"]"\
- "[file normalize "$origin_dir/ip/blk_mem_gen_0/blk_mem_gen_0.xci"]"\
+ "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
  "[file normalize "$origin_dir/sim/TB_fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_collector.vhd"]"\
@@ -155,13 +155,12 @@ set_property -name "simulator_language" -value "Mixed" -objects $obj
 set_property -name "sim_compile_state" -value "1" -objects $obj
 set_property -name "source_mgmt_mode" -value "DisplayOnly" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
-set_property -name "webtalk.activehdl_export_sim" -value "3" -objects $obj
-set_property -name "webtalk.modelsim_export_sim" -value "3" -objects $obj
-set_property -name "webtalk.questa_export_sim" -value "3" -objects $obj
-set_property -name "webtalk.riviera_export_sim" -value "3" -objects $obj
-set_property -name "webtalk.vcs_export_sim" -value "3" -objects $obj
-set_property -name "webtalk.xcelium_export_sim" -value "3" -objects $obj
-set_property -name "webtalk.xsim_export_sim" -value "3" -objects $obj
+set_property -name "webtalk.activehdl_export_sim" -value "4" -objects $obj
+set_property -name "webtalk.modelsim_export_sim" -value "4" -objects $obj
+set_property -name "webtalk.questa_export_sim" -value "4" -objects $obj
+set_property -name "webtalk.riviera_export_sim" -value "4" -objects $obj
+set_property -name "webtalk.vcs_export_sim" -value "4" -objects $obj
+set_property -name "webtalk.xsim_export_sim" -value "4" -objects $obj
 set_property -name "webtalk.xsim_launch_sim" -value "54" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_MEMORY" -objects $obj
 
@@ -208,12 +207,12 @@ set_property -name "top_auto_set" -value "0" -objects $obj
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
 set files [list \
- [file normalize "${origin_dir}/ip/blk_mem_gen_0/blk_mem_gen_0.xci"] \
+ [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
 ]
 add_files -norecurse -fileset $obj $files
 
 # Set 'sources_1' fileset file properties for remote files
-set file "$origin_dir/ip/blk_mem_gen_0/blk_mem_gen_0.xci"
+set file "$origin_dir/ip/context_memory_block/context_memory_block.xci"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "generate_files_for_reference" -value "0" -objects $file_obj

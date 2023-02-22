@@ -51,14 +51,15 @@
 -- The following code must appear in the VHDL architecture header.
 
 ------------- Begin Cut here for COMPONENT Declaration ------ COMP_TAG
-COMPONENT blk_mem_gen_0
+COMPONENT context_memory_block
   PORT (
     clka : IN STD_LOGIC;
-    ena : IN STD_LOGIC;
     wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
     addra : IN STD_LOGIC_VECTOR(8 DOWNTO 0);
-    dina : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-    douta : OUT STD_LOGIC_VECTOR(31 DOWNTO 0) 
+    dina : IN STD_LOGIC_VECTOR(39 DOWNTO 0);
+    clkb : IN STD_LOGIC;
+    addrb : IN STD_LOGIC_VECTOR(8 DOWNTO 0);
+    doutb : OUT STD_LOGIC_VECTOR(39 DOWNTO 0) 
   );
 END COMPONENT;
 -- COMP_TAG_END ------ End COMPONENT Declaration ------------
@@ -67,19 +68,20 @@ END COMPONENT;
 -- body. Substitute your own instance name and net names.
 
 ------------- Begin Cut here for INSTANTIATION Template ----- INST_TAG
-your_instance_name : blk_mem_gen_0
+your_instance_name : context_memory_block
   PORT MAP (
     clka => clka,
-    ena => ena,
     wea => wea,
     addra => addra,
     dina => dina,
-    douta => douta
+    clkb => clkb,
+    addrb => addrb,
+    doutb => doutb
   );
 -- INST_TAG_END ------ End INSTANTIATION Template ---------
 
--- You must compile the wrapper file blk_mem_gen_0.vhd when simulating
--- the core, blk_mem_gen_0. When compiling the wrapper file, be sure to
+-- You must compile the wrapper file context_memory_block.vhd when simulating
+-- the core, context_memory_block. When compiling the wrapper file, be sure to
 -- reference the VHDL simulation library.
 
 
