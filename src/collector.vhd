@@ -20,9 +20,7 @@
 
 -- TODO:
 -- * Use additional camera signals (new row when href goes low, use vsync etc.)
--- * Reset after frame has finished
 -- * Error handling (e.g. throw away frame when href goes low before last pixel in row)
--- * Clear for new frame
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -50,12 +48,14 @@ entity collector is
         href    : in    STD_LOGIC               := '0';
         vsync   : in    STD_LOGIC               := '0';
         -- Output interface
-        clk     : in    STD_LOGIC               := '0';
-        A       : out   UNSIGNED(15 downto 0)   := (others=>'0');
-        B       : out   UNSIGNED(15 downto 0)   := (others=>'0');
-        C       : out   UNSIGNED(15 downto 0)   := (others=>'0');
-        D       : out   UNSIGNED(15 downto 0)   := (others=>'0');
-        X       : out   UNSIGNED(15 downto 0)   := (others=>'0')
+        clk         : in    STD_LOGIC               := '0';
+        A           : out   UNSIGNED(15 downto 0)   := (others=>'0');
+        B           : out   UNSIGNED(15 downto 0)   := (others=>'0');
+        C           : out   UNSIGNED(15 downto 0)   := (others=>'0');
+        D           : out   UNSIGNED(15 downto 0)   := (others=>'0');
+        X           : out   UNSIGNED(15 downto 0)   := (others=>'0');
+        valid_data  : out   STD_LOGIC               := '0'; -- Is high while a frame is being transmitted
+        new_pixel   : out   STD_LOGIC               := '0'  -- Pulses for each new pixel (to drive pipeline)
         );
 end collector;
 
@@ -77,6 +77,7 @@ architecture Behavioral of collector is
     attribute ASYNC_REG : STRING;
     
     -- Type declarations
+    type DESERIALIZER_FSM_TYPE is (IDLE, RUNNING);
     type MEMORY_READER_FSM_TYPE is (IDLE, LOAD_A, LOAD_B, LOAD_C, LOAD_D, OUTPUT_X, READ_NEXT_B);
     type MEMORY_WRITER_FSM_TYPE is (IDLE, STORE_X, UPDATE_POINTERS, WRITE_D0, WRITE_A0);
     
@@ -84,9 +85,10 @@ architecture Behavioral of collector is
     signal resetn_int       : STD_LOGIC := '1';
     
         -- Receiving of bytes
-    signal first_byte       : STD_LOGIC := '1';
-    signal pixel_received   : STD_LOGIC := '0';
-    signal X_buffer         : UNSIGNED(15 downto 0) := (others=>'0');
+    signal deserializer_state   : DESERIALIZER_FSM_TYPE := IDLE;
+    signal first_byte           : STD_LOGIC := '1';
+    signal pixel_received       : STD_LOGIC := '0';
+    signal X_buffer             : UNSIGNED(15 downto 0) := (others=>'0');
     
         -- Memory
     signal pointer_mutex        : BOOLEAN                       := FALSE;   -- Allows updating buffer pointers
@@ -109,6 +111,9 @@ architecture Behavioral of collector is
     signal row_counter  : INTEGER   := 0;
     signal col_counter  : INTEGER   := 0;
     signal next_B       : UNSIGNED(B'high downto B'low) := (others=>'0');
+    signal A_buffer     : UNSIGNED(15 downto 0)   := (others=>'0');
+    signal B_buffer     : UNSIGNED(15 downto 0)   := (others=>'0');
+    signal C_buffer     : UNSIGNED(15 downto 0)   := (others=>'0');
         
             -- Synchronization
     signal pixel_presynced  : UNSIGNED(7 downto 0)  := (others=>'0');
@@ -122,6 +127,10 @@ architecture Behavioral of collector is
     signal href_presynced   : STD_LOGIC := '0';
     signal href_synced      : STD_LOGIC := '0';
     attribute ASYNC_REG of href_synced  : SIGNAL is "TRUE";
+    
+    signal vsync_presynced  : STD_LOGIC := '0';
+    signal vsync_synced     : STD_LOGIC := '0';
+    attribute ASYNC_REG of vsync_synced : SIGNAL is "TRUE";
 
 begin
 
@@ -143,6 +152,7 @@ begin
     write_addr_vector   <= std_logic_vector(write_addr);
     write_data_vector   <= std_logic_vector(write_data);
     pointer_mutex       <= pointer_mutex_reader XOR pointer_mutex_writer;
+    new_pixel           <= pixel_received;
 
     sync: process(clk)
     begin
@@ -155,11 +165,15 @@ begin
             
             href_presynced  <= href;
             href_synced     <= href_presynced;
+            
+            vsync_presynced <= vsync;
+            vsync_synced    <= vsync_presynced;
         end if;
     end process;
 
     deserializer: process(clk)
-        variable pclk_shift : STD_LOGIC_VECTOR(1 downto 0)  := (others=>'0');
+        variable pclk_shift     : STD_LOGIC_VECTOR(1 downto 0)  := (others=>'0');
+        variable vsync_shift    : STD_LOGIC_VECTOR(1 downto 0)  := (others=>'0');
     begin
         if rising_edge(clk) then
             if resetn_int = '0' then
@@ -167,6 +181,8 @@ begin
                 pixel_received  <= '0';
                 first_byte      <= '1';
                 X_buffer        <= (others=>'0');
+                deserializer_state  <= IDLE;
+                valid_data      <= '0';
                 
                 pclk_shift := "00";
             else
@@ -174,19 +190,32 @@ begin
                 pixel_received  <= '0';
             
                 -- Shift registers
-                pclk_shift := pclk_shift(0) & pclk_synced;
+                pclk_shift  := pclk_shift(0) & pclk_synced;
+                vsync_shift := vsync_shift(0) & vsync_synced;
                 
-                -- New pixel incoming
-                if href_synced = '1' AND (pclk_shift = "01") then
-                    if first_byte = '1' then
-                        X_buffer(15 downto 8)   <= pixel_synced;
-                        first_byte              <= '0';
-                    else
-                        X_buffer(7 downto 0)    <= pixel_synced;
-                        pixel_received          <= '1';
-                        first_byte              <= '1';
-                    end if;
-                end if;
+                case deserializer_state is
+                    when IDLE =>
+                        valid_data  <= '0';
+                        if vsync_shift = "10" then
+                            valid_data <= '1';
+                            deserializer_state <= RUNNING;
+                        end if;
+                        
+                    -- vsync has been received, frame is starting
+                    when RUNNING =>
+                        -- New pixel incoming
+                        valid_data <= '1';
+                        if href_synced = '1' AND (pclk_shift = "01") then
+                            if first_byte = '1' then
+                                X_buffer(15 downto 8)   <= pixel_synced;
+                                first_byte              <= '0';
+                            else
+                                X_buffer(7 downto 0)    <= pixel_synced;
+                                pixel_received          <= '1';
+                                first_byte              <= '1';
+                            end if;
+                        end if;
+                end case;
             end if;
         end if;
     end process;
@@ -206,6 +235,9 @@ begin
                 X                       <= (others=>'0');
                 pointer_mutex_reader    <= FALSE;
                 next_B                  <= (others=>'0');
+                A_buffer                <= (others=>'0');
+                B_buffer                <= (others=>'0');
+                C_buffer                <= (others=>'0');
             else
                 case memory_reader_fsm_state is
                     -- Wait for new pixel
@@ -223,24 +255,27 @@ begin
                         
                     -- Load B value
                     when LOAD_B =>
-                        A           <= read_data;
+                        A_buffer    <= read_data;
                         read_addr   <= tail_pointer;            -- Address for C
                         memory_reader_fsm_state <= LOAD_C;
                         
                     -- Load C value
                     when LOAD_C =>
-                        B           <= read_data;
+                        B_buffer    <= read_data;
                         read_addr   <= tail_pointer + 2;        -- Address for D
                         memory_reader_fsm_state <= LOAD_D;
                         
                     -- Load D value
                     when LOAD_D =>
-                        C           <= read_data;
+                        C_buffer    <= read_data;
                         read_addr   <= head_pointer - to_unsigned(image_width, head_pointer'length) + 1;  -- Next B in case of new row
                         memory_reader_fsm_state <= OUTPUT_X;
                         
                     -- Output X value
                     when OUTPUT_X =>
+                        A   <= A_buffer;
+                        B   <= B_buffer;
+                        C   <= C_buffer;
                         D   <= read_data;
                         X   <= X_buffer;
                         

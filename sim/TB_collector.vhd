@@ -66,12 +66,14 @@ architecture Behavioral of TB_collector is
             href    : in    STD_LOGIC               := '0';
             vsync   : in    STD_LOGIC               := '0';
             -- Output interface
-            clk     : in    STD_LOGIC               := '0';
-            A       : out   UNSIGNED(15 downto 0)   := (others=>'0');
-            B       : out   UNSIGNED(15 downto 0)   := (others=>'0');
-            C       : out   UNSIGNED(15 downto 0)   := (others=>'0');
-            D       : out   UNSIGNED(15 downto 0)   := (others=>'0');
-            X       : out   UNSIGNED(15 downto 0)   := (others=>'0')
+            clk         : in    STD_LOGIC               := '0';
+            A           : out   UNSIGNED(15 downto 0)   := (others=>'0');
+            B           : out   UNSIGNED(15 downto 0)   := (others=>'0');
+            C           : out   UNSIGNED(15 downto 0)   := (others=>'0');
+            D           : out   UNSIGNED(15 downto 0)   := (others=>'0');
+            X           : out   UNSIGNED(15 downto 0)   := (others=>'0');
+            valid_data  : out   STD_LOGIC               := '0';
+            new_pixel   : out   STD_LOGIC               := '0'  -- Pulses for each new pixel (to drive pipeline)
             );
     end component;
     
@@ -105,6 +107,8 @@ architecture Behavioral of TB_collector is
     signal C       : UNSIGNED(15 downto 0)   := (others=>'0');
     signal D       : UNSIGNED(15 downto 0)   := (others=>'0');
     signal X       : UNSIGNED(15 downto 0)   := (others=>'0');
+    signal valid_data   : STD_LOGIC         := '0';
+    signal new_pixel    : STD_LOGIC         := '0';
     
 begin
     -- Component instantiations
@@ -135,7 +139,9 @@ begin
         B       => B,
         C       => C,
         D       => D,
-        X       => X
+        X       => X,
+        valid_data  => valid_data,
+        new_pixel   => new_pixel
     );
     
     -- Signal assignments
