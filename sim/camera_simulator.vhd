@@ -37,7 +37,8 @@ use STD.TEXTIO.ALL;
 entity camera_simulator is
     Generic (
         pclk_freq_MHz   : REAL      := 6.0;
-        file_name       : STRING    := "../../../../../kodak_dataset/kodim01.ppm";  -- Path to image file
+        file_name_1     : STRING    := "../../../../../kodak_dataset/no_border.ppm";  -- Path to image file
+        file_name_2     : STRING    := "../../../../../kodak_dataset/kodim01.ppm";  -- Path to image file
         format          : STRING    := "RGB565";
         pre_clocks      : INTEGER   := 0    -- Number of clocks before image
     );
@@ -109,9 +110,10 @@ begin
         end procedure;
         
     begin
+        --******************** IMAGE 1 ********************
         -- Initialize
             -- Open file
-        file_open(file_status, image, FILE_NAME, read_mode);
+        file_open(file_status, image, file_name_1, read_mode);
         
             -- Read header
         readline(image, line_buffer);           -- Magic number
@@ -190,7 +192,89 @@ begin
         
         file_close(image);
         wait for 10*TLINE;  -- Time between frames
-        wait;
+        
+        --******************** IMAGE 2 ********************
+        -- Initialize
+            -- Open file
+        file_open(file_status, image, file_name_2, read_mode);
+        
+            -- Read header
+        readline(image, line_buffer);           -- Magic number
+        readline(image, line_buffer);           -- Width and height
+        read(line_buffer, image_width_var);
+        read(line_buffer, image_height_var);
+        image_width       <= image_width_var;
+        image_height      <= image_height_var;
+        readline(image, line_buffer);           -- MAXVAL
+        
+        TLINE   := (image_width_var + 144)*TP;  -- Time per row
+        
+        wait for pre_clocks*TPCLK;  -- Wait pre-clock period before starting
+        
+        -- Read pixel values
+        vsync   <= '1';
+        wait for 3*TLINE;
+        vsync   <= '0';
+        wait for 17*TLINE;
+        
+        -- Scan through rows
+        readline(image, line_buffer);       -- Read line from file (terminates at first 0A character)
+        while row_count < image_height_var
+        loop
+            -- Scan through columns
+            href    <= '1';
+            while col_count < image_width_var
+            loop
+                -- Read pixel
+                read_byte(line_buffer, R_var);
+                read_byte(line_buffer, G_var);
+                read_byte(line_buffer, B_var);
+                
+                -- Transmit byte 1
+                pixel   <= (others=>'0');
+                case FORMAT is
+                    when "RGB565" =>    -- RGB565
+                        pixel(7 downto 3)   <= R_var(7 downto 3);
+                        pixel(2 downto 0)   <= G_var(7 downto 5);
+                    when others =>      -- RGB555
+                        pixel(6 downto 2)   <= R_var(7 downto 3);
+                        pixel(1 downto 0)   <= G_var(7 downto 6);
+                end case;
+                
+                wait for TPCLK;
+                
+                -- Transmit byte 2
+                pixel   <= (others=>'0');
+                case FORMAT is
+                    when "RGB565" =>    -- RGB565
+                        pixel(7 downto 5)   <= G_var(4 downto 2);
+                        pixel(4 downto 0)   <= B_var(7 downto 3);
+                    when others =>      -- RGB555
+                        pixel(7 downto 5)   <= G_var(5 downto 3);
+                        pixel(4 downto 0)   <= B_var(7 downto 3);
+                end case;
+
+                wait for PIXEL_HPER;
+                -- DEBUGGING
+                row_count_sig <= row_count;
+                col_count_sig <= col_count;
+                -- DEBUGGING
+                col_count   := col_count + 1;
+                wait for PIXEL_HPER;
+            end loop;
+            
+            href    <= '0';
+            
+            col_count   := 0;
+            row_count   := row_count + 1;
+            
+            wait for 144*TP;
+        end loop;
+        
+        row_count   := 0;
+        
+        file_close(image);
+        wait for 10*TLINE;  -- Time between frames
     end process;
 
 end Behavioral;

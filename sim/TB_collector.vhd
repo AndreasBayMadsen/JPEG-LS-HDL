@@ -41,9 +41,10 @@ architecture Behavioral of TB_collector is
     component camera_simulator
         Generic (
             pclk_freq_MHz   : REAL      := 6.0;
-            file_name       : STRING    := "../../../../../kodak_dataset/no_border.ppm";  -- Path to image file
+            file_name_1     : STRING    := "../../../../../kodak_dataset/no_border.ppm";  -- Path to image file
+            file_name_2     : STRING    := "../../../../../kodak_dataset/kodim01.ppm";  -- Path to image file
             format          : STRING    := "RGB565";
-            pre_clocks      : INTEGER   := 0
+            pre_clocks      : INTEGER   := 0    -- Number of clocks before image
         );
         Port (
             pclk    : out   STD_LOGIC               := '0';
