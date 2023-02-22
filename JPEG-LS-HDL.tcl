@@ -26,8 +26,11 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/sim/TB_fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_collector.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_context_modeller.vhd"]"\
+ "[file normalize "$origin_dir/ip/collector_bram/collector_bram.xci"]"\
+ "[file normalize "$origin_dir/sim_cfg/TB_collector_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
+ "[file normalize "$origin_dir/sim/camera_simulator.vhd"]"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -125,6 +128,7 @@ set proj_dir [get_property directory [current_project]]
 # Set project properties
 set obj [current_project]
 set_property -name "board_part" -value "tul.com.tw:pynq-z2:part0:1.0" -objects $obj
+set_property -name "customized_default_ip_location" -value "/home/andreas/Desktop/EMS-project/Vivado/ip_repo" -objects $obj
 set_property -name "default_lib" -value "xil_defaultlib" -objects $obj
 set_property -name "enable_resource_estimation" -value "0" -objects $obj
 set_property -name "enable_vhdl_2008" -value "1" -objects $obj
@@ -155,13 +159,14 @@ set_property -name "simulator_language" -value "Mixed" -objects $obj
 set_property -name "sim_compile_state" -value "1" -objects $obj
 set_property -name "source_mgmt_mode" -value "DisplayOnly" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
-set_property -name "webtalk.activehdl_export_sim" -value "4" -objects $obj
-set_property -name "webtalk.modelsim_export_sim" -value "4" -objects $obj
-set_property -name "webtalk.questa_export_sim" -value "4" -objects $obj
-set_property -name "webtalk.riviera_export_sim" -value "4" -objects $obj
-set_property -name "webtalk.vcs_export_sim" -value "4" -objects $obj
-set_property -name "webtalk.xsim_export_sim" -value "4" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "54" -objects $obj
+set_property -name "webtalk.activehdl_export_sim" -value "9" -objects $obj
+set_property -name "webtalk.modelsim_export_sim" -value "9" -objects $obj
+set_property -name "webtalk.questa_export_sim" -value "9" -objects $obj
+set_property -name "webtalk.riviera_export_sim" -value "9" -objects $obj
+set_property -name "webtalk.vcs_export_sim" -value "9" -objects $obj
+set_property -name "webtalk.xcelium_export_sim" -value "1" -objects $obj
+set_property -name "webtalk.xsim_export_sim" -value "9" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "94" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -208,11 +213,21 @@ set_property -name "top_auto_set" -value "0" -objects $obj
 set obj [get_filesets sources_1]
 set files [list \
  [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
+ [file normalize "${origin_dir}/ip/collector_bram/collector_bram.xci"] \
 ]
 add_files -norecurse -fileset $obj $files
 
 # Set 'sources_1' fileset file properties for remote files
 set file "$origin_dir/ip/context_memory_block/context_memory_block.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+set file "$origin_dir/ip/collector_bram/collector_bram.xci"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
@@ -270,6 +285,10 @@ set files [list \
  [file normalize "${origin_dir}/sim/TB_fixed_predictor.vhd"] \
  [file normalize "${origin_dir}/sim/TB_collector.vhd"] \
  [file normalize "${origin_dir}/sim/TB_context_modeller.vhd"] \
+ [file normalize "${origin_dir}/sim/camera_simulator.vhd"] \
+ [file normalize "${origin_dir}/src/collector.vhd"] \
+ [file normalize "${origin_dir}/sim_cfg/TB_collector_behav.wcfg"] \
+ [file normalize "${origin_dir}/src/fixed_predictor.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -280,6 +299,21 @@ set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 set file "$origin_dir/sim/TB_collector.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/sim/camera_simulator.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/collector.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/fixed_predictor.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -309,11 +343,17 @@ set obj [get_filesets full_simulation]
 set files [list \
  [file normalize "${origin_dir}/sim/TB_full_sim.vhd"] \
  [file normalize "${origin_dir}/sim_cfg/TB_full_sim_behav.wcfg"] \
+ [file normalize "${origin_dir}/sim/camera_simulator.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
 
 # Set 'full_simulation' fileset file properties for remote files
 set file "$origin_dir/sim/TB_full_sim.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/sim/camera_simulator.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj

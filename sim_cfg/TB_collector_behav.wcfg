@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="TB_collector_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="TB_collector" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000000000 ms"></ZoomStartTime>
+      <ZoomEndTime time="6.641856145 ms"></ZoomEndTime>
+      <Cursor1Time time="0.001000000 ms"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="284"></NameColumnWidth>
+      <ValueColumnWidth column_width="104"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="22" />
+   <wave_markers>
+      <marker label="" time="14723068080" />
+   </wave_markers>
+   <wvobject fp_name="divider51" type="divider">
+      <obj_property name="label">Camera interface</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group194">
+      <obj_property name="label">ALL</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="logic" fp_name="/TB_collector/DUT/pclk">
+         <obj_property name="ElementShortName">pclk</obj_property>
+         <obj_property name="ObjectShortName">pclk</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/pixel">
+         <obj_property name="ElementShortName">pixel[7:0]</obj_property>
+         <obj_property name="ObjectShortName">pixel[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_collector/DUT/vsync">
+         <obj_property name="ElementShortName">vsync</obj_property>
+         <obj_property name="ObjectShortName">vsync</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="divider53" type="divider">
+      <obj_property name="label">Camera receiver</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group61">
+      <obj_property name="label">Inputs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/TB_collector/DUT/clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_collector/DUT/pclk_synced">
+         <obj_property name="ElementShortName">pclk_synced</obj_property>
+         <obj_property name="ObjectShortName">pclk_synced</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/pixel_synced">
+         <obj_property name="ElementShortName">pixel_synced[7:0]</obj_property>
+         <obj_property name="ObjectShortName">pixel_synced[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_collector/DUT/href_synced">
+         <obj_property name="ElementShortName">href_synced</obj_property>
+         <obj_property name="ObjectShortName">href_synced</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_collector/DUT/first_byte">
+         <obj_property name="ElementShortName">first_byte</obj_property>
+         <obj_property name="ObjectShortName">first_byte</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group67">
+      <obj_property name="label">Outputs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="array" fp_name="/TB_collector/DUT/A">
+         <obj_property name="ElementShortName">A[15:0]</obj_property>
+         <obj_property name="ObjectShortName">A[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/B">
+         <obj_property name="ElementShortName">B[15:0]</obj_property>
+         <obj_property name="ObjectShortName">B[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/C">
+         <obj_property name="ElementShortName">C[15:0]</obj_property>
+         <obj_property name="ObjectShortName">C[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/D">
+         <obj_property name="ElementShortName">D[15:0]</obj_property>
+         <obj_property name="ObjectShortName">D[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/X">
+         <obj_property name="ElementShortName">X[15:0]</obj_property>
+         <obj_property name="ObjectShortName">X[15:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="divider95" type="divider">
+      <obj_property name="label">Image overview</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/TB_collector/DUT/row_counter">
+      <obj_property name="ElementShortName">row_counter</obj_property>
+      <obj_property name="ObjectShortName">row_counter</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/TB_collector/DUT/col_counter">
+      <obj_property name="ElementShortName">col_counter</obj_property>
+      <obj_property name="ObjectShortName">col_counter</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider193" type="divider">
+      <obj_property name="label">Memory handler</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_collector/DUT/pixel_received">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">pixel_received</obj_property>
+      <obj_property name="ObjectShortName">pixel_received</obj_property>
+      <obj_property name="label">pixel_received</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_collector/DUT/head_pointer">
+      <obj_property name="ElementShortName">head_pointer[9:0]</obj_property>
+      <obj_property name="ObjectShortName">head_pointer[9:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_collector/DUT/tail_pointer">
+      <obj_property name="ElementShortName">tail_pointer[9:0]</obj_property>
+      <obj_property name="ObjectShortName">tail_pointer[9:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/TB_collector/DUT/pointer_mutex">
+      <obj_property name="ElementShortName">pointer_mutex</obj_property>
+      <obj_property name="ObjectShortName">pointer_mutex</obj_property>
+   </wvobject>
+   <wvobject type="vbus" fp_name="vbus1213">
+      <obj_property name="label">Memory</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="array" fp_name="/TB_collector/DUT/mem/inst/\native_mem_module.blk_mem_gen_v8_4_5_inst /memory[767]">
+         <obj_property name="ElementShortName">[767][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[767][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/mem/inst/\native_mem_module.blk_mem_gen_v8_4_5_inst /memory[768]">
+         <obj_property name="ElementShortName">[768][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[768][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/mem/inst/\native_mem_module.blk_mem_gen_v8_4_5_inst /memory[769]">
+         <obj_property name="ElementShortName">[769][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[769][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/mem/inst/\native_mem_module.blk_mem_gen_v8_4_5_inst /memory[770]">
+         <obj_property name="ElementShortName">[770][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[770][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/mem/inst/\native_mem_module.blk_mem_gen_v8_4_5_inst /memory[771]">
+         <obj_property name="ElementShortName">[771][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[771][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/mem/inst/\native_mem_module.blk_mem_gen_v8_4_5_inst /memory[772]">
+         <obj_property name="ElementShortName">[772][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[772][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/mem/inst/\native_mem_module.blk_mem_gen_v8_4_5_inst /memory[773]">
+         <obj_property name="ElementShortName">[773][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[773][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/mem/inst/\native_mem_module.blk_mem_gen_v8_4_5_inst /memory[774]">
+         <obj_property name="ElementShortName">[774][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[774][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/mem/inst/\native_mem_module.blk_mem_gen_v8_4_5_inst /memory[775]">
+         <obj_property name="ElementShortName">[775][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[775][15:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group196">
+      <obj_property name="label">Reader</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/TB_collector/DUT/clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_collector/DUT/memory_reader_fsm_state">
+         <obj_property name="ElementShortName">memory_reader_fsm_state</obj_property>
+         <obj_property name="ObjectShortName">memory_reader_fsm_state</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/read_addr">
+         <obj_property name="ElementShortName">read_addr[9:0]</obj_property>
+         <obj_property name="ObjectShortName">read_addr[9:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/read_data">
+         <obj_property name="ElementShortName">read_data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">read_data[15:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group197">
+      <obj_property name="label">Writer</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/TB_collector/DUT/clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_collector/DUT/memory_writer_fsm_state">
+         <obj_property name="ElementShortName">memory_writer_fsm_state</obj_property>
+         <obj_property name="ObjectShortName">memory_writer_fsm_state</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_collector/DUT/write_enable">
+         <obj_property name="ElementShortName">write_enable</obj_property>
+         <obj_property name="ObjectShortName">write_enable</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/write_addr">
+         <obj_property name="ElementShortName">write_addr[9:0]</obj_property>
+         <obj_property name="ObjectShortName">write_addr[9:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_collector/DUT/write_data">
+         <obj_property name="ElementShortName">write_data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">write_data[15:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="divider89" type="divider">
+      <obj_property name="label">Output</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_collector/DUT/A">
+      <obj_property name="ElementShortName">A[15:0]</obj_property>
+      <obj_property name="ObjectShortName">A[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_collector/DUT/B">
+      <obj_property name="ElementShortName">B[15:0]</obj_property>
+      <obj_property name="ObjectShortName">B[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_collector/DUT/C">
+      <obj_property name="ElementShortName">C[15:0]</obj_property>
+      <obj_property name="ObjectShortName">C[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_collector/DUT/D">
+      <obj_property name="ElementShortName">D[15:0]</obj_property>
+      <obj_property name="ObjectShortName">D[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_collector/DUT/X">
+      <obj_property name="ElementShortName">X[15:0]</obj_property>
+      <obj_property name="ObjectShortName">X[15:0]</obj_property>
+   </wvobject>
+</wave_config>
