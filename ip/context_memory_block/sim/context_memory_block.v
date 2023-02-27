@@ -99,7 +99,7 @@ output wire [39 : 0] doutb;
     .C_LOAD_INIT_FILE(0),
     .C_INIT_FILE_NAME("no_coe_file_loaded"),
     .C_INIT_FILE("context_memory_block.mem"),
-    .C_USE_DEFAULT_DATA(1),
+    .C_USE_DEFAULT_DATA(0),
     .C_DEFAULT_DATA("0"),
     .C_HAS_RSTA(0),
     .C_RST_PRIORITY_A("CE"),
@@ -109,7 +109,7 @@ output wire [39 : 0] doutb;
     .C_HAS_REGCEA(0),
     .C_USE_BYTE_WEA(0),
     .C_WEA_WIDTH(1),
-    .C_WRITE_MODE_A("NO_CHANGE"),
+    .C_WRITE_MODE_A("READ_FIRST"),
     .C_WRITE_WIDTH_A(40),
     .C_READ_WIDTH_A(40),
     .C_WRITE_DEPTH_A(512),
@@ -142,9 +142,9 @@ output wire [39 : 0] doutb;
     .C_READ_LATENCY_A(1),
     .C_READ_LATENCY_B(1),
     .C_HAS_INJECTERR(0),
-    .C_SIM_COLLISION_CHECK("ALL"),
+    .C_SIM_COLLISION_CHECK("NONE"),
     .C_COMMON_CLK(0),
-    .C_DISABLE_WARN_BHV_COLL(0),
+    .C_DISABLE_WARN_BHV_COLL(1),
     .C_EN_SLEEP_PIN(0),
     .C_USE_URAM(0),
     .C_EN_RDADDRA_CHG(0),
@@ -155,7 +155,7 @@ output wire [39 : 0] doutb;
     .C_DISABLE_WARN_BHV_RANGE(0),
     .C_COUNT_36K_BRAM("1"),
     .C_COUNT_18K_BRAM("0"),
-    .C_EST_POWER_SUMMARY("Estimated Power for IP     :     6.1213 mW")
+    .C_EST_POWER_SUMMARY("Estimated Power for IP     :     6.511625 mW")
   ) inst (
     .clka(clka),
     .rsta(1'D0),

@@ -37,7 +37,7 @@ entity fixed_predictor is
     generic ( 
         data_width :    integer := 8);
     Port ( 
-        pclk :           in  STD_LOGIC;
+        pclk :          in  STD_LOGIC;
         last_data :     in  STD_LOGIC;
         A :             in  unsigned    (data_width - 1 downto 0);
         B :             in  unsigned    (data_width - 1 downto 0);
