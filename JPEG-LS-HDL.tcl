@@ -19,20 +19,24 @@ proc checkRequiredFiles { origin_dir} {
   set status true
   set files [list \
  "[file normalize "$origin_dir/src/fixed_predictor.vhd"]"\
+ "[file normalize "$origin_dir/src/context_modeller.vhd"]"\
  "[file normalize "$origin_dir/src/collector.vhd"]"\
  "[file normalize "$origin_dir/src/gradient.vhd"]"\
  "[file normalize "$origin_dir/ip/collector_bram/collector_bram.xci"]"\
+ "[file normalize "$origin_dir/src/golomb_coder.vhd"]"\
+ "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
  "[file normalize "$origin_dir/sim/TB_fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_collector.vhd"]"\
+ "[file normalize "$origin_dir/sim/TB_context_modeller.vhd"]"\
+ "[file normalize "$origin_dir/sim_cfg/TB_context_modeller_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/camera_simulator.vhd"]"\
  "[file normalize "$origin_dir/src/collector.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_collector_behav.wcfg"]"\
  "[file normalize "$origin_dir/src/fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_gradient.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_gradient_behav.wcfg"]"\
- "[file normalize "$origin_dir/sim/TB_context_modeller.vhd"]"\
- "[file normalize "$origin_dir/sim_cfg/TB_context_modeller_behav.wcfg"]"\
+ "[file normalize "$origin_dir/sim/TB_golomb_coder.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/camera_simulator.vhd"]"\
@@ -183,14 +187,21 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 set obj [get_filesets sources_1]
 set files [list \
  [file normalize "${origin_dir}/src/fixed_predictor.vhd"] \
+ [file normalize "${origin_dir}/src/context_modeller.vhd"] \
  [file normalize "${origin_dir}/src/collector.vhd"] \
  [file normalize "${origin_dir}/src/gradient.vhd"] \
  [file normalize "${origin_dir}/ip/collector_bram/collector_bram.xci"] \
+ [file normalize "${origin_dir}/src/golomb_coder.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
 
 # Set 'sources_1' fileset file properties for remote files
 set file "$origin_dir/src/fixed_predictor.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/context_modeller.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -214,6 +225,11 @@ if { ![get_property "is_locked" $file_obj] } {
   set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
 }
 
+set file "$origin_dir/src/golomb_coder.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 
 # Set 'sources_1' fileset file properties for local files
 # None
@@ -223,6 +239,27 @@ set obj [get_filesets sources_1]
 set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
 set_property -name "top" -value "collector" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
+
+# Set 'sources_1' fileset object
+set obj [get_filesets sources_1]
+set files [list \
+ [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'sources_1' fileset file properties for remote files
+set file "$origin_dir/ip/context_memory_block/context_memory_block.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+
+# Set 'sources_1' fileset file properties for local files
+# None
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -268,14 +305,15 @@ set obj [get_filesets block_tests]
 set files [list \
  [file normalize "${origin_dir}/sim/TB_fixed_predictor.vhd"] \
  [file normalize "${origin_dir}/sim/TB_collector.vhd"] \
+ [file normalize "${origin_dir}/sim/TB_context_modeller.vhd"] \
+ [file normalize "${origin_dir}/sim_cfg/TB_context_modeller_behav.wcfg"] \
  [file normalize "${origin_dir}/sim/camera_simulator.vhd"] \
  [file normalize "${origin_dir}/src/collector.vhd"] \
  [file normalize "${origin_dir}/sim_cfg/TB_collector_behav.wcfg"] \
  [file normalize "${origin_dir}/src/fixed_predictor.vhd"] \
  [file normalize "${origin_dir}/sim/TB_gradient.vhd"] \
  [file normalize "${origin_dir}/sim_cfg/TB_gradient_behav.wcfg"] \
- [file normalize "${origin_dir}/sim/TB_context_modeller.vhd"] \
- [file normalize "${origin_dir}/sim_cfg/TB_context_modeller_behav.wcfg"] \
+ [file normalize "${origin_dir}/sim/TB_golomb_coder.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -286,6 +324,11 @@ set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 set file "$origin_dir/sim/TB_collector.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/sim/TB_context_modeller.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -306,6 +349,11 @@ set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 set file "$origin_dir/sim/TB_gradient.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/sim/TB_golomb_coder.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
