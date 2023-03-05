@@ -40,7 +40,7 @@ architecture Behavioral of TB_collector is
     -- Component declarations
     component camera_simulator
         Generic (
-            pclk_freq_MHz   : REAL      := 6.0;
+            pclk_freq_MHz   : REAL      := 12.0;
             file_name_1     : STRING    := "../../../../../kodak_dataset/no_border.ppm";  -- Path to image file
             file_name_2     : STRING    := "../../../../../kodak_dataset/kodim01.ppm";  -- Path to image file
             format          : STRING    := "RGB565";
@@ -66,7 +66,6 @@ architecture Behavioral of TB_collector is
             href    : in    STD_LOGIC               := '0';
             vsync   : in    STD_LOGIC               := '0';
             -- Output interface
-            clk         : in    STD_LOGIC               := '0';
             A           : out   UNSIGNED(15 downto 0)   := (others=>'0');
             B           : out   UNSIGNED(15 downto 0)   := (others=>'0');
             C           : out   UNSIGNED(15 downto 0)   := (others=>'0');
@@ -79,27 +78,14 @@ architecture Behavioral of TB_collector is
     
     -- Constant declarations
         -- Base
-    constant PCLK_FREQ_MHZ  : REAL  := 6.0;
-    constant CLK_FREQ_MHZ   : REAL  := 48.0;   -- Clock frequency in MHz
-    
-        -- Derived
-    constant CLK_PER        : TIME  := (1.0/CLK_FREQ_MHZ)*1us;  -- Clock period in seconds
-    constant CLK_HPER       : TIME  := CLK_PER/2.0;
+    constant PCLK_FREQ_MHZ  : REAL  := 12.0;
     
     -- Signal declarations
-        -- General
-    signal clk      : STD_LOGIC             := '0';
-    
         -- Camera interface
     signal pclk     : STD_LOGIC             := '0';
     signal pixel    : UNSIGNED(7 downto 0)  := (others=>'0');
     signal href     : STD_LOGIC             := '0';
     signal vsync    : STD_LOGIC             := '0';
-    
-    signal pclk_delayed     : STD_LOGIC             := '0';
-    signal pixel_delayed    : UNSIGNED(7 downto 0)  := (others=>'0');
-    signal href_delayed     : STD_LOGIC             := '0';
-    signal vsync_delayed    : STD_LOGIC             := '0';
     
         -- Output interface
     signal A       : UNSIGNED(15 downto 0)   := (others=>'0');
@@ -130,11 +116,10 @@ begin
         image_width     => 768
     )
     port map(
-        pclk    => pclk_delayed,
-        pixel   => pixel_delayed,
-        href    => href_delayed,
-        vsync   => vsync_delayed,
-        clk     => clk,
+        pclk    => pclk,
+        pixel   => pixel,
+        href    => href,
+        vsync   => vsync,
         A       => A,
         B       => B,
         C       => C,
@@ -144,12 +129,4 @@ begin
         new_pixel   => new_pixel
     );
     
-    -- Signal assignments
-    clk <= not clk after CLK_HPER;
-    
-    pclk_delayed    <= pclk after (1.0/PCLK_FREQ_MHZ)*1.0/4.0*1us;
-    pixel_delayed   <= pixel after (1.0/PCLK_FREQ_MHZ)*1.0/4.0*1us;
-    href_delayed    <= href after (1.0/PCLK_FREQ_MHZ)*1.0/4.0*1us;
-    vsync_delayed   <= vsync after (1.0/PCLK_FREQ_MHZ)*1.0/4.0*1us;
-
 end Behavioral;

@@ -36,7 +36,7 @@ use STD.TEXTIO.ALL;
 
 entity camera_simulator is
     Generic (
-        pclk_freq_MHz   : REAL      := 6.0;
+        pclk_freq_MHz   : REAL      := 12.0;
         file_name_1     : STRING    := "../../../../../kodak_dataset/no_border.ppm";  -- Path to image file
         file_name_2     : STRING    := "../../../../../kodak_dataset/kodim01.ppm";  -- Path to image file
         format          : STRING    := "RGB565";
@@ -53,9 +53,10 @@ end camera_simulator;
 architecture Behavioral of camera_simulator is
     -- Constant declarations
         -- Derived
-    constant TPCLK      : TIME      := (1.0/pclk_freq_MHz)*1 us;
-    constant TP         : TIME      := 2*TPCLK;
-    constant PIXEL_HPER : TIME      := TPCLK/2;
+    constant PCLK_PER_APPR  : TIME      := (1.0/pclk_freq_MHz)*1 us;    -- Approximate frequency
+    constant PIXEL_HPER     : TIME      := PCLK_PER_APPR/2;
+    constant PCLK_PER       : TIME      := PIXEL_HPER*2;
+    constant TP             : TIME      := 2*PCLK_PER;
 
     -- Signal declarations
         -- Debugging variables
@@ -126,7 +127,7 @@ begin
         
         TLINE   := (image_width_var + 144)*TP;  -- Time per row
         
-        wait for pre_clocks*TPCLK;  -- Wait pre-clock period before starting
+        wait for pre_clocks*PCLK_PER;  -- Wait pre-clock period before starting
         
         -- Read pixel values
         vsync   <= '1';
@@ -158,7 +159,7 @@ begin
                         pixel(1 downto 0)   <= G_var(7 downto 6);
                 end case;
                 
-                wait for TPCLK;
+                wait for PCLK_PER;
                 
                 -- Transmit byte 2
                 pixel   <= (others=>'0');
@@ -209,7 +210,7 @@ begin
         
         TLINE   := (image_width_var + 144)*TP;  -- Time per row
         
-        wait for pre_clocks*TPCLK;  -- Wait pre-clock period before starting
+        wait for pre_clocks*PCLK_PER;  -- Wait pre-clock period before starting
         
         -- Read pixel values
         vsync   <= '1';
@@ -241,7 +242,7 @@ begin
                         pixel(1 downto 0)   <= G_var(7 downto 6);
                 end case;
                 
-                wait for TPCLK;
+                wait for PCLK_PER;
                 
                 -- Transmit byte 2
                 pixel   <= (others=>'0');
