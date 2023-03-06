@@ -25,7 +25,7 @@ use IEEE.MATH_REAL.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -34,24 +34,49 @@ use IEEE.MATH_REAL.ALL;
 
 entity golomb_coder is
     Generic (
-        alpha : integer := 256
+        k_width     :   integer := 5;
+        beta_max    :   integer := 8;
+        L_max       :   integer := 32
     );
     Port ( pclk : in STD_LOGIC;
            en : in STD_LOGIC;
            valid_data : in STD_LOGIC;
-           k : in STD_LOGIC;
-           error : in STD_LOGIC_VECTOR (2 downto 0);
-           encoded : out STD_LOGIC_VECTOR (20 downto 0);
-           size : out STD_LOGIC_VECTOR (6 downto 0));
+           k : in unsigned (k_width - 1 downto 0);
+           error : in unsigned (beta_max - 1 downto 0);
+           encoded : out STD_LOGIC_VECTOR (L_max - 1 downto 0);
+           size : out unsigned (k_width downto 0));
 end golomb_coder;
 
 architecture Behavioral of golomb_coder is
 
-    constant beta : integer := integer(realmax(2.0, ceil(log2(real(alpha)))));
+    -- constant beta_max : integer := integer(realmax(2.0, ceil(log2(real(alpha)))));
+    -- constant L_max : integer := integer(2.0 * real(beta) + realmax(8.0, real(beta)));
 
-    constant L_max : integer := integer(2.0 * beta_max + realmax(8.0, real(beta)))
+    constant unary_limit : integer := L_max - beta_max - 1;
 
+    signal unary_val : unsigned(beta_max - 1 downto 0);
+    
 begin
+
+    unary_val <= shift_right(error, to_integer(k));
+
+    process(k, error, unary_val)
+    begin
+        
+        encoded <= (others => '0');
+    
+        if (unary_val < to_unsigned(unary_limit, unary_val'length)) then
+            
+            encoded(to_integer(k)) <= '1';
+            encoded(to_integer(k) - 1 downto 0) <= STD_LOGIC_VECTOR(error(to_integer(k) - 1 downto 0));
+            size <= resize(k, size'length) + resize(unary_val, size'length) + 1;
+        else
+            
+            encoded(beta_max) <= '1';
+            encoded(beta_max - 1 downto 0) <=  STD_LOGIC_VECTOR(resize(error - 1, beta_max)); 
+            size <= to_unsigned(L_max, size'length);
+        end if;
+    end process;
 
 
 end Behavioral;
