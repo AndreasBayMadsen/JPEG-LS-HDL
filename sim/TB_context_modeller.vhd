@@ -7,10 +7,10 @@ use ieee.std_logic_1164.all;
 use IEEE.NUMERIC_STD.ALL;
 use IEEE.MATH_REAL.ALL;
 
-entity tb_context_modeller is
-end tb_context_modeller;
+entity TB_context_modeller is
+end TB_context_modeller;
 
-architecture tb of tb_context_modeller is
+architecture tb of TB_context_modeller is
 
     component context_modeller is
         generic ( 
@@ -229,9 +229,3 @@ begin
 
 end tb;
 
--- Configuration block below is required by some simulators. Usually no need to edit.
-
-configuration cfg_tb_context_modeller of tb_context_modeller is
-    for tb
-    end for;
-end cfg_tb_context_modeller;

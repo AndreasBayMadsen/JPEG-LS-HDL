@@ -6,10 +6,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use IEEE.NUMERIC_STD.ALL;
 
-entity tb_fixed_predictor is
-end tb_fixed_predictor;
+entity TB_fixed_predictor is
+end TB_fixed_predictor;
 
-architecture tb of tb_fixed_predictor is
+architecture tb of TB_fixed_predictor is
 
     component fixed_predictor
         generic ( 
@@ -102,10 +102,3 @@ begin
     end process;
 
 end tb;
-
--- Configuration block below is required by some simulators. Usually no need to edit.
-
-configuration cfg_tb_fixed_predictor of tb_fixed_predictor is
-    for tb
-    end for;
-end cfg_tb_fixed_predictor;

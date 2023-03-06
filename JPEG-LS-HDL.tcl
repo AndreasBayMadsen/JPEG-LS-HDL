@@ -37,6 +37,7 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/sim/TB_gradient.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_gradient_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/TB_golomb_coder.vhd"]"\
+ "[file normalize "$origin_dir/sim_cfg/TB_golomb_coder_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/camera_simulator.vhd"]"\
@@ -173,9 +174,8 @@ set_property -name "webtalk.modelsim_export_sim" -value "6" -objects $obj
 set_property -name "webtalk.questa_export_sim" -value "6" -objects $obj
 set_property -name "webtalk.riviera_export_sim" -value "6" -objects $obj
 set_property -name "webtalk.vcs_export_sim" -value "6" -objects $obj
-set_property -name "webtalk.xcelium_export_sim" -value "1" -objects $obj
 set_property -name "webtalk.xsim_export_sim" -value "6" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "133" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "164" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -314,6 +314,7 @@ set files [list \
  [file normalize "${origin_dir}/sim/TB_gradient.vhd"] \
  [file normalize "${origin_dir}/sim_cfg/TB_gradient_behav.wcfg"] \
  [file normalize "${origin_dir}/sim/TB_golomb_coder.vhd"] \
+ [file normalize "${origin_dir}/sim_cfg/TB_golomb_coder_behav.wcfg"] \
 ]
 add_files -norecurse -fileset $obj $files
 
