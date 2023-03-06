@@ -38,6 +38,7 @@ entity collector is
         image_width     : INTEGER   := 500
     );
     Port (
+        resetn  : in    STD_LOGIC               := '1';
         -- Camera interface
         pclk    : in    STD_LOGIC               := '0';
         pixel   : in    UNSIGNED(7 downto 0)    := (others=>'0');
@@ -133,7 +134,7 @@ begin
         variable href_shift     : STD_LOGIC_VECTOR(1 downto 0)  := (others=>'0');
     begin
         if rising_edge(pclk) then
-            if resetn_int = '0' then
+            if resetn_int = '0' OR resetn = '0' then
                 -- Synchronous reset
                 pixel_received      <= '0';
                 deserializer_state  <= IDLE;
@@ -215,7 +216,7 @@ begin
         variable write_addr_var     : UNSIGNED(write_addr'high downto write_addr'low)   := (others=>'0');
     begin
         if rising_edge(pclk) then
-            if resetn_int = '0' then
+            if resetn_int = '0' or resetn = '0' then
                 -- Synchronous reset
                 A               <= (others=>'0');
                 B               <= (others=>'0');
