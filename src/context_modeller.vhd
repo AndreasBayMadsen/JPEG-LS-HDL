@@ -53,7 +53,9 @@ entity context_modeller is
         idx :           in  STD_LOGIC_VECTOR    (integer(ceil(log2(real(no_contexts)))) - 1 downto 0);
         error :         in  signed              (data_width - 1 downto 0);
          
-        error_bias :    out signed              (data_width - 1 downto 0);
+        C :             out signed              (data_width - 1 downto 0);
+        B :             out signed              (b_size - 1 downto 0);
+        N :             out unsigned            (n_size - 1 downto 0);
         k :             out unsigned            (k_width - 1 downto 0));
 end context_modeller;
 
@@ -171,7 +173,7 @@ begin
     N_t2 <= shift_right(N_t1, 1) + 1 when N_read = N_reset_val else N_t1 + 1;
     
     A_t3 <= A_t2; 
-    B_t3 <= - resize(signed('0' & N_t2) + 1, B_t3'length) when (B_t2 + signed('0' & N_t2) <= - signed('0' & N_t2)) and (B_t2 <= - signed('0' & N_t2)) else
+    B_t3 <= resize(- signed('0' & N_t2) + 1, B_t3'length) when (B_t2 + signed('0' & N_t2) <= - signed('0' & N_t2)) and (B_t2 <= - signed('0' & N_t2)) else
             resize(B_t2 + signed('0' & N_t2), B_t3'length) when B_t2 <= - signed('0' & N_t2) else
             to_signed(0, B_t3'length) when (B_t2 - signed('0' & N_t2) > to_signed(0, B_t3'length)) and (B_t2 > to_signed(0, B_t3'length)) else
             resize(B_t2 - signed('0' & N_t2), B_t3'length) when (B_t2 > to_signed(0, B_t3'length)) else
@@ -184,7 +186,9 @@ begin
     N_t3 <= N_t2;
     
     -- Set ouputs while valid
-    error_bias <= C_read;
+    C <= C_read;
+    N <= N_read;
+    B <= B_read;
     k <= k_temp;
     
     process(pclk)

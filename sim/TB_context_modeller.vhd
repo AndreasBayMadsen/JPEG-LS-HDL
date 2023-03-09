@@ -33,7 +33,9 @@ architecture tb of TB_context_modeller is
             idx :           in  STD_LOGIC_VECTOR    (integer(ceil(log2(real(no_contexts)))) - 1 downto 0);
             error :         in  signed              (data_width - 1 downto 0);
              
-            error_bias :    out signed              (data_width - 1 downto 0);
+            C :             out signed              (data_width - 1 downto 0);
+            B :             out signed              (b_size - 1 downto 0);
+            N :             out unsigned            (n_size - 1 downto 0);
             k :             out unsigned            (k_width - 1 downto 0));
     end component;
     
@@ -55,8 +57,11 @@ architecture tb of TB_context_modeller is
     signal valid_data       : STD_LOGIC;
     signal idx              : std_logic_vector  (8 downto 0);
     signal error_val        : signed            (data_width - 1 downto 0);
-    signal error_bias       : signed            (data_width - 1 downto 0);
-    signal k                : unsigned          (k_width - 1 downto 0);
+    
+    signal C :             signed              (data_width - 1 downto 0);
+    signal B :             signed              (b_size - 1 downto 0);
+    signal N :             unsigned            (n_size - 1 downto 0);
+    signal k :             unsigned            (k_width - 1 downto 0);
 
 begin
 
@@ -79,8 +84,11 @@ begin
               valid_data        => valid_data,
               idx               => idx,
               error             => error_val,
-              error_bias        => error_bias,
-              k                 => k);
+              C => C,
+              B => B,
+              N => N,
+              k => k
+              );
 
     stimuli : process
     begin
@@ -94,33 +102,43 @@ begin
         error_val <= to_signed(5, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 80 ns;
-        assert error_bias = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(2, k'length) report "k was not 2 as expected but is " & integer'image(to_integer(k)) severity ERROR;
-        
+        assert B = to_signed(0, B'length) report "B was not 0 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(1, N'length) report "N was not 1 as expected but is " & integer'image(to_integer(N)) severity ERROR;
+ 
         error_val <= to_signed(5, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 80 ns;
-        assert error_bias = to_signed(1, data_width) report "error_bias was not 1 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(1, data_width) report "error_bias was not 1 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(3, k'length) report "k was not 3 as expected but is " & integer'image(to_integer(k)) severity ERROR;
+        assert B = to_signed(0, B'length) report "B was not -11 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(2, N'length) report "N was not 35 as expected but is " & integer'image(to_integer(N)) severity ERROR;
         
         error_val <= to_signed(5, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(1, idx'length));
         wait for 80 ns;
-        assert error_bias = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(2, k'length) report "k was not 2 as expected but is " & integer'image(to_integer(k)) severity ERROR;
-        
+        assert B = to_signed(0, B'length) report "B was not 0 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(1, N'length) report "N was not 1 as expected but is " & integer'image(to_integer(N)) severity ERROR;
+ 
         error_val <= to_signed(-10, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 5200 ns;
-        assert error_bias = to_signed(-23, data_width) report "error_bias was not -23 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(-23, data_width) report "error_bias was not -23 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(4, k'length) report "k was not 4 as expected but is " & integer'image(to_integer(k)) severity ERROR;
-        
+        assert B = to_signed(-26, B'length) report "B was not -26 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(35, N'length) report "N was not 35 as expected but is " & integer'image(to_integer(N)) severity ERROR;
+ 
         error_val <= to_signed(20, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 5200 ns;
-        assert error_bias = to_signed(4, data_width) report "error_bias was not 4 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(4, data_width) report "error_bias was not 4 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(5, k'length) report "k was not 5 as expected but is " & integer'image(to_integer(k)) severity ERROR;
-        
+        assert B = to_signed(-19, B'length) report "B was not -19 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(36, N'length) report "N was not 36 as expected but is " & integer'image(to_integer(N)) severity ERROR;
+ 
         wait for 80 ns;
         valid_data <= '0';
         idx <= (others => '0');
@@ -132,36 +150,48 @@ begin
         
         report "Reset done" severity NOTE;
         
+        report "Second test with different values after reset" severity NOTE;
+        
         valid_data <= '1';
         error_val <= to_signed(-5, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 80 ns;
-        assert error_bias = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(2, k'length) report "k was not 2 as expected but is " & integer'image(to_integer(k)) severity ERROR;
+        assert B = to_signed(0, B'length) report "B was not 0 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(1, N'length) report "N was not 1 as expected but is " & integer'image(to_integer(N)) severity ERROR;
    
         error_val <= to_signed(-5, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 80 ns;
-        assert error_bias = to_signed(-1, data_width) report "error_bias was not 1 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(-1, data_width) report "error_bias was not 1 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(3, k'length) report "k was not 3 as expected but is " & integer'image(to_integer(k)) severity ERROR;
+        assert B = to_signed(-1, B'length) report "B was not 0 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(2, N'length) report "N was not 1 as expected but is " & integer'image(to_integer(N)) severity ERROR;
         
         error_val <= to_signed(-5, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(1, idx'length));
         wait for 80 ns;
-        assert error_bias = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(2, k'length) report "k was not 2 as expected but is " & integer'image(to_integer(k)) severity ERROR;
+        assert B = to_signed(0, B'length) report "B was not 0 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(1, N'length) report "N was not 1 as expected but is " & integer'image(to_integer(N)) severity ERROR;
         
         error_val <= to_signed(10, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 5200 ns;
-        assert error_bias = to_signed(25, data_width) report "error_bias was not 25 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(25, data_width) report "error_bias was not 25 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(4, k'length) report "k was not 4 as expected but is " & integer'image(to_integer(k)) severity ERROR;
+        assert B = to_signed(-11, B'length) report "B was not -11 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(35, N'length) report "N was not 35 as expected but is " & integer'image(to_integer(N)) severity ERROR;
         
         error_val <= to_signed(-20, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 5200 ns;
-        assert error_bias = to_signed(-1, data_width) report "error_bias was not -1 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(-1, data_width) report "error_bias was not -1 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(5, k'length) report "k was not 5 as expected but is " & integer'image(to_integer(k)) severity ERROR;
+        assert B = to_signed(-9, B'length) report "B was not -9 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(36, N'length) report "N was not 36 as expected but is " & integer'image(to_integer(N)) severity ERROR;
 
         wait for 80 ns;
         valid_data <= '0';
@@ -174,31 +204,43 @@ begin
         
         report "Reset done" severity NOTE;
         
+        report "Third test with pause in middle" severity NOTE;
+
         valid_data <= '1';
         error_val <= to_signed(-5, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 80 ns;
-        assert error_bias = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(2, k'length) report "k was not 2 as expected but is " & integer'image(to_integer(k)) severity ERROR;
-   
+        assert B = to_signed(0, B'length) report "B was not 0 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(1, N'length) report "N was not 1 as expected but is " & integer'image(to_integer(N)) severity ERROR;
+ 
         error_val <= to_signed(-5, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 80 ns;
-        assert error_bias = to_signed(-1, data_width) report "error_bias was not 1 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(-1, data_width) report "error_bias was not 1 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(3, k'length) report "k was not 3 as expected but is " & integer'image(to_integer(k)) severity ERROR;
+        assert B = to_signed(-1, B'length) report "B was not 0 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(2, N'length) report "N was not 1 as expected but is " & integer'image(to_integer(N)) severity ERROR;
+ 
         
         error_val <= to_signed(-5, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(1, idx'length));
         wait for 80 ns;
-        assert error_bias = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(0, data_width) report "error_bias was not 0 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(2, k'length) report "k was not 2 as expected but is " & integer'image(to_integer(k)) severity ERROR;
+        assert B = to_signed(0, B'length) report "B was not 0 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(1, N'length) report "N was not 1 as expected but is " & integer'image(to_integer(N)) severity ERROR;
+ 
         
         error_val <= to_signed(10, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 5200 ns;
-        assert error_bias = to_signed(25, data_width) report "error_bias was not 25 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(25, data_width) report "error_bias was not 25 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(4, k'length) report "k was not 4 as expected but is " & integer'image(to_integer(k)) severity ERROR;
-        
+        assert B = to_signed(-11, B'length) report "B was not -11 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(35, N'length) report "N was not 35 as expected but is " & integer'image(to_integer(N)) severity ERROR;
+ 
         en <= '0';
         
         wait for 2600 ns;
@@ -208,9 +250,11 @@ begin
         error_val <= to_signed(-20, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 5200 ns;
-        assert error_bias = to_signed(-1, data_width) report "error_bias was not -1 as expected but is " & integer'image(to_integer(error_bias)) severity ERROR;
+        assert C = to_signed(-1, data_width) report "error_bias was not -1 as expected but is " & integer'image(to_integer(C)) severity ERROR;
         assert k = to_unsigned(5, k'length) report "k was not 5 as expected but is " & integer'image(to_integer(k)) severity ERROR;
-
+        assert B = to_signed(-9, B'length) report "B was not -9 as expected but is " & integer'image(to_integer(B)) severity ERROR;
+        assert N = to_unsigned(36, N'length) report "N was not 36 as expected but is " & integer'image(to_integer(N)) severity ERROR;
+ 
         wait for 80 ns;
         valid_data <= '0';
         idx <= (others => '0');

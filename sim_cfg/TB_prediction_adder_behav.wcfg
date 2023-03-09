@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="TB_prediction_adder_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="TB_prediction_adder" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="192.980 ns"></ZoomStartTime>
+      <ZoomEndTime time="324.417 ns"></ZoomEndTime>
+      <Cursor1Time time="243.550 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="282"></NameColumnWidth>
+      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="21" />
+   <wvobject type="logic" fp_name="/TB_prediction_adder/pclk">
+      <obj_property name="ElementShortName">pclk</obj_property>
+      <obj_property name="ObjectShortName">pclk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_prediction_adder/en">
+      <obj_property name="ElementShortName">en</obj_property>
+      <obj_property name="ObjectShortName">en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_prediction_adder/valid_data">
+      <obj_property name="ElementShortName">valid_data</obj_property>
+      <obj_property name="ObjectShortName">valid_data</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_prediction_adder/sign_flag">
+      <obj_property name="ElementShortName">sign_flag</obj_property>
+      <obj_property name="ObjectShortName">sign_flag</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/pixel">
+      <obj_property name="ElementShortName">pixel[7:0]</obj_property>
+      <obj_property name="ObjectShortName">pixel[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/fixed_pred">
+      <obj_property name="ElementShortName">fixed_pred[7:0]</obj_property>
+      <obj_property name="ObjectShortName">fixed_pred[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/C">
+      <obj_property name="ElementShortName">C[7:0]</obj_property>
+      <obj_property name="ObjectShortName">C[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/B">
+      <obj_property name="ElementShortName">B[8:0]</obj_property>
+      <obj_property name="ObjectShortName">B[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/N">
+      <obj_property name="ElementShortName">N[6:0]</obj_property>
+      <obj_property name="ObjectShortName">N[6:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/k">
+      <obj_property name="ElementShortName">k[4:0]</obj_property>
+      <obj_property name="ObjectShortName">k[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/error_val">
+      <obj_property name="ElementShortName">error_val[7:0]</obj_property>
+      <obj_property name="ObjectShortName">error_val[7:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/mapped_error">
+      <obj_property name="ElementShortName">mapped_error[7:0]</obj_property>
+      <obj_property name="ObjectShortName">mapped_error[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/dut/pred_1">
+      <obj_property name="ElementShortName">pred_1[9:0]</obj_property>
+      <obj_property name="ObjectShortName">pred_1[9:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/dut/pred_2">
+      <obj_property name="ElementShortName">pred_2[9:0]</obj_property>
+      <obj_property name="ObjectShortName">pred_2[9:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/dut/pred_3">
+      <obj_property name="ElementShortName">pred_3[9:0]</obj_property>
+      <obj_property name="ObjectShortName">pred_3[9:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/dut/pred_er_1">
+      <obj_property name="ElementShortName">pred_er_1[9:0]</obj_property>
+      <obj_property name="ObjectShortName">pred_er_1[9:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/dut/pred_er_2">
+      <obj_property name="ElementShortName">pred_er_2[9:0]</obj_property>
+      <obj_property name="ObjectShortName">pred_er_2[9:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/dut/pred_er_3">
+      <obj_property name="ElementShortName">pred_er_3[9:0]</obj_property>
+      <obj_property name="ObjectShortName">pred_er_3[9:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_prediction_adder/dut/mapped_0_flag">
+      <obj_property name="ElementShortName">mapped_0_flag</obj_property>
+      <obj_property name="ObjectShortName">mapped_0_flag</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_prediction_adder/dut/error_positive_flag">
+      <obj_property name="ElementShortName">error_positive_flag</obj_property>
+      <obj_property name="ObjectShortName">error_positive_flag</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_prediction_adder/dut/mapped_er_1">
+      <obj_property name="ElementShortName">mapped_er_1[9:0]</obj_property>
+      <obj_property name="ObjectShortName">mapped_er_1[9:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>
