@@ -35,21 +35,21 @@ use IEEE.NUMERIC_STD.ALL;
 entity fixed_predictor is
 
     generic ( 
-        data_width :    integer := 8);
+        color_res   : INTEGER   := 5);
     Port ( 
         pclk :          in  STD_LOGIC;
         last_data :     in  STD_LOGIC;
-        A :             in  unsigned    (data_width - 1 downto 0);
-        B :             in  unsigned    (data_width - 1 downto 0);
-        C :             in  unsigned    (data_width - 1 downto 0);
+        A :             in  unsigned    (color_res - 1 downto 0);
+        B :             in  unsigned    (color_res - 1 downto 0);
+        C :             in  unsigned    (color_res - 1 downto 0);
            
-        x_pred :        out unsigned    (data_width - 1 downto 0);
+        x_pred :        out unsigned    (color_res - 1 downto 0);
         done :          out STD_LOGIC);
 end fixed_predictor;
 
 architecture Behavioral of fixed_predictor is
 
-    subtype data_type is unsigned (data_width - 1 downto 0);
+    subtype data_type is unsigned (color_res - 1 downto 0);
 
     signal x_temp :         data_type   := (others=>'0');
     signal largest_temp :   data_type   := (others=>'0');

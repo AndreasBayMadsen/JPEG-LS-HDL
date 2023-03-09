@@ -13,19 +13,19 @@ architecture tb of TB_fixed_predictor is
 
     component fixed_predictor
         generic ( 
-            data_width :    integer);
+            color_res :    integer);
         port (
             pclk       :     in  std_logic;
             last_data :     in  std_logic;
-            A         :     in  unsigned    (data_width - 1 downto 0);
-            B         :     in  unsigned    (data_width - 1 downto 0);
-            C         :     in  unsigned    (data_width - 1 downto 0);
-            x_pred    :     out unsigned    (data_width - 1 downto 0);
+            A         :     in  unsigned    (color_res - 1 downto 0);
+            B         :     in  unsigned    (color_res - 1 downto 0);
+            C         :     in  unsigned    (color_res - 1 downto 0);
+            x_pred    :     out unsigned    (color_res - 1 downto 0);
             done      :     out std_logic);
     end component;
 
-    constant data_width : integer := 8;
-    subtype data_type is unsigned (data_width - 1 downto 0);
+    constant color_res : integer := 8;
+    subtype data_type is unsigned (color_res - 1 downto 0);
     
     signal pclk       :  std_logic := '1';
     signal last_data :  std_logic;
@@ -39,7 +39,7 @@ begin
 
     dut : fixed_predictor
     generic map(
-        data_width => data_width)
+        color_res => color_res)
     port map (
         pclk       => pclk,
         last_data => last_data,

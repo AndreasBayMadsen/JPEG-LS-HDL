@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="TB_fixed_predictor_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="TB_fixed_predictor" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,000.001 ns"></ZoomEndTime>
+      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="167"></NameColumnWidth>
+      <ValueColumnWidth column_width="76"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="8" />
+   <wvobject type="logic" fp_name="/TB_fixed_predictor/pclk">
+      <obj_property name="ElementShortName">pclk</obj_property>
+      <obj_property name="ObjectShortName">pclk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_fixed_predictor/last_data">
+      <obj_property name="ElementShortName">last_data</obj_property>
+      <obj_property name="ObjectShortName">last_data</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_fixed_predictor/A">
+      <obj_property name="ElementShortName">A[7:0]</obj_property>
+      <obj_property name="ObjectShortName">A[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_fixed_predictor/B">
+      <obj_property name="ElementShortName">B[7:0]</obj_property>
+      <obj_property name="ObjectShortName">B[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_fixed_predictor/C">
+      <obj_property name="ElementShortName">C[7:0]</obj_property>
+      <obj_property name="ObjectShortName">C[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_fixed_predictor/x_pred">
+      <obj_property name="ElementShortName">x_pred[7:0]</obj_property>
+      <obj_property name="ObjectShortName">x_pred[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_fixed_predictor/done">
+      <obj_property name="ElementShortName">done</obj_property>
+      <obj_property name="ObjectShortName">done</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/TB_fixed_predictor/color_res">
+      <obj_property name="ElementShortName">color_res</obj_property>
+      <obj_property name="ObjectShortName">color_res</obj_property>
+   </wvobject>
+</wave_config>
