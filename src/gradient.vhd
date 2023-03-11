@@ -52,15 +52,16 @@ architecture Behavioral of gradient is
     type GRADIENT is array (0 to 2) of INTEGER;
 
     -- Signal declarations
-    signal G            : GRADIENT  := (others=>0);
-    signal Q            : GRADIENT  := (others=>0);
-    signal Q_corr       : GRADIENT  := (others=>0); -- Q with sign corrected
-    signal ctxt_idx_int : INTEGER   := 0;
+    signal G            : GRADIENT              := (others=>0);
+    signal Q            : GRADIENT              := (others=>0);
+    signal Q_corr       : GRADIENT              := (others=>0); -- Q with sign corrected
+    signal ctxt_idx_int : INTEGER               := 0;
+    signal ctxt_idx_buf : UNSIGNED(8 downto 0)  := (others=>'0');
     
 begin
 
     -- Signal assignments
-    ctxt_idx <= to_unsigned(ctxt_idx_int, ctxt_idx'length);
+    ctxt_idx_buf <= to_unsigned(ctxt_idx_int, ctxt_idx_buf'length);
     
     -- Calculate gradients
     G(0)    <= to_integer(D) - to_integer(B);
@@ -122,6 +123,19 @@ begin
             end if;
         else
             ctxt_idx_int <= (Q_corr(0)-1)*81 + (Q_corr(1)+4)*9 + (Q_corr(2)+4);
+        end if;
+    end process;
+    
+    -- Buffer output
+    buff: process(clk)
+    begin
+        if rising_edge(clk) then
+            if resetn = '0' then
+                -- Synchronous reset
+                ctxt_idx <= (others=>'0');
+            else
+                ctxt_idx <= ctxt_idx_buf;
+            end if;
         end if;
     end process;
 
