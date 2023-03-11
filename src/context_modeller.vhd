@@ -35,16 +35,16 @@ use IEEE.NUMERIC_STD.ALL;
 entity context_modeller is
     generic ( 
         data_width  :   integer := 8;
-        k_width     :   integer := 5;
-        n_size      :   integer := 7;
-        a_size      :   integer := 15;
-        b_size      :   integer := 9;
-        c_size      :   integer := 8;
+        k_width     :   integer := 5;       -- KUNNE DEN IKKE SÆTTES TIL ceil(log2(data_width-1))?
+        n_size      :   integer := 7;       -- KUNNE DEN IKKE SÆTTES TIL ceil(log2(n_reset+1))?
+        a_size      :   integer := 15;      -- KUNNE DEN IKKE SÆTTES TIL ceil(log2(n_reset*(2**(data_width-1))))?
+        b_size      :   integer := 9;       -- I VÆRSTE FALD KUNNE DEN VEL SÆTTES TIL 1+ceil(log2(n_reset*(2**(data_width-1))))?
+        c_size      :   integer := 8;       -- KUNNE DEN IKKE BARE ALTID SÆTTES TIL DATA_WIDTH?
         n_reset     :   integer := 64;
-        min_c       :   integer := -128;
-        max_c       :   integer := 127;
+        min_c       :   integer := -128;    -- KUNNE VEL SÆTTES TIL -2**(c_size-1)?
+        max_c       :   integer := 127;     -- KUNNE VEL SÆTTES TIL 2**(c_size-1)-1?
         no_contexts :   integer := 365;
-        alpha       :   integer := 256
+        alpha       :   integer := 256      -- KUNNE VEL SÆTTES TIL 2**data_width?
         );
     Port (
         pclk :          in  STD_LOGIC;
@@ -74,6 +74,7 @@ architecture Behavioral of context_modeller is
         doutb   : OUT   STD_LOGIC_VECTOR(39 DOWNTO 0)
       );
     END component;
+    
     -- RAM constants
     constant A_offset : integer := 0;
     constant B_offset : integer := a_size;
@@ -173,7 +174,7 @@ begin
     N_t2 <= shift_right(N_t1, 1) + 1 when N_read = N_reset_val else N_t1 + 1;
     
     A_t3 <= A_t2; 
-    B_t3 <= resize(- signed('0' & N_t2) + 1, B_t3'length) when (B_t2 + signed('0' & N_t2) <= - signed('0' & N_t2)) and (B_t2 <= - signed('0' & N_t2)) else
+    B_t3 <= - resize(signed('0' & N_t2) + 1, B_t3'length) when (B_t2 + signed('0' & N_t2) <= - signed('0' & N_t2)) and (B_t2 <= - signed('0' & N_t2)) else  -- HVOR KOMMER DET '-' FRA? OG HVORFOR APPENDER VI '0'?
             resize(B_t2 + signed('0' & N_t2), B_t3'length) when B_t2 <= - signed('0' & N_t2) else
             to_signed(0, B_t3'length) when (B_t2 - signed('0' & N_t2) > to_signed(0, B_t3'length)) and (B_t2 > to_signed(0, B_t3'length)) else
             resize(B_t2 - signed('0' & N_t2), B_t3'length) when (B_t2 > to_signed(0, B_t3'length)) else
