@@ -174,7 +174,7 @@ begin
     N_t2 <= shift_right(N_t1, 1) + 1 when N_read = N_reset_val else N_t1 + 1;
     
     A_t3 <= A_t2; 
-    B_t3 <= - resize(signed('0' & N_t2) + 1, B_t3'length) when (B_t2 + signed('0' & N_t2) <= - signed('0' & N_t2)) and (B_t2 <= - signed('0' & N_t2)) else  -- HVOR KOMMER DET '-' FRA? OG HVORFOR APPENDER VI '0'?
+    B_t3 <= resize(- signed('0' & N_t2) + 1, B_t3'length) when (B_t2 + signed('0' & N_t2) <= - signed('0' & N_t2)) and (B_t2 <= - signed('0' & N_t2)) else
             resize(B_t2 + signed('0' & N_t2), B_t3'length) when B_t2 <= - signed('0' & N_t2) else
             to_signed(0, B_t3'length) when (B_t2 - signed('0' & N_t2) > to_signed(0, B_t3'length)) and (B_t2 > to_signed(0, B_t3'length)) else
             resize(B_t2 - signed('0' & N_t2), B_t3'length) when (B_t2 > to_signed(0, B_t3'length)) else
