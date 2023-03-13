@@ -201,8 +201,8 @@ begin
             case context_state is
                 when WAITING =>
                     
-                    if en = '1' then
-                        if valid_data = '1' then
+                    if valid_data = '1' then
+                        if en = '1' then
                         
                             -- Update RAM values.
                             dout <= (others => '0');
@@ -217,12 +217,11 @@ begin
                             -- Get context from RAM
                             addrin <= (others => '0');
                             addrin(idx'high downto idx'low) <= idx;
-                           
-                        else
-                            if reset_done_flag = '0' then
-                                context_state <= RESET;
-                                reset_idx <= (others => '0');
-                            end if;
+                       end if;
+                    else
+                        if reset_done_flag = '0' then
+                            context_state <= RESET;
+                            reset_idx <= (others => '0');
                         end if;
                     end if;
                     

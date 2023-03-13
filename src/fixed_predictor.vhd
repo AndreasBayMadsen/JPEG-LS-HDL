@@ -38,13 +38,11 @@ entity fixed_predictor is
         color_res   : INTEGER   := 5);
     Port ( 
         pclk :          in  STD_LOGIC;
-        last_data :     in  STD_LOGIC;
         A :             in  unsigned    (color_res - 1 downto 0);
         B :             in  unsigned    (color_res - 1 downto 0);
         C :             in  unsigned    (color_res - 1 downto 0);
            
-        x_pred :        out unsigned    (color_res - 1 downto 0);
-        done :          out STD_LOGIC);
+        x_pred :        out unsigned    (color_res - 1 downto 0));
 end fixed_predictor;
 
 architecture Behavioral of fixed_predictor is
@@ -69,19 +67,8 @@ begin
         end if;
     end process;
 
-    x_temp <= smallest_temp when C >= largest_temp else 
+    x_pred <= smallest_temp when C >= largest_temp else 
          largest_temp when C <= smallest_temp else 
          A + B - C;
-    
-    last_temp <= last_data;
-    
-    process(pclk)
-    begin
-        if rising_edge(pclk) then
-            x_pred <= x_temp;
-            done <= last_temp;
-            
-        end if;
-    end process;
 
 end Behavioral;

@@ -68,16 +68,14 @@ architecture Behavioral of pipeline_module_1 is
     
     component fixed_predictor
         generic ( 
-            data_width :    integer := 8);
+            color_res   :    INTEGER := 5);
         Port ( 
             pclk :          in  STD_LOGIC;
-            last_data :     in  STD_LOGIC;
-            A :             in  unsigned    (data_width - 1 downto 0);
-            B :             in  unsigned    (data_width - 1 downto 0);
-            C :             in  unsigned    (data_width - 1 downto 0);
+            A :             in  unsigned    (color_res - 1 downto 0);
+            B :             in  unsigned    (color_res - 1 downto 0);
+            C :             in  unsigned    (color_res - 1 downto 0);
                
-            x_pred :        out unsigned    (data_width - 1 downto 0);
-            done :          out STD_LOGIC);
+            x_pred :        out unsigned    (color_res - 1 downto 0));
     end component;
     
 begin
@@ -100,16 +98,14 @@ begin
     
     pred: fixed_predictor
     generic map(
-        data_width  => color_res
+        color_res  => color_res
     )
     port map(
         pclk        => clk,
-        last_data   => '0',     -- What is the purpose of 'last_data'?
         A           => A,
         B           => B,
         C           => C,
-        x_pred      => X_pred,
-        done        => open
+        x_pred      => X_pred
     );
 
 end Behavioral;

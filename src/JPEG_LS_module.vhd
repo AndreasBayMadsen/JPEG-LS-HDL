@@ -86,10 +86,46 @@ architecture Behavioral of JPEG_LS_module is
                 );
     end component;
     
+    component pipeline_module_2
+        Generic (   color_res   : INTEGER   := 5;
+                    k_width     : INTEGER   := 5);
+        Port (  -- Global signals
+                clk         : in    STD_LOGIC                       := '1';
+                resetn      : in    STD_LOGIC                       := '1';
+                -- Input signals
+                enable      : in    STD_LOGIC                       := '0';
+                valid_data  : in    STD_LOGIC                       := '0';
+                pixel       : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
+                prediction  : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
+                ctxt_idx    : in    UNSIGNED(8 downto 0)            := (others=>'0');
+                sign        : in    STD_LOGIC                       := '0';
+                -- Output signals
+                k           : out   UNSIGNED(k_width-1 downto 0)    := (others=>'0');
+                mapped_error: out   UNSIGNED(color_res-1 downto 0)  := (others=>'0')
+                );
+    end component;
+    
+    component golomb_coder
+        Generic (
+            k_width     :   integer := 5;
+            beta_max    :   integer := 8;
+            L_max       :   integer := 32
+        );
+        Port ( pclk : in STD_LOGIC;
+               en : in STD_LOGIC;
+               valid_data : in STD_LOGIC;
+               k : in unsigned (k_width - 1 downto 0);
+               error : in unsigned (beta_max - 1 downto 0);
+               encoded : out STD_LOGIC_VECTOR (L_max - 1 downto 0);
+               size : out unsigned (k_width downto 0));
+    end component;
+    
     -- Constant declarations
-    constant R_size : INTEGER   := 5;   -- Number of bits per color
-    constant G_size : INTEGER   := 6;
-    constant B_size : INTEGER   := 5;
+    constant R_size     : INTEGER   := 5;   -- Number of bits per color
+    constant G_size     : INTEGER   := 6;
+    constant B_size     : INTEGER   := 5;
+    constant k_width    : INTEGER   := 5;
+    constant L_max      : INTEGER   := 32;
     
     -- Signal declarations
         -- PIPELINE REGION 1 - Collector, gradient and fixed predictor
@@ -99,18 +135,20 @@ architecture Behavioral of JPEG_LS_module is
     signal C            : UNSIGNED(15 downto 0)         := (others=>'0');
     signal D            : UNSIGNED(15 downto 0)         := (others=>'0');
     signal X            : UNSIGNED(15 downto 0)         := (others=>'0');
-    signal valid_data   : STD_LOGIC                     := '0';
+    signal valid_data_1 : STD_LOGIC                     := '0';
     signal new_pixel    : STD_LOGIC                     := '0';
+    signal enable       : STD_LOGIC                     := '0'; -- Like 'new_pixel', but for components instead of registers
+    signal first_pulse  : BOOLEAN                       := TRUE;
     
-    signal ctxt_idx_r   : UNSIGNED(8 downto 0)          := (others=>'0');
-    signal ctxt_idx_g   : UNSIGNED(8 downto 0)          := (others=>'0');
-    signal ctxt_idx_b   : UNSIGNED(8 downto 0)          := (others=>'0');
-    signal sign_r       : STD_LOGIC                     := '0';
-    signal sign_g       : STD_LOGIC                     := '0';
-    signal sign_b       : STD_LOGIC                     := '0';
-    signal X_pred_r     : UNSIGNED(R_size-1 downto 0)   := (others=>'0');
-    signal X_pred_g     : UNSIGNED(G_size-1 downto 0)   := (others=>'0');
-    signal X_pred_b     : UNSIGNED(B_size-1 downto 0)   := (others=>'0');
+    signal ctxt_idx_r_1 : UNSIGNED(8 downto 0)          := (others=>'0');
+    signal ctxt_idx_g_1 : UNSIGNED(8 downto 0)          := (others=>'0');
+    signal ctxt_idx_b_1 : UNSIGNED(8 downto 0)          := (others=>'0');
+    signal sign_r_1     : STD_LOGIC                     := '0';
+    signal sign_g_1     : STD_LOGIC                     := '0';
+    signal sign_b_1     : STD_LOGIC                     := '0';
+    signal X_pred_r_1   : UNSIGNED(R_size-1 downto 0)   := (others=>'0');
+    signal X_pred_g_1   : UNSIGNED(G_size-1 downto 0)   := (others=>'0');
+    signal X_pred_b_1   : UNSIGNED(B_size-1 downto 0)   := (others=>'0');
     signal A_r          : UNSIGNED(R_size-1 downto 0)   := (others=>'0');
     signal A_g          : UNSIGNED(G_size-1 downto 0)   := (others=>'0');
     signal A_b          : UNSIGNED(B_size-1 downto 0)   := (others=>'0');
@@ -123,8 +161,45 @@ architecture Behavioral of JPEG_LS_module is
     signal D_r          : UNSIGNED(R_size-1 downto 0)   := (others=>'0');
     signal D_g          : UNSIGNED(G_size-1 downto 0)   := (others=>'0');
     signal D_b          : UNSIGNED(B_size-1 downto 0)   := (others=>'0');
+    signal X_r_1        : UNSIGNED(R_size-1 downto 0)   := (others=>'0');
+    signal X_g_1        : UNSIGNED(G_size-1 downto 0)   := (others=>'0');
+    signal X_b_1        : UNSIGNED(B_size-1 downto 0)   := (others=>'0');
     
-    signal href_delay   : STD_LOGIC                     := '0';
+        -- PIPELINE REGION 2 - Context modeller and error calculation
+    signal valid_data_2     : STD_LOGIC                     := '0';
+    signal X_r_2            : UNSIGNED(R_size-1 downto 0)   := (others=>'0');
+    signal X_g_2            : UNSIGNED(G_size-1 downto 0)   := (others=>'0');
+    signal X_b_2            : UNSIGNED(B_size-1 downto 0)   := (others=>'0');
+    signal X_pred_r_2       : UNSIGNED(R_size-1 downto 0)   := (others=>'0');
+    signal X_pred_g_2       : UNSIGNED(G_size-1 downto 0)   := (others=>'0');
+    signal X_pred_b_2       : UNSIGNED(B_size-1 downto 0)   := (others=>'0');
+    signal ctxt_idx_r_2     : UNSIGNED(8 downto 0)          := (others=>'0');
+    signal ctxt_idx_g_2     : UNSIGNED(8 downto 0)          := (others=>'0');
+    signal ctxt_idx_b_2     : UNSIGNED(8 downto 0)          := (others=>'0');
+    signal sign_r_2         : STD_LOGIC                     := '0';
+    signal sign_g_2         : STD_LOGIC                     := '0';
+    signal sign_b_2         : STD_LOGIC                     := '0';
+    signal k_r_2            : UNSIGNED(k_width-1 downto 0)  := (others=>'0');
+    signal k_g_2            : UNSIGNED(k_width-1 downto 0)  := (others=>'0');
+    signal k_b_2            : UNSIGNED(k_width-1 downto 0)  := (others=>'0');
+    signal mapped_error_r_2 : UNSIGNED(R_size-1 downto 0)   := (others=>'0');
+    signal mapped_error_g_2 : UNSIGNED(G_size-1 downto 0)   := (others=>'0');
+    signal mapped_error_b_2 : UNSIGNED(B_size-1 downto 0)   := (others=>'0');
+    
+        -- PIPELINE REGION 3 - Golomb coder
+    signal valid_data_3     : STD_LOGIC                             := '0';
+    signal k_r_3            : UNSIGNED(k_width-1 downto 0)          := (others=>'0');    
+    signal k_g_3            : UNSIGNED(k_width-1 downto 0)          := (others=>'0');    
+    signal k_b_3            : UNSIGNED(k_width-1 downto 0)          := (others=>'0');
+    signal mapped_error_r_3 : UNSIGNED(R_size-1 downto 0)           := (others=>'0');
+    signal mapped_error_g_3 : UNSIGNED(G_size-1 downto 0)           := (others=>'0');
+    signal mapped_error_b_3 : UNSIGNED(B_size-1 downto 0)           := (others=>'0');
+    signal encoded_r        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+    signal encoded_g        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+    signal encoded_b        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+    signal encoded_size_r   : UNSIGNED(k_width downto 0)            := (others=>'0');
+    signal encoded_size_g   : UNSIGNED(k_width downto 0)            := (others=>'0');
+    signal encoded_size_b   : UNSIGNED(k_width downto 0)            := (others=>'0');
     
 begin
 
@@ -146,7 +221,7 @@ begin
         C           => C,
         D           => D,
         X           => X,
-        valid_data  => valid_data,
+        valid_data  => valid_data_1,
         new_pixel   => new_pixel
     );
     
@@ -161,9 +236,9 @@ begin
         B           => B_r,
         C           => C_r,
         D           => D_r,
-        ctxt_idx    => ctxt_idx_r,
-        sign        => sign_r,
-        X_pred      => X_pred_r
+        ctxt_idx    => ctxt_idx_r_1,
+        sign        => sign_r_1,
+        X_pred      => X_pred_r_1
     );
     
     mod_1_g: pipeline_module_1  -- Pipeline module 1 for green color
@@ -177,9 +252,9 @@ begin
         B           => B_g,
         C           => C_g,
         D           => D_g,
-        ctxt_idx    => ctxt_idx_g,
-        sign        => sign_g,
-        X_pred      => X_pred_g
+        ctxt_idx    => ctxt_idx_g_1,
+        sign        => sign_g_1,
+        X_pred      => X_pred_g_1
     );
     
     mod_1_b: pipeline_module_1  -- Pipeline module 1 for blue color
@@ -193,9 +268,9 @@ begin
         B           => B_b,
         C           => C_b,
         D           => D_b,
-        ctxt_idx    => ctxt_idx_b,
-        sign        => sign_b,
-        X_pred      => X_pred_b
+        ctxt_idx    => ctxt_idx_b_1,
+        sign        => sign_b_1,
+        X_pred      => X_pred_b_1
     );
 
     -- Signal assignments
@@ -212,16 +287,197 @@ begin
     D_r         <= D(15 downto 11);
     D_g         <= D(10 downto 5);
     D_b         <= D(4 downto 0);
+    X_r_1       <= X(15 downto 11);
+    X_g_1       <= X(10 downto 5);
+    X_b_1       <= X(4 downto 0);
     
-    delay: process(pclk)
+    -- Enable signal
+    enable_gen: process(pclk)
     begin
         if rising_edge(pclk) then
-            href_delay <= href;
+            if resetn = '0' then
+                -- Synchronous reset
+                first_pulse <= TRUE;
+            else
+                if new_pixel = '1' then
+                    first_pulse <= FALSE;
+                end if;
+            end if;
         end if;
     end process;
     
-    -- PIPELINE REGION 2 - Context modeller, 
+    enable <= '0' when first_pulse else new_pixel;
+    
+    -- Pipeline register 1
+    pipeline_register_1: process(pclk)
+    begin
+        if rising_edge(pclk) then
+            if resetn = '0' then
+                -- Synchronous reset
+                valid_data_2    <= '0';
+                X_r_2           <= (others=>'0');
+                X_g_2           <= (others=>'0');
+                X_b_2           <= (others=>'0');
+                X_pred_r_2      <= (others=>'0');
+                X_pred_g_2      <= (others=>'0');
+                X_pred_b_2      <= (others=>'0');
+                ctxt_idx_r_2    <= (others=>'0');
+                ctxt_idx_g_2    <= (others=>'0');
+                ctxt_idx_b_2    <= (others=>'0');
+                sign_r_2        <= '0';
+                sign_g_2        <= '0';
+                sign_b_2        <= '0';
+            else
+                if new_pixel = '1' then
+                    valid_data_2    <= valid_data_1;
+                    X_r_2           <= X_r_1;
+                    X_g_2           <= X_g_1;
+                    X_b_2           <= X_b_1;
+                    X_pred_r_2      <= X_pred_r_1;
+                    X_pred_g_2      <= X_pred_g_1;
+                    X_pred_b_2      <= X_pred_b_1;
+                    ctxt_idx_r_2    <= ctxt_idx_r_1;
+                    ctxt_idx_g_2    <= ctxt_idx_g_1;
+                    ctxt_idx_b_2    <= ctxt_idx_b_1;
+                    sign_r_2        <= sign_r_1;
+                    sign_g_2        <= sign_g_1;
+                    sign_b_2        <= sign_b_1;
+                end if;
+            end if;
+        end if;
+    end process;
+    
+    -- PIPELINE REGION 2 - Context modeller and error calculation
         -- Component instantiations
-        
+    mod_2_r: pipeline_module_2  -- Pipeline module 2 for red color
+    generic map(
+        color_res   => R_size,
+        k_width     => k_width
+    )
+    port map(
+        clk             => pclk,
+        resetn          => resetn,
+        enable          => enable,
+        valid_data      => valid_data_2,
+        pixel           => X_r_2,
+        prediction      => X_pred_r_2,
+        ctxt_idx        => ctxt_idx_r_2,
+        sign            => sign_r_2,
+        k               => k_r_2,
+        mapped_error    => mapped_error_r_2
+    );
+    
+    mod_2_g: pipeline_module_2  -- Pipeline module 2 for green color
+    generic map(
+        color_res   => G_size,
+        k_width     => k_width
+    )
+    port map(
+        clk             => pclk,
+        resetn          => resetn,
+        enable          => enable,
+        valid_data      => valid_data_2,
+        pixel           => X_g_2,
+        prediction      => X_pred_g_2,
+        ctxt_idx        => ctxt_idx_g_2,
+        sign            => sign_g_2,
+        k               => k_g_2,
+        mapped_error    => mapped_error_g_2
+    );
+    
+    mod_2_b: pipeline_module_2  -- Pipeline module 2 for blue color
+    generic map(
+        color_res   => B_size,
+        k_width     => k_width
+    )
+    port map(
+        clk             => pclk,
+        resetn          => resetn,
+        enable          => enable,
+        valid_data      => valid_data_2,
+        pixel           => X_b_2,
+        prediction      => X_pred_b_2,
+        ctxt_idx        => ctxt_idx_b_2,
+        sign            => sign_b_2,
+        k               => k_b_2,
+        mapped_error    => mapped_error_b_2
+    );
+    
+    -- Pipeline register 2
+    pipeline_register_2: process(pclk)
+    begin
+        if rising_edge(pclk) then
+            if resetn = '0' then
+                -- Synchronous reset
+                valid_data_3        <= '0';
+                k_r_3               <= (others=>'0');
+                k_g_3               <= (others=>'0');
+                k_b_3               <= (others=>'0');
+                mapped_error_r_3    <= (others=>'0');
+                mapped_error_g_3    <= (others=>'0');
+                mapped_error_b_3    <= (others=>'0');
+            else
+                if new_pixel = '1' then
+                    valid_data_3        <= valid_data_2;
+                    k_r_3               <= k_r_2;
+                    k_g_3               <= k_g_2;
+                    k_b_3               <= k_b_2;
+                    mapped_error_r_3    <= mapped_error_r_2;
+                    mapped_error_g_3    <= mapped_error_g_2;
+                    mapped_error_b_3    <= mapped_error_b_2;
+                end if;
+            end if;
+        end if;
+    end process;
+    
+    -- PIPELINE REGION 3 - Golomb coder
+        -- Component instantiations
+    golomb_r: golomb_coder  -- Golomb coder for red color
+    generic map(
+        k_width     => k_width,
+        beta_max    => mapped_error_r_3'length,
+        L_max       => L_max
+    )
+    port map(
+        pclk        => pclk,
+        en          => enable,
+        valid_data  => valid_data_3,
+        k           => k_r_3,
+        error       => mapped_error_r_3,
+        encoded     => encoded_r,
+        size        => encoded_size_r
+    );
+    
+    golomb_g: golomb_coder  -- Golomb coder for green color
+    generic map(
+        k_width     => k_width,
+        beta_max    => mapped_error_g_3'length,
+        L_max       => L_max
+    )
+    port map(
+        pclk        => pclk,
+        en          => enable,
+        valid_data  => valid_data_3,
+        k           => k_g_3,
+        error       => mapped_error_g_3,
+        encoded     => encoded_g,
+        size        => encoded_size_g
+    );
+
+    golomb_b: golomb_coder  -- Golomb coder for blue color
+    generic map(
+        k_width     => k_width,
+        beta_max    => mapped_error_b_3'length,
+        L_max       => L_max
+    )
+    port map(
+        pclk        => pclk,
+        en          => enable,
+        valid_data  => valid_data_3,
+        k           => k_b_3,
+        error       => mapped_error_b_3,
+        encoded     => encoded_b,
+        size        => encoded_size_b
+    );
 
 end Behavioral;

@@ -67,8 +67,8 @@ begin
     
         if (unary_val < to_unsigned(unary_limit, unary_val'length)) then
             
+            encoded(beta_max - 1 downto 0) <= STD_LOGIC_VECTOR(resize(error(to_integer(k) - 1 downto 0), beta_max));
             encoded(to_integer(k)) <= '1';
-            encoded(to_integer(k) - 1 downto 0) <= STD_LOGIC_VECTOR(error(to_integer(k) - 1 downto 0));
             size <= resize(k, size'length) + resize(unary_val, size'length) + 1;
         else
             

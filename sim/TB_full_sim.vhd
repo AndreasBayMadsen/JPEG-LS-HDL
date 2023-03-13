@@ -98,8 +98,8 @@ begin
     
     DUT: JPEG_LS_module
     generic map(
-        image_height    => 500,
-        image_width     => 500
+        image_height    => 512,
+        image_width     => 768
     )
     port map(
         resetn  => resetn,

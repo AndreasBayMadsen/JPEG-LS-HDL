@@ -27,9 +27,13 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/ip/HWT_collector_bram/HWT_collector_bram.xci"]"\
  "[file normalize "$origin_dir/ip/HWT_collector_ila/HWT_collector_ila.xci"]"\
  "[file normalize "$origin_dir/ip/HWT_collector_clk/HWT_collector_clk.xci"]"\
+ "[file normalize "$origin_dir/src/context_modeller.vhd"]"\
  "[file normalize "$origin_dir/src/golomb_coder.vhd"]"\
- "[file normalize "$origin_dir/src/prediction_adder.vhd"]"\
+ "[file normalize "$origin_dir/src/JPEG_LS_module.vhd"]"\
+ "[file normalize "$origin_dir/src/pipeline_module_1.vhd"]"\
  "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
+ "[file normalize "$origin_dir/src/pipeline_module_2.vhd"]"\
+ "[file normalize "$origin_dir/src/prediction_adder.vhd"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
  "[file normalize "$origin_dir/sim/TB_fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_collector.vhd"]"\
@@ -41,12 +45,11 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/sim_cfg/TB_gradient_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/TB_golomb_coder.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_golomb_coder_behav.wcfg"]"\
- "[file normalize "$origin_dir/sim/TB_prediction_adder.vhd"]"\
- "[file normalize "$origin_dir/sim_cfg/TB_prediction_adder_behav.wcfg"]"\
- "[file normalize "$origin_dir/sim_cfg/TB_fixed_predictor_behav.wcfg"]"\
- "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
+ "[file normalize "$origin_dir/sim/TB_context_modeller.vhd"]"\
+ "[file normalize "$origin_dir/sim_cfg/TB_context_modeller_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/camera_simulator.vhd"]"\
+ "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -180,9 +183,8 @@ set_property -name "webtalk.modelsim_export_sim" -value "23" -objects $obj
 set_property -name "webtalk.questa_export_sim" -value "23" -objects $obj
 set_property -name "webtalk.riviera_export_sim" -value "23" -objects $obj
 set_property -name "webtalk.vcs_export_sim" -value "23" -objects $obj
-set_property -name "webtalk.xcelium_export_sim" -value "12" -objects $obj
 set_property -name "webtalk.xsim_export_sim" -value "23" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "188" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "215" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_CDC XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -199,7 +201,15 @@ set files [list \
  [file normalize "${origin_dir}/ip/collector_bram/collector_bram.xci"] \
  [file normalize "${origin_dir}/hw_tests/HWT_collector.vhd"] \
  [file normalize "${origin_dir}/src/debounce.vhd"] \
+ [file normalize "${origin_dir}/ip/HWT_collector_bram/HWT_collector_bram.xci"] \
+ [file normalize "${origin_dir}/ip/HWT_collector_ila/HWT_collector_ila.xci"] \
+ [file normalize "${origin_dir}/ip/HWT_collector_clk/HWT_collector_clk.xci"] \
+ [file normalize "${origin_dir}/src/context_modeller.vhd"] \
  [file normalize "${origin_dir}/src/golomb_coder.vhd"] \
+ [file normalize "${origin_dir}/src/JPEG_LS_module.vhd"] \
+ [file normalize "${origin_dir}/src/pipeline_module_1.vhd"] \
+ [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
+ [file normalize "${origin_dir}/src/pipeline_module_2.vhd"] \
  [file normalize "${origin_dir}/src/prediction_adder.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
@@ -233,8 +243,65 @@ set file "$origin_dir/hw_tests/HWT_collector.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
+set_property -name "is_enabled" -value "0" -objects $file_obj
 
 set file "$origin_dir/src/debounce.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+set_property -name "is_enabled" -value "0" -objects $file_obj
+
+set file "$origin_dir/ip/HWT_collector_bram/HWT_collector_bram.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "is_enabled" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+
+set file "$origin_dir/ip/HWT_collector_ila/HWT_collector_ila.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "is_enabled" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+
+set file "$origin_dir/ip/HWT_collector_clk/HWT_collector_clk.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "is_enabled" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+
+set file "$origin_dir/src/context_modeller.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/golomb_coder.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/JPEG_LS_module.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/pipeline_module_1.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/ip/context_memory_block/context_memory_block.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+set file "$origin_dir/src/pipeline_module_2.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -251,71 +318,8 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
 set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
-set_property -name "top" -value "HWT_collector" -objects $obj
+set_property -name "top" -value "JPEG_LS_module" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
-
-# Set 'sources_1' fileset object
-set obj [get_filesets sources_1]
-set files [list \
- [file normalize "${origin_dir}/ip/HWT_collector_bram/HWT_collector_bram.xci"] \
-]
-add_files -norecurse -fileset $obj $files
-
-# Set 'sources_1' fileset file properties for remote files
-set file "$origin_dir/ip/HWT_collector_bram/HWT_collector_bram.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
-
-# Set 'sources_1' fileset file properties for local files
-# None
-
-# Set 'sources_1' fileset object
-set obj [get_filesets sources_1]
-set files [list \
- [file normalize "${origin_dir}/ip/HWT_collector_ila/HWT_collector_ila.xci"] \
-]
-add_files -norecurse -fileset $obj $files
-
-# Set 'sources_1' fileset file properties for remote files
-set file "$origin_dir/ip/HWT_collector_ila/HWT_collector_ila.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
-
-# Set 'sources_1' fileset file properties for local files
-# None
-
-# Set 'sources_1' fileset object
-set obj [get_filesets sources_1]
-set files [list \
- [file normalize "${origin_dir}/ip/HWT_collector_clk/HWT_collector_clk.xci"] \
-]
-add_files -norecurse -fileset $obj $files
-
-# Set 'sources_1' fileset file properties for remote files
-set file "$origin_dir/ip/HWT_collector_clk/HWT_collector_clk.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
-
-# Set 'sources_1' fileset file properties for local files
-# None
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -347,7 +351,7 @@ set obj [get_filesets sim_1]
 
 # Set 'sim_1' fileset properties
 set obj [get_filesets sim_1]
-set_property -name "top" -value "fixed_predictor" -objects $obj
+set_property -name "top" -value "JPEG_LS_module" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
@@ -369,9 +373,8 @@ set files [list \
  [file normalize "${origin_dir}/sim_cfg/TB_gradient_behav.wcfg"] \
  [file normalize "${origin_dir}/sim/TB_golomb_coder.vhd"] \
  [file normalize "${origin_dir}/sim_cfg/TB_golomb_coder_behav.wcfg"] \
- [file normalize "${origin_dir}/sim/TB_prediction_adder.vhd"] \
- [file normalize "${origin_dir}/sim_cfg/TB_prediction_adder_behav.wcfg"] \
- [file normalize "${origin_dir}/sim_cfg/TB_fixed_predictor_behav.wcfg"] \
+ [file normalize "${origin_dir}/sim/TB_context_modeller.vhd"] \
+ [file normalize "${origin_dir}/sim_cfg/TB_context_modeller_behav.wcfg"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -411,7 +414,7 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
-set file "$origin_dir/sim/TB_prediction_adder.vhd"
+set file "$origin_dir/sim/TB_context_modeller.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -422,7 +425,7 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 # Set 'block_tests' fileset properties
 set obj [get_filesets block_tests]
-set_property -name "top" -value "TB_fixed_predictor" -objects $obj
+set_property -name "top" -value "TB_full_sim" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
@@ -434,19 +437,19 @@ if {[string equal [get_filesets -quiet full_simulation] ""]} {
 # Set 'full_simulation' fileset object
 set obj [get_filesets full_simulation]
 set files [list \
- [file normalize "${origin_dir}/sim/TB_full_sim.vhd"] \
  [file normalize "${origin_dir}/sim_cfg/TB_full_sim_behav.wcfg"] \
  [file normalize "${origin_dir}/sim/camera_simulator.vhd"] \
+ [file normalize "${origin_dir}/sim/TB_full_sim.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
 
 # Set 'full_simulation' fileset file properties for remote files
-set file "$origin_dir/sim/TB_full_sim.vhd"
+set file "$origin_dir/sim/camera_simulator.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
-set file "$origin_dir/sim/camera_simulator.vhd"
+set file "$origin_dir/sim/TB_full_sim.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -457,10 +460,16 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 # Set 'full_simulation' fileset properties
 set obj [get_filesets full_simulation]
-set_property -name "source_set" -value "" -objects $obj
 set_property -name "top" -value "TB_full_sim" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
+
+# Set 'utils_1' fileset object
+set obj [get_filesets utils_1]
+# Empty (no sources present)
+
+# Set 'utils_1' fileset properties
+set obj [get_filesets utils_1]
 
 set idrFlowPropertiesConstraints ""
 catch {
@@ -488,7 +497,6 @@ if { $obj != "" } {
 
 }
 set obj [get_runs synth_1]
-set_property -name "needs_refresh" -value "1" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
 
@@ -711,7 +719,6 @@ set_property -name "options.warn_on_violation" -value "1" -objects $obj
 
 }
 set obj [get_runs impl_1]
-set_property -name "needs_refresh" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Implementation Defaults" -objects $obj
 set_property -name "steps.write_bitstream.args.readback_file" -value "0" -objects $obj
 set_property -name "steps.write_bitstream.args.verbose" -value "0" -objects $obj
