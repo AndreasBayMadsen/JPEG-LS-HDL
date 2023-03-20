@@ -92,6 +92,9 @@ architecture Behavioral of context_modeller is
     signal addrout  :   STD_LOGIC_VECTOR(8 DOWNTO 0);
     signal dout     :   STD_LOGIC_VECTOR(39 DOWNTO 0);
     
+    signal addr_latch  :   STD_LOGIC_VECTOR(8 DOWNTO 0);
+    signal old_addr  :   STD_LOGIC_VECTOR(8 DOWNTO 0) := (others=>'0');
+    
     signal wea      :   STD_LOGIC;
     
     signal A_read   : unsigned    (a_size - 1 downto 0);
@@ -113,6 +116,11 @@ architecture Behavioral of context_modeller is
     signal B_t3     : signed      (b_size - 1 downto 0);
     signal C_t3     : signed      (c_size - 1 downto 0);
     signal N_t3     : unsigned    (n_size - 1 downto 0);
+    
+    signal A_latch     : unsigned    (a_size - 1 downto 0) := A_def;
+    signal B_latch     : signed      (b_size - 1 downto 0) := B_def;
+    signal C_latch     : signed      (c_size - 1 downto 0) := C_def;
+    signal N_latch     : unsigned    (n_size - 1 downto 0) := N_def;
     
     signal N_shift  : unsigned    (a_size downto 0);
     signal k_temp   : unsigned    (k_width - 1 downto 0);
@@ -139,10 +147,24 @@ begin
               
               
     -- READ context from RAM.
-    A_read <= unsigned(din(a_size - 1 + a_offset downto a_offset));
-    B_read <= signed(din(b_size - 1 + b_offset downto b_offset));
-    C_read <= signed(din(c_size - 1 + c_offset downto c_offset));
-    N_read <= unsigned(din(n_size - 1 + n_offset downto n_offset));
+    
+    process(din, old_addr, addr_latch)
+    begin
+    
+        if old_addr /= addr_latch then
+            A_read <= unsigned(din(a_size - 1 + a_offset downto a_offset));
+            B_read <= signed(din(b_size - 1 + b_offset downto b_offset));
+            C_read <= signed(din(c_size - 1 + c_offset downto c_offset));
+            N_read <= unsigned(din(n_size - 1 + n_offset downto n_offset));
+        else
+            A_read <= A_latch;
+            B_read <= B_latch;
+            C_read <= C_latch;
+            N_read <= N_latch;
+        end if;
+    end process;
+    
+    
               
     -- Find k value
     N_shift(N_shift'high downto N_read'high + 1) <= (others => '0');
@@ -150,6 +172,7 @@ begin
     
     process(A_read, N_shift)
     begin
+        k_temp <= (others=>'1');
         if A_read <= N_shift then
             k_temp <= to_unsigned(0, k'length);
         end if; 
@@ -210,13 +233,24 @@ begin
                             dout(b_size - 1 + b_offset downto b_offset) <= STD_LOGIC_VECTOR(B_t3);
                             dout(c_size - 1 + c_offset downto c_offset) <= STD_LOGIC_VECTOR(C_t3);
                             dout(n_size - 1 + n_offset downto n_offset) <= STD_LOGIC_VECTOR(N_t3);
-                            wea <= '1';
+                            
+                            A_latch     <= A_t3;
+                            B_latch     <= B_t3;
+                            C_latch     <= C_t3;
+                            N_latch     <= N_t3;
+                            
+                            if reset_done_flag /= '1' then
+                                old_addr <= addr_latch;
+                                wea <= '1';
+                            end if;
                         
                             context_state <= TASK;
                             
                             -- Get context from RAM
                             addrin <= (others => '0');
                             addrin(idx'high downto idx'low) <= idx;
+                            addr_latch <= (others => '0');
+                            addr_latch(idx'high downto idx'low) <= idx;
                        end if;
                     else
                         if reset_done_flag = '0' then
@@ -228,8 +262,8 @@ begin
                 when TASK =>
                 
                     -- Set address to write.
-                    addrout <= (others => '0');
-                    addrout(idx'high downto idx'low) <= idx;
+                    addrout <= addr_latch;
+                    --addrout(idx'high downto idx'low) <= idx;
                     
                     -- Context has now been edited.
                     reset_done_flag <= '0';
@@ -257,6 +291,11 @@ begin
                         context_state <= WAITING;
                         reset_done_flag <= '1';
                     end if;
+                    
+                    A_latch <=  A_def;
+                    B_latch <=  B_def;
+                    C_latch <=  C_def;
+                    N_latch <=  N_def;
             end case;
         end if;
     end process;

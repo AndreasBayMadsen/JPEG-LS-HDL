@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="15,728.226 ns"></ZoomStartTime>
-      <ZoomEndTime time="17,238.876 ns"></ZoomEndTime>
-      <Cursor1Time time="16,366.698 ns"></Cursor1Time>
+      <ZoomStartTime time="98,623.770 ns"></ZoomStartTime>
+      <ZoomEndTime time="98,963.355 ns"></ZoomEndTime>
+      <Cursor1Time time="98,760.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="166"></NameColumnWidth>
-      <ValueColumnWidth column_width="132"></ValueColumnWidth>
+      <ValueColumnWidth column_width="128"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="16" />
+   <WVObjectSize size="19" />
    <wvobject type="logic" fp_name="/TB_context_modeller/pclk">
       <obj_property name="ElementShortName">pclk</obj_property>
       <obj_property name="ObjectShortName">pclk</obj_property>
@@ -32,10 +32,22 @@
       <obj_property name="ElementShortName">idx[8:0]</obj_property>
       <obj_property name="ObjectShortName">idx[8:0]</obj_property>
    </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller/dut/idx">
+      <obj_property name="ElementShortName">idx[8:0]</obj_property>
+      <obj_property name="ObjectShortName">idx[8:0]</obj_property>
+   </wvobject>
    <wvobject type="array" fp_name="/TB_context_modeller/error_val">
       <obj_property name="ElementShortName">error_val[7:0]</obj_property>
       <obj_property name="ObjectShortName">error_val[7:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_context_modeller/en">
+      <obj_property name="ElementShortName">en</obj_property>
+      <obj_property name="ObjectShortName">en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_context_modeller/dut/en">
+      <obj_property name="ElementShortName">en</obj_property>
+      <obj_property name="ObjectShortName">en</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/TB_context_modeller/k">
       <obj_property name="ElementShortName">k[4:0]</obj_property>

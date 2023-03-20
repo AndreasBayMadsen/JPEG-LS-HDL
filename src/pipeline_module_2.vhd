@@ -180,5 +180,6 @@ begin
     
     -- Signal assignments
     ctxt_idx_vec(ctxt_idx'high downto ctxt_idx'low) <= std_logic_vector(ctxt_idx);
+    k <= k_golomb;
 
 end Behavioral;

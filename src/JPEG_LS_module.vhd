@@ -136,9 +136,7 @@ architecture Behavioral of JPEG_LS_module is
     signal D            : UNSIGNED(15 downto 0)         := (others=>'0');
     signal X            : UNSIGNED(15 downto 0)         := (others=>'0');
     signal valid_data_1 : STD_LOGIC                     := '0';
-    signal new_pixel    : STD_LOGIC                     := '0';
-    signal enable       : STD_LOGIC                     := '0'; -- Like 'new_pixel', but for components instead of registers
-    signal first_pulse  : BOOLEAN                       := TRUE;
+    signal new_pixel_1  : STD_LOGIC                     := '0';
     
     signal ctxt_idx_r_1 : UNSIGNED(8 downto 0)          := (others=>'0');
     signal ctxt_idx_g_1 : UNSIGNED(8 downto 0)          := (others=>'0');
@@ -167,6 +165,10 @@ architecture Behavioral of JPEG_LS_module is
     
         -- PIPELINE REGION 2 - Context modeller and error calculation
     signal valid_data_2     : STD_LOGIC                     := '0';
+    signal new_pixel_2_buf  : STD_LOGIC                     := '0';
+    signal new_pixel_2      : STD_LOGIC                     := '0';
+    signal new_pixel_2_5_buf: STD_LOGIC                     := '0';
+    signal new_pixel_2_5    : STD_LOGIC                     := '0';
     signal X_r_2            : UNSIGNED(R_size-1 downto 0)   := (others=>'0');
     signal X_g_2            : UNSIGNED(G_size-1 downto 0)   := (others=>'0');
     signal X_b_2            : UNSIGNED(B_size-1 downto 0)   := (others=>'0');
@@ -188,6 +190,8 @@ architecture Behavioral of JPEG_LS_module is
     
         -- PIPELINE REGION 3 - Golomb coder
     signal valid_data_3     : STD_LOGIC                             := '0';
+    signal new_pixel_3_buf  : STD_LOGIC                             := '0';
+    signal new_pixel_3      : STD_LOGIC                             := '0';
     signal k_r_3            : UNSIGNED(k_width-1 downto 0)          := (others=>'0');    
     signal k_g_3            : UNSIGNED(k_width-1 downto 0)          := (others=>'0');    
     signal k_b_3            : UNSIGNED(k_width-1 downto 0)          := (others=>'0');
@@ -222,7 +226,7 @@ begin
         D           => D,
         X           => X,
         valid_data  => valid_data_1,
-        new_pixel   => new_pixel
+        new_pixel   => new_pixel_1
     );
     
     mod_1_r: pipeline_module_1  -- Pipeline module 1 for red color
@@ -291,23 +295,6 @@ begin
     X_g_1       <= X(10 downto 5);
     X_b_1       <= X(4 downto 0);
     
-    -- Enable signal
-    enable_gen: process(pclk)
-    begin
-        if rising_edge(pclk) then
-            if resetn = '0' then
-                -- Synchronous reset
-                first_pulse <= TRUE;
-            else
-                if new_pixel = '1' then
-                    first_pulse <= FALSE;
-                end if;
-            end if;
-        end if;
-    end process;
-    
-    enable <= '0' when first_pulse else new_pixel;
-    
     -- Pipeline register 1
     pipeline_register_1: process(pclk)
     begin
@@ -327,8 +314,11 @@ begin
                 sign_r_2        <= '0';
                 sign_g_2        <= '0';
                 sign_b_2        <= '0';
+                new_pixel_2_buf <= '0';
+                new_pixel_2     <= '0';
             else
-                if new_pixel = '1' then
+                -- Propagate data
+                if new_pixel_1 = '1' then
                     valid_data_2    <= valid_data_1;
                     X_r_2           <= X_r_1;
                     X_g_2           <= X_g_1;
@@ -343,6 +333,10 @@ begin
                     sign_g_2        <= sign_g_1;
                     sign_b_2        <= sign_b_1;
                 end if;
+                
+                -- Propagate 'new_pixel'
+                new_pixel_2_buf <= new_pixel_1;
+                new_pixel_2     <= new_pixel_2_buf;
             end if;
         end if;
     end process;
@@ -357,7 +351,7 @@ begin
     port map(
         clk             => pclk,
         resetn          => resetn,
-        enable          => enable,
+        enable          => new_pixel_2,
         valid_data      => valid_data_2,
         pixel           => X_r_2,
         prediction      => X_pred_r_2,
@@ -375,7 +369,7 @@ begin
     port map(
         clk             => pclk,
         resetn          => resetn,
-        enable          => enable,
+        enable          => new_pixel_2,
         valid_data      => valid_data_2,
         pixel           => X_g_2,
         prediction      => X_pred_g_2,
@@ -393,7 +387,7 @@ begin
     port map(
         clk             => pclk,
         resetn          => resetn,
-        enable          => enable,
+        enable          => new_pixel_2,
         valid_data      => valid_data_2,
         pixel           => X_b_2,
         prediction      => X_pred_b_2,
@@ -402,6 +396,20 @@ begin
         k               => k_b_2,
         mapped_error    => mapped_error_b_2
     );
+    
+    -- Propagate 'new_pixel'
+    process(pclk)
+    begin
+        if rising_edge(pclk) then
+            if resetn = '0' then
+                new_pixel_2_5_buf   <= '0';
+                new_pixel_2_5       <= '0';
+            else
+                new_pixel_2_5_buf   <= new_pixel_2;
+                new_pixel_2_5       <= new_pixel_2_5_buf;
+            end if;
+        end if;
+    end process;
     
     -- Pipeline register 2
     pipeline_register_2: process(pclk)
@@ -416,8 +424,10 @@ begin
                 mapped_error_r_3    <= (others=>'0');
                 mapped_error_g_3    <= (others=>'0');
                 mapped_error_b_3    <= (others=>'0');
+                new_pixel_3_buf     <= '0';
+                new_pixel_3         <= '0';
             else
-                if new_pixel = '1' then
+                if new_pixel_2_5 = '1' then
                     valid_data_3        <= valid_data_2;
                     k_r_3               <= k_r_2;
                     k_g_3               <= k_g_2;
@@ -426,6 +436,9 @@ begin
                     mapped_error_g_3    <= mapped_error_g_2;
                     mapped_error_b_3    <= mapped_error_b_2;
                 end if;
+                
+                new_pixel_3_buf <= new_pixel_2_5;
+                new_pixel_3     <= new_pixel_3_buf;
             end if;
         end if;
     end process;
@@ -440,7 +453,7 @@ begin
     )
     port map(
         pclk        => pclk,
-        en          => enable,
+        en          => new_pixel_3,
         valid_data  => valid_data_3,
         k           => k_r_3,
         error       => mapped_error_r_3,
@@ -456,7 +469,7 @@ begin
     )
     port map(
         pclk        => pclk,
-        en          => enable,
+        en          => new_pixel_3,
         valid_data  => valid_data_3,
         k           => k_g_3,
         error       => mapped_error_g_3,
@@ -472,7 +485,7 @@ begin
     )
     port map(
         pclk        => pclk,
-        en          => enable,
+        en          => new_pixel_3,
         valid_data  => valid_data_3,
         k           => k_b_3,
         error       => mapped_error_b_3,

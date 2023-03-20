@@ -31,9 +31,9 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/src/golomb_coder.vhd"]"\
  "[file normalize "$origin_dir/src/JPEG_LS_module.vhd"]"\
  "[file normalize "$origin_dir/src/pipeline_module_1.vhd"]"\
- "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
  "[file normalize "$origin_dir/src/pipeline_module_2.vhd"]"\
  "[file normalize "$origin_dir/src/prediction_adder.vhd"]"\
+ "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
  "[file normalize "$origin_dir/sim/TB_fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_collector.vhd"]"\
@@ -178,13 +178,13 @@ set_property -name "simulator_language" -value "Mixed" -objects $obj
 set_property -name "sim_compile_state" -value "1" -objects $obj
 set_property -name "source_mgmt_mode" -value "DisplayOnly" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
-set_property -name "webtalk.activehdl_export_sim" -value "23" -objects $obj
-set_property -name "webtalk.modelsim_export_sim" -value "23" -objects $obj
-set_property -name "webtalk.questa_export_sim" -value "23" -objects $obj
-set_property -name "webtalk.riviera_export_sim" -value "23" -objects $obj
-set_property -name "webtalk.vcs_export_sim" -value "23" -objects $obj
-set_property -name "webtalk.xsim_export_sim" -value "23" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "215" -objects $obj
+set_property -name "webtalk.activehdl_export_sim" -value "25" -objects $obj
+set_property -name "webtalk.modelsim_export_sim" -value "25" -objects $obj
+set_property -name "webtalk.questa_export_sim" -value "25" -objects $obj
+set_property -name "webtalk.riviera_export_sim" -value "25" -objects $obj
+set_property -name "webtalk.vcs_export_sim" -value "25" -objects $obj
+set_property -name "webtalk.xsim_export_sim" -value "25" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "279" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_CDC XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -208,7 +208,6 @@ set files [list \
  [file normalize "${origin_dir}/src/golomb_coder.vhd"] \
  [file normalize "${origin_dir}/src/JPEG_LS_module.vhd"] \
  [file normalize "${origin_dir}/src/pipeline_module_1.vhd"] \
- [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
  [file normalize "${origin_dir}/src/pipeline_module_2.vhd"] \
  [file normalize "${origin_dir}/src/prediction_adder.vhd"] \
 ]
@@ -292,15 +291,6 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
-set file "$origin_dir/ip/context_memory_block/context_memory_block.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
 set file "$origin_dir/src/pipeline_module_2.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
@@ -320,6 +310,27 @@ set obj [get_filesets sources_1]
 set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
 set_property -name "top" -value "JPEG_LS_module" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
+
+# Set 'sources_1' fileset object
+set obj [get_filesets sources_1]
+set files [list \
+ [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'sources_1' fileset file properties for remote files
+set file "$origin_dir/ip/context_memory_block/context_memory_block.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+
+# Set 'sources_1' fileset file properties for local files
+# None
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -425,7 +436,7 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 # Set 'block_tests' fileset properties
 set obj [get_filesets block_tests]
-set_property -name "top" -value "TB_full_sim" -objects $obj
+set_property -name "top" -value "TB_context_modeller" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
@@ -497,6 +508,7 @@ if { $obj != "" } {
 
 }
 set obj [get_runs synth_1]
+set_property -name "needs_refresh" -value "1" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
 

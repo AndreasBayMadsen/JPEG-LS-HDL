@@ -58,6 +58,8 @@ architecture tb of TB_context_modeller is
     signal idx              : std_logic_vector  (8 downto 0);
     signal error_val        : signed            (data_width - 1 downto 0);
     
+    signal disable_en : STD_LOGIC := '1';
+    
     signal C :             signed              (data_width - 1 downto 0);
     signal B :             signed              (b_size - 1 downto 0);
     signal N :             unsigned            (n_size - 1 downto 0);
@@ -93,10 +95,13 @@ begin
     stimuli : process
     begin
     
+        wait for 1 ns;
         idx <= (others => '0');
         error_val <= (others => '0');
         valid_data <= '0';
         wait for 16 us;
+        
+        disable_en <= '0';
         
         valid_data <= '1';
         error_val <= to_signed(5, data_width);
@@ -241,12 +246,12 @@ begin
         assert B = to_signed(-11, B'length) report "B was not -11 as expected but is " & integer'image(to_integer(B)) severity ERROR;
         assert N = to_unsigned(35, N'length) report "N was not 35 as expected but is " & integer'image(to_integer(N)) severity ERROR;
  
-        en <= '0';
+        disable_en <= '1';
         
         wait for 2600 ns;
         
-        en <= '1';
-        
+        disable_en <= '0';
+
         error_val <= to_signed(-20, data_width);
         idx <= STD_LOGIC_VECTOR(to_unsigned(0, idx'length));
         wait for 5200 ns;
@@ -262,6 +267,39 @@ begin
 
         report "Final data test done..." severity NOTE;
 
+        report "Resetting" severity NOTE;
+        
+        wait for 16 us;
+        
+        
+        valid_data <= '1';
+        error_val <= to_signed(5, data_width);
+        idx <= STD_LOGIC_VECTOR(to_unsigned(1, idx'length));
+        wait for 80 ns;
+        error_val <= to_signed(5, data_width);
+        idx <= STD_LOGIC_VECTOR(to_unsigned(2, idx'length));
+        wait for 80 ns;
+        error_val <= to_signed(5, data_width);
+        idx <= STD_LOGIC_VECTOR(to_unsigned(3, idx'length));
+        wait for 80 ns;
+        error_val <= to_signed(5, data_width);
+        idx <= STD_LOGIC_VECTOR(to_unsigned(4, idx'length));
+        wait for 80 ns;
+        error_val <= to_signed(5, data_width);
+        idx <= STD_LOGIC_VECTOR(to_unsigned(1, idx'length));
+        wait for 80 ns;
+        error_val <= to_signed(5, data_width);
+        idx <= STD_LOGIC_VECTOR(to_unsigned(2, idx'length));
+        wait for 80 ns;
+        error_val <= to_signed(5, data_width);
+        idx <= STD_LOGIC_VECTOR(to_unsigned(3, idx'length));
+        wait for 80 ns;
+        error_val <= to_signed(5, data_width);
+        idx <= STD_LOGIC_VECTOR(to_unsigned(4, idx'length));
+        wait for 80 ns;
+        
+        report "Done" severity NOTE;
+
         wait;
     end process;
     
@@ -269,6 +307,18 @@ begin
     begin
         pclk <= not pclk;
         wait for 20 ns;
+    end process;
+    
+    sti : process
+    begin
+    
+    if disable_en = '0' then
+        en <= not en;
+        wait for 40 ns;
+    else
+        wait for 1 ns;
+    end if;
+    
     end process;
 
 end tb;

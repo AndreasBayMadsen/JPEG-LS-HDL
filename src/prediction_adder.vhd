@@ -61,6 +61,10 @@ architecture Behavioral of prediction_adder is
 
     constant mod_lim : signed(color_res + 1 downto 0) := to_signed(integer(ceil(real(alpha) / 2.0)), color_res + 2);
 
+    signal pixel_latch           :    unsigned (color_res - 1 downto 0) := (others=>'0');
+    signal fixed_pred_latch      :    unsigned (color_res - 1 downto 0) := (others=>'0');
+    signal sign_flag_latch       :    STD_LOGIC := '0';
+
     signal pred_1 : signed(color_res + 1 downto 0);
     signal pred_2 : signed(color_res + 1 downto 0);
     signal pred_3 : signed(color_res + 1 downto 0);
@@ -76,14 +80,23 @@ architecture Behavioral of prediction_adder is
 
 begin
 
-    pred_1 <= signed("00" & fixed_pred);
-    pred_2 <= pred_1 + C when sign_flag = '0' else pred_1 - C;
+    process (pclk) 
+    begin
+        if rising_edge(pclk) and en = '1' then
+            pixel_latch <= pixel;
+            fixed_pred_latch <= fixed_pred;
+            sign_flag_latch <= sign_flag;
+        end if;
+    end process;
+
+    pred_1 <= signed("00" & fixed_pred_latch);
+    pred_2 <= pred_1 + C when sign_flag_latch = '0' else pred_1 - C;
     pred_3 <= to_signed(alpha - 1, pred_3'length) when pred_2 > to_signed(alpha - 1, pred_2'length) else
               to_signed(0, pred_3'length) when pred_2 < to_signed(0, pred_2'length) else
               pred_2;
               
-    pred_er_1 <= signed("00" & pixel) - pred_3 when sign_flag = '0' else
-                 - signed("00" & pixel) + pred_3;
+    pred_er_1 <= signed("00" & pixel_latch) - pred_3 when sign_flag_latch = '0' else
+                 - signed("00" & pixel_latch) + pred_3;
                  
     pred_er_2 <= pred_er_1 mod alpha;
     

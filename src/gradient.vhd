@@ -44,7 +44,8 @@ entity gradient is
             C           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
             D           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
             ctxt_idx    : out   UNSIGNED(8 downto 0)            := (others=>'0');
-            sign        : out   STD_LOGIC                       := '0');
+            sign        : out   STD_LOGIC                       := '0'
+            );
 end gradient;
 
 architecture Behavioral of gradient is
@@ -56,12 +57,11 @@ architecture Behavioral of gradient is
     signal Q            : GRADIENT              := (others=>0);
     signal Q_corr       : GRADIENT              := (others=>0); -- Q with sign corrected
     signal ctxt_idx_int : INTEGER               := 0;
-    signal ctxt_idx_buf : UNSIGNED(8 downto 0)  := (others=>'0');
     
 begin
 
     -- Signal assignments
-    ctxt_idx_buf <= to_unsigned(ctxt_idx_int, ctxt_idx_buf'length);
+    ctxt_idx <= to_unsigned(ctxt_idx_int, ctxt_idx'length);
     
     -- Calculate gradients
     G(0)    <= to_integer(D) - to_integer(B);
@@ -126,17 +126,4 @@ begin
         end if;
     end process;
     
-    -- Buffer output
-    buff: process(clk)
-    begin
-        if rising_edge(clk) then
-            if resetn = '0' then
-                -- Synchronous reset
-                ctxt_idx <= (others=>'0');
-            else
-                ctxt_idx <= ctxt_idx_buf;
-            end if;
-        end if;
-    end process;
-
 end Behavioral;
