@@ -34,13 +34,24 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity JPEG_LS_module is
     Generic (   image_height    : INTEGER   := 500;     -- Image dimensions in number of pixels
-                image_width     : INTEGER   := 500);
+                image_width     : INTEGER   := 500;
+                L_max           : INTEGER   := 32;      -- Maximum code size per pixel
+                k_width         : INTEGER   := 5
+                );
     Port (  resetn  : in    STD_LOGIC                       := '1';             -- Active LOW reset signal
             -- Camera interface
             pclk    : in    STD_LOGIC                       := '1';             -- Pixel clock
             pixel   : in    STD_LOGIC_VECTOR(7 downto 0)    := (others=>'0');   -- Parallel bus for pixel data
             href    : in    STD_LOGIC                       := '0';             -- Row synchronization signal
-            vsync   : in    STD_LOGIC                       := '0'              -- Frame synchronization signal
+            vsync   : in    STD_LOGIC                       := '0';             -- Frame synchronization signal
+            -- Output
+            new_pixel       : out   STD_LOGIC                           := '0';
+            encoded_r       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+            encoded_g       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+            encoded_b       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+            encoded_size_r  : out UNSIGNED(k_width downto 0)            := (others=>'0');
+            encoded_size_g  : out UNSIGNED(k_width downto 0)            := (others=>'0');
+            encoded_size_b  : out UNSIGNED(k_width downto 0)            := (others=>'0')
             );
 end JPEG_LS_module;
 
@@ -124,8 +135,7 @@ architecture Behavioral of JPEG_LS_module is
     constant R_size     : INTEGER   := 5;   -- Number of bits per color
     constant G_size     : INTEGER   := 6;
     constant B_size     : INTEGER   := 5;
-    constant k_width    : INTEGER   := 5;
-    constant L_max      : INTEGER   := 32;
+    -- constant k_width    : INTEGER   := 5;
     
     -- Signal declarations
         -- PIPELINE REGION 1 - Collector, gradient and fixed predictor
@@ -198,12 +208,12 @@ architecture Behavioral of JPEG_LS_module is
     signal mapped_error_r_3 : UNSIGNED(R_size-1 downto 0)           := (others=>'0');
     signal mapped_error_g_3 : UNSIGNED(G_size-1 downto 0)           := (others=>'0');
     signal mapped_error_b_3 : UNSIGNED(B_size-1 downto 0)           := (others=>'0');
-    signal encoded_r        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-    signal encoded_g        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-    signal encoded_b        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-    signal encoded_size_r   : UNSIGNED(k_width downto 0)            := (others=>'0');
-    signal encoded_size_g   : UNSIGNED(k_width downto 0)            := (others=>'0');
-    signal encoded_size_b   : UNSIGNED(k_width downto 0)            := (others=>'0');
+--    signal encoded_r        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+--    signal encoded_g        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+--    signal encoded_b        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+--    signal encoded_size_r   : UNSIGNED(k_width downto 0)            := (others=>'0');
+--    signal encoded_size_g   : UNSIGNED(k_width downto 0)            := (others=>'0');
+--    signal encoded_size_b   : UNSIGNED(k_width downto 0)            := (others=>'0');
     
 begin
 

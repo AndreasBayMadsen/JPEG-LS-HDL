@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="3,206,281.990 ns"></ZoomStartTime>
-      <ZoomEndTime time="3,209,431.991 ns"></ZoomEndTime>
-      <Cursor1Time time="3,208,240.334 ns"></Cursor1Time>
+      <ZoomStartTime time="3,040,956.670 ns"></ZoomStartTime>
+      <ZoomEndTime time="3,042,378.671 ns"></ZoomEndTime>
+      <Cursor1Time time="3,041,576.334 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="148"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="12" />
+   <WVObjectSize size="15" />
    <wvobject type="group" fp_name="group250">
       <obj_property name="label">Camera</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -44,9 +44,14 @@
       <obj_property name="label">Entry</obj_property>
       <obj_property name="DisplayName">label</obj_property>
    </wvobject>
+   <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_1">
+      <obj_property name="ElementShortName">new_pixel_1</obj_property>
+      <obj_property name="ObjectShortName">new_pixel_1</obj_property>
+   </wvobject>
    <wvobject type="group" fp_name="group251">
       <obj_property name="label">Collector</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/A">
          <obj_property name="ElementShortName">A[15:0]</obj_property>
          <obj_property name="ObjectShortName">A[15:0]</obj_property>
@@ -71,10 +76,6 @@
          <obj_property name="ElementShortName">valid_data_1</obj_property>
          <obj_property name="ObjectShortName">valid_data_1</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel">
-         <obj_property name="ElementShortName">new_pixel</obj_property>
-         <obj_property name="ObjectShortName">new_pixel</obj_property>
-      </wvobject>
       <wvobject type="other" fp_name="/TB_full_sim/DUT/pixel_collector/row_counter">
          <obj_property name="ElementShortName">row_counter</obj_property>
          <obj_property name="ObjectShortName">row_counter</obj_property>
@@ -87,6 +88,7 @@
    <wvobject type="group" fp_name="group259">
       <obj_property name="label">Gradient</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/A">
          <obj_property name="ElementShortName">A[4:0]</obj_property>
          <obj_property name="ObjectShortName">A[4:0]</obj_property>
@@ -144,18 +146,22 @@
       <obj_property name="label">Pipeline 1</obj_property>
       <obj_property name="DisplayName">label</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/DUT/enable">
-      <obj_property name="ElementShortName">enable</obj_property>
-      <obj_property name="ObjectShortName">enable</obj_property>
+   <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_2">
+      <obj_property name="ElementShortName">new_pixel_2</obj_property>
+      <obj_property name="ObjectShortName">new_pixel_2</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/DUT/mod_2_r/valid_data">
-      <obj_property name="ElementShortName">valid_data</obj_property>
-      <obj_property name="ObjectShortName">valid_data</obj_property>
+   <wvobject type="logic" fp_name="/TB_full_sim/DUT/valid_data_2">
+      <obj_property name="ElementShortName">valid_data_2</obj_property>
+      <obj_property name="ObjectShortName">valid_data_2</obj_property>
    </wvobject>
    <wvobject type="group" fp_name="group98">
       <obj_property name="label">Context modeller</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/idx">
+         <obj_property name="ElementShortName">idx[8:0]</obj_property>
+         <obj_property name="ObjectShortName">idx[8:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/addr_latch">
          <obj_property name="ElementShortName">addr_latch[8:0]</obj_property>
          <obj_property name="ObjectShortName">addr_latch[8:0]</obj_property>
@@ -265,11 +271,20 @@
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/mapped_error">
          <obj_property name="ElementShortName">mapped_error[4:0]</obj_property>
          <obj_property name="ObjectShortName">mapped_error[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_2_5">
+      <obj_property name="ElementShortName">new_pixel_2_5</obj_property>
+      <obj_property name="ObjectShortName">new_pixel_2_5</obj_property>
    </wvobject>
    <wvobject fp_name="divider152" type="divider">
       <obj_property name="label">Pipeline 2</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_3">
+      <obj_property name="ElementShortName">new_pixel_3</obj_property>
+      <obj_property name="ObjectShortName">new_pixel_3</obj_property>
    </wvobject>
    <wvobject type="group" fp_name="group156">
       <obj_property name="label">Golomb coder</obj_property>
@@ -287,6 +302,8 @@
       <wvobject type="array" fp_name="/TB_full_sim/DUT/golomb_r/encoded">
          <obj_property name="ElementShortName">encoded[31:0]</obj_property>
          <obj_property name="ObjectShortName">encoded[31:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+         <obj_property name="isExpanded"></obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/golomb_r/size">
          <obj_property name="ElementShortName">size[5:0]</obj_property>

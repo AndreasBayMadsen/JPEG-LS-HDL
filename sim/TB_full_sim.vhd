@@ -56,13 +56,24 @@ architecture Behavioral of TB_full_sim is
     
     component JPEG_LS_module
         Generic (   image_height    : INTEGER   := 500;     -- Image dimensions in number of pixels
-                    image_width     : INTEGER   := 500);
+                    image_width     : INTEGER   := 500;
+                    L_max           : INTEGER   := 32;      -- Maximum code size per pixel
+                    k_width         : INTEGER   := 5
+                    );
         Port (  resetn  : in    STD_LOGIC                       := '1';             -- Active LOW reset signal
                 -- Camera interface
                 pclk    : in    STD_LOGIC                       := '1';             -- Pixel clock
                 pixel   : in    STD_LOGIC_VECTOR(7 downto 0)    := (others=>'0');   -- Parallel bus for pixel data
                 href    : in    STD_LOGIC                       := '0';             -- Row synchronization signal
-                vsync   : in    STD_LOGIC                       := '0'              -- Frame synchronization signal
+                vsync   : in    STD_LOGIC                       := '0';             -- Frame synchronization signal
+                -- Output
+                new_pixel       : out   STD_LOGIC                           := '0';
+                encoded_r       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+                encoded_g       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+                encoded_b       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+                encoded_size_r  : out UNSIGNED(k_width downto 0)            := (others=>'0');
+                encoded_size_g  : out UNSIGNED(k_width downto 0)            := (others=>'0');
+                encoded_size_b  : out UNSIGNED(k_width downto 0)            := (others=>'0')
                 );
     end component;
     
@@ -80,6 +91,15 @@ architecture Behavioral of TB_full_sim is
     signal pixel_vec    : STD_LOGIC_VECTOR(7 downto 0)  := (others=>'0');
     signal href         : STD_LOGIC                     := '0';
     signal vsync        : STD_LOGIC                     := '0';
+    
+        -- Output
+    signal new_pixel        : STD_LOGIC := '0';
+    signal encoded_r        : STD_LOGIC_VECTOR(31 downto 0)    := (others=>'0');
+    signal encoded_g        : STD_LOGIC_VECTOR(31 downto 0)    := (others=>'0');
+    signal encoded_b        : STD_LOGIC_VECTOR(31 downto 0)    := (others=>'0');
+    signal encoded_size_r   : UNSIGNED(5 downto 0)            := (others=>'0');
+    signal encoded_size_g   : UNSIGNED(5 downto 0)            := (others=>'0');
+    signal encoded_size_b   : UNSIGNED(5 downto 0)            := (others=>'0');
     
 begin
 
@@ -102,11 +122,18 @@ begin
         image_width     => 768
     )
     port map(
-        resetn  => resetn,
-        pclk    => pclk,
-        pixel   => pixel_vec,
-        href    => href,
-        vsync   => vsync
+        resetn      => resetn,
+        pclk        => pclk,
+        pixel       => pixel_vec,
+        href        => href,
+        vsync       => vsync,
+        new_pixel   => new_pixel,
+        encoded_r   => encoded_r,
+        encoded_g   => encoded_g,
+        encoded_b   => encoded_b,
+        encoded_size_r  => encoded_size_r,
+        encoded_size_g  => encoded_size_g,
+        encoded_size_b  => encoded_size_b
     );
     
     -- Signal assignments
