@@ -1,6 +1,8 @@
 #include "bnstream.h"
 #include "bnopt.h"
 #include "mesgtext.h"
+#include <fstream>
+#include <string>
 
 // Test of new lossless JPEG proposal ISO/IEC WD 14495
 
@@ -431,8 +433,10 @@ decodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 &value,Bi
 }
 
 static BinaryOutputStream &
-encodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 value,BinaryOutputStream &out)
+encodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 value,BinaryOutputStream &out, ofstream &dbg_file)
 {
+	string dbg_str;	// For debugging
+
 //cerr << "\t\tencodeMappedErrvalWithGolomb: k = " << k << " value = " << value << endl;
 //cerr << "\t\tencodeMappedErrvalWithGolomb: glimit = " << glimit << endl;
 //cerr << "\t\tencodeMappedErrvalWithGolomb: qbpp = " << qbpp << endl;
@@ -449,19 +453,39 @@ encodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 value,Bin
 
 	if (unarycode < limit) {
 //cerr << "\t\tencodeMappedErrvalWithGolomb: not limited, writing " << unarycode << " zero bits followed by 1 then remaining " << k << " bits" << endl;
-		while (unarycode--) writeBit(out,0);			// Append unary representation of remaining most significant bits
+		while (unarycode--)
+		{
+			dbg_str.push_back('0');
+			writeBit(out,0);			// Append unary representation of remaining most significant bits
+		}
 		writeBit(out,1);					// Flag the end of the unary code
+		dbg_str.push_back('1');
 		Uint16 bits=k;						// Append least significant k bits
-		while (bits--) { writeBit(out,(value>>bits)&1); } 	// msb bit is written first & use the decremented bits as shift
+		while (bits--)
+		{
+			writeBit(out,(value>>bits)&1);
+			dbg_str += to_string((value>>bits)&1);
+		} 	// msb bit is written first & use the decremented bits as shift
 	}
 	else {
 //cerr << "\t\tencodeMappedErrvalWithGolomb: limited, writing " << limit << " zero bits followed by 1 then remaining " << qbpp << " bits of value-1" << endl;
-		while (limit--) writeBit(out,0);			// Append limit 0 bits
+		while (limit--)
+		{
+			writeBit(out,0);			// Append limit 0 bits
+			dbg_str.push_back('0');
+		}
 		writeBit(out,1);					// Flag the end of the unary code
+		dbg_str.push_back('1');
 		value-=1;
-		while (qbpp--) { writeBit(out,(value>>qbpp)&1); } 	// write whole value (always of length qbpp)
+		while (qbpp--)
+		{
+			writeBit(out,(value>>qbpp)&1);
+			dbg_str += to_string((value>>qbpp)&1);
+		} 	// write whole value (always of length qbpp)
 	}
 //cerr << endl;
+
+	dbg_file << dbg_str << endl;
 	return out;
 }
 
@@ -506,7 +530,7 @@ static void
 codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MAXVAL,Uint16 RESET,
 		Uint16 LIMIT,Uint16 qbpp,Uint16 rk,
 		Uint32 *A,Int32 *N,Int32 *Nn,
-		BinaryInputStream &in,BinaryOutputStream &out,bool decompressing)
+		BinaryInputStream &in,BinaryOutputStream &out,bool decompressing, ofstream &dbg_file)
 {
 //cerr << "\t\tcodecRunEndSample: " << (decompressing ? "decoding" : "encoding") << endl;
 //if (!decompressing) cerr << "\t\tcodecRunEndSample: value = " << Ix << endl;
@@ -689,7 +713,7 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 
 //cerr << "\t\tcodecRunEndSample: EMErrval after subtraction of RItype = " << EMErrval << endl;
 
-		encodeMappedErrvalWithGolomb(k,LIMIT-rk-1,qbpp,EMErrval,out);
+		encodeMappedErrvalWithGolomb(k,LIMIT-rk-1,qbpp,EMErrval,out, dbg_file);
 	}
 
 	// Update parameters ...
@@ -720,6 +744,10 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 int
 main(int argc,char **argv)
 {
+	// Create file for debugging
+	ofstream dbg_file;
+	dbg_file.open("../jpeg_ls_dump.txt");
+
 	bool bad=false;
 
 	GetNamedOptions				options(argc,argv);
@@ -1122,7 +1150,7 @@ main(int argc,char **argv)
 							}
 //cerr << "\t\tRa = " << Ra << endl;
 //cerr << "\t\tRb = " << Rb << endl;
-							codecRunEndSample(thisRow[col],Ra,Rb,RANGE,NEAR,MAXVAL,RESET,LIMIT,qbpp,J[RUNIndex],A,N,Nn,in,out,decompressing);
+							codecRunEndSample(thisRow[col],Ra,Rb,RANGE,NEAR,MAXVAL,RESET,LIMIT,qbpp,J[RUNIndex],A,N,Nn,in,out,decompressing, dbg_file);
 //cerr << "pixel[" << row << "," << col << "] = " << thisRow[col] << endl;
 //cerr << "\tValue that ends run " << thisRow[col] << endl;
 //dumpReadBitPosition();
@@ -1205,7 +1233,7 @@ main(int argc,char **argv)
 //cerr << "\t\tUpdated Ra = " << Ra << endl;
 //cerr << "\t\tUpdated Rb = " << Rb << endl;
 
-						codecRunEndSample(thisRow[col],Ra,Rb,RANGE,NEAR,MAXVAL,RESET,LIMIT,qbpp,J[RUNIndex],A,N,Nn,in,out,decompressing);
+						codecRunEndSample(thisRow[col],Ra,Rb,RANGE,NEAR,MAXVAL,RESET,LIMIT,qbpp,J[RUNIndex],A,N,Nn,in,out,decompressing, dbg_file);
 
 //cerr << "\tAfter encoding value that ends run " << endl;
 //dumpWriteBitPosition();
@@ -1464,7 +1492,7 @@ main(int argc,char **argv)
 
 //cerr << "\t\tMErrval = " << MErrval << endl;
 
-					encodeMappedErrvalWithGolomb(k,LIMIT,qbpp,MErrval,out);
+					encodeMappedErrvalWithGolomb(k,LIMIT,qbpp,MErrval,out, dbg_file);
 				}
 
 				// Update variables (A.6) ...
@@ -1531,6 +1559,9 @@ main(int argc,char **argv)
 	if (B) delete[] B;
 	if (C) delete[] C;
 	if (N) delete[] N;
+
+	// Close debugging file
+	dbg_file.close();
 
 	return success ? 0 : 1;
 }
