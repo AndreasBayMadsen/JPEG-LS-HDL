@@ -126,7 +126,7 @@ cerr << "readForwardByte=" << hex << unsigned(readForwardByte) << dec << endl;
 		}
 	}
 	bit=(readBitByte>>(--readBitCount)) & 1;
-//cerr << (bit ? "1" : "0");
+
 	return in;
 }
 
@@ -147,7 +147,7 @@ writeBit(BinaryOutputStream &out,Uint32 bit)
 	Assert(writeBitCount<8);
 	writeBitByte=writeBitByte<<1;
 	if (bit) writeBitByte|=1;
-//cerr << (bit ? "1" : "0");
+
 	if (++writeBitCount >= 8) {
 		++writeBitByteOffset;
 		out.write((char *)&writeBitByte,1);
@@ -313,7 +313,6 @@ readSOI(BinaryInputStream &in,Uint16 marker)
 static bool
 readSOF55(BinaryInputStream &in,Uint16 marker,Uint16 &P,Uint32 &ROWS,Uint32 &COLUMNS)
 {
-//cerr << "readSOF55:" << endl;
 	Uint16 length;
 	unsigned char precision;
 	Uint16 rows;
@@ -322,15 +321,15 @@ readSOF55(BinaryInputStream &in,Uint16 marker,Uint16 &P,Uint32 &ROWS,Uint32 &COL
 	unsigned char componentid;
 	unsigned char hvsampling;
 	unsigned char quanttable;
-	return marker == JPEG_MARKER_SOF55			// && (cerr << "readSOF55: JPEG_MARKER_SOF55" << endl)
-	    && read16BE(in,length) && length == 11		// && (cerr << "readSOF55: length = " << dec << length << endl)
-	    && read8(in,precision) && (P=precision,true)	// && (cerr << "readSOF55: P = " << dec << P << endl)
-	    && read16BE(in,rows) && (ROWS=rows,true)		// && (cerr << "readSOF55: ROWS = " << dec << ROWS << endl)
-	    && read16BE(in,columns) && (COLUMNS=columns,true)	// && (cerr << "readSOF55: COLUMNS = " << dec << COLUMNS << endl)
-	    && read8(in,ncomponents) && ncomponents == 1	// && (cerr << "readSOF55: ncomponents = " << dec << Uint16(ncomponents) << endl)
-	    && read8(in,componentid)				// && (cerr << "readSOF55: componentid = " << dec << Uint16(componentid) << endl)
-	    && read8(in,hvsampling)				// && (cerr << "readSOF55: hvsampling = " << dec << Uint16(hvsampling) << endl)
-	    && read8(in,quanttable)				// && (cerr << "readSOF55: quanttable = " << dec << Uint16(quanttable) << endl)
+	return marker == JPEG_MARKER_SOF55
+	    && read16BE(in,length) && length == 11
+	    && read8(in,precision) && (P=precision,true)
+	    && read16BE(in,rows) && (ROWS=rows,true)
+	    && read16BE(in,columns) && (COLUMNS=columns,true)
+	    && read8(in,ncomponents) && ncomponents == 1
+	    && read8(in,componentid)
+	    && read8(in,hvsampling)
+	    && read8(in,quanttable)
 	;
 }
 
@@ -378,45 +377,32 @@ determineGolombParameter(Uint32 n,Uint32 a)
 {
 	Uint16 k;
 
-//cerr << "\t\tdetermineGolombParameter: n = " << n << endl;
-//cerr << "\t\tdetermineGolombParameter: a = " << a << endl;
-
 	Assert(n);			// Make sure we don't get out of control
 	for (k=0;(n<<k) < a; ++k)	// Number of occurrences vs accumulated error magnitude
 		Assert(k<31);		// ... internal limit ... don't exceed width of Uint32
 
-//cerr << "\t\tdetermineGolombParameter: k = " << k << endl;
 	return k;
 }
 
 static BinaryInputStream &
 decodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 &value,BinaryInputStream &in)
 {
-//cerr << "\t\tdecodeMappedErrvalWithGolomb: k = " << k << endl;
-//cerr << "\t\tdecodeMappedErrvalWithGolomb: glimit = " << glimit << endl;
-//cerr << "\t\tdecodeMappedErrvalWithGolomb: qbpp = " << qbpp << endl;
-
 	// Read unary representation of remaining most significant bits
 
 	Uint32 bit;
 	Uint32 unarycode=0;
 	while (readBit(in,bit) && !bit) ++unarycode;	// stops after bit is 1 (having read and discared trailing 1 bit)
-//cerr << endl;
 
 	Uint32 offset;
 	Uint16 bitstoread;
 	Assert(glimit > qbpp+1);
 	Uint16 limit=glimit-qbpp-1;
-//cerr << "\t\tdecodeMappedErrvalWithGolomb: unarycode = " << unarycode << endl;
-//cerr << "\t\tdecodeMappedErrvalWithGolomb: limit = " << limit << endl;
 	if (unarycode < limit) {		// use it to form most significant bits
-//cerr << "\t\tdecodeMappedErrvalWithGolomb: not limited, read " << unarycode << " zero bits (as value) followed by 1 then will read remaining " << k << " bits" << endl;
 		value=unarycode;		// will later get shifted into ms bits
 		bitstoread=k;
 		offset=0;
 	}
 	else {
-//cerr << "\t\tdecodeMappedErrvalWithGolomb: limited, read " << unarycode << " zero bits followed by 1 then will read remaining " << qbpp << " bits of value-1" << endl;
 		value=0;			// no contribution from unary code ... whole value is next
 		bitstoread=qbpp;
 		offset=1;
@@ -425,10 +411,9 @@ decodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 &value,Bi
 	// Read least significant k bits
 
 	while (bitstoread-- && readBit(in,bit)) value=(value<<1) | bit;	// msb bit is read first
-//cerr << endl;
+
 	value+=offset;				// correct for limited case 
 
-//cerr << "\t\tdecodeMappedErrvalWithGolomb: value = " << value << endl;
 	return in;
 }
 
@@ -437,10 +422,6 @@ encodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 value,Bin
 {
 	string dbg_str;	// For debugging
 
-//cerr << "\t\tencodeMappedErrvalWithGolomb: k = " << k << " value = " << value << endl;
-//cerr << "\t\tencodeMappedErrvalWithGolomb: glimit = " << glimit << endl;
-//cerr << "\t\tencodeMappedErrvalWithGolomb: qbpp = " << qbpp << endl;
-
 	// A.5.3 Mapped-error encoding
 
 	Uint32 unarycode=value>>k;					// Most significant bits go into unary code
@@ -448,11 +429,7 @@ encodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 value,Bin
 	Assert(glimit > qbpp+1);
 	Uint16 limit=glimit-qbpp-1;
 
-//cerr << "\t\tencodeMappedErrvalWithGolomb: unarycode = " << unarycode << endl;
-//cerr << "\t\tencodeMappedErrvalWithGolomb: limit = " << limit << endl;
-
 	if (unarycode < limit) {
-//cerr << "\t\tencodeMappedErrvalWithGolomb: not limited, writing " << unarycode << " zero bits followed by 1 then remaining " << k << " bits" << endl;
 		while (unarycode--)
 		{
 			dbg_str.push_back('0');
@@ -468,7 +445,6 @@ encodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 value,Bin
 		} 	// msb bit is written first & use the decremented bits as shift
 	}
 	else {
-//cerr << "\t\tencodeMappedErrvalWithGolomb: limited, writing " << limit << " zero bits followed by 1 then remaining " << qbpp << " bits of value-1" << endl;
 		while (limit--)
 		{
 			writeBit(out,0);			// Append limit 0 bits
@@ -483,7 +459,6 @@ encodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 value,Bin
 			dbg_str += to_string((value>>qbpp)&1);
 		} 	// write whole value (always of length qbpp)
 	}
-//cerr << endl;
 
 	dbg_file << dbg_str << endl;
 	return out;
@@ -492,8 +467,6 @@ encodeMappedErrvalWithGolomb(Uint16 k,Uint16 glimit,Uint16 qbpp,Uint32 value,Bin
 static void
 quantizeErrval(Uint16 NEAR,Int32 &Errval)
 {
-//cerr << "\t\tquantizeErrval: before Errval = " << Errval << endl;
-
 	if (NEAR) {
 		if (Errval > 0)
 			Errval=(Errval+NEAR)/(2*NEAR+1);
@@ -501,29 +474,23 @@ quantizeErrval(Uint16 NEAR,Int32 &Errval)
 			Errval=(Errval-NEAR)/(2*NEAR+1);		// in A.4.4 it is actually -(NEAR-Errval)/(2*NEAR+1)
 	}
 	// else leave Errval as it is for lossless mode
-
-//cerr << "\t\tquantizeErrval: after Errval = " << Errval << endl;
 }
 
 static void
 deQuantizeErrval(Uint16 NEAR,Int32 &Errval)
 {
-//cerr << "\t\tdeQuantizeErrval: before Errval = " << Errval << endl;
 
 	if (NEAR) Errval=Errval*(2*NEAR+1);
 
-//cerr << "\t\tdeQuantizeErrval: after Errval = " << Errval << endl;
 }
 
 static inline void
 clampPredictedValue(Int32 &X,Int32 MAXVAL)
 {
-//cerr << "\t\tclampPredictedValue: before value = " << X << endl;
 
 	if      (X > MAXVAL)	X=MAXVAL;
 	else if (X < 0)		X=0;
 
-//cerr << "\t\tclampPredictedValue: after value = " << X << endl;
 }
 
 static void
@@ -532,8 +499,6 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 		Uint32 *A,Int32 *N,Int32 *Nn,
 		BinaryInputStream &in,BinaryOutputStream &out,bool decompressing, ofstream &dbg_file)
 {
-//cerr << "\t\tcodecRunEndSample: " << (decompressing ? "decoding" : "encoding") << endl;
-//if (!decompressing) cerr << "\t\tcodecRunEndSample: value = " << Ix << endl;
 
 	bool RItype = (Ra == Rb || Abs(Ra-Rb) <= NEAR);
 
@@ -541,22 +506,11 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 
 	Int32 Px = RItype ? Ra : Rb;
 
-//cerr << "\t\tcodecRunEndSample: Ra = " << Ra << endl;
-//cerr << "\t\tcodecRunEndSample: Rb = " << Rb << endl;
-//cerr << "\t\tcodecRunEndSample: RItype = " << (RItype ? "1":"0") << endl;
-//cerr << "\t\tcodecRunEndSample: SIGN = " << SIGN << endl;
-//cerr << "\t\tcodecRunEndSample: Px = " << Px << endl;
-
 	Uint32 TEMP = RItype ? A[366]+(N[366]>>1) : A[365];
 
 	Uint16 Q = 365 + (RItype ? 1 : 0);
 
-//cerr << "\t\tcodecRunEndSample: TEMP = " << TEMP << endl;
-//cerr << "\t\tcodecRunEndSample: Q = " << Q << endl;
-
 	Uint16 k = determineGolombParameter(N[Q],TEMP);
-
-//cerr << "\t\tcodecRunEndSample: k = " << k << endl;
 
 	Int32  Errval;
 	Int32  updateErrval;
@@ -565,11 +519,7 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 	if (decompressing) {
 		decodeMappedErrvalWithGolomb(k,LIMIT-rk-1,qbpp,EMErrval,in);	// needs work :(
 
-//cerr << "\t\tcodecRunEndSample: EMErrval = " << EMErrval << endl;
-
 		Uint32 tEMErrval = EMErrval + (RItype ? 1 : 0);		// use local copy to leave original for parameter update later
-
-//cerr << "\t\tcodecRunEndSample: tEMErrval = " << tEMErrval << endl;
 
 		if (tEMErrval == 0) {
 			Errval = 0;
@@ -601,18 +551,11 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 			}
 		}
 
-
-//cerr << "\t\tcodecRunEndSample: Errval after sign unmapping = " << Errval << endl;
-
 		updateErrval=Errval;
 
 		if (NEAR > 0) deQuantizeErrval(NEAR,Errval);
 
-//cerr << "\t\tcodecRunEndSample: Errval SIGN uncorrected = " << Errval << endl;
-
 		if (SIGN < 0) Errval=-Errval;		// if "context type" was negative
-
-//cerr << "\t\tcodecRunEndSample: Errval result = " << Errval << endl;
 
 		Int32 Rx = Px+Errval;
 
@@ -632,21 +575,15 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 		Ix=(Uint16)Rx;
 	}
 	else {
-//cerr << "\t\tIx " << Ix << endl;
 		Errval = Int32(Ix) - Px;
-//cerr << "\t\tErrval " << Errval << endl;
 
 		if (SIGN < 0) Errval=-Errval;		// if "context type" was negative
-
-//cerr << "\t\tErrval sign corrected " << Errval << endl;
 
 		// Figure out sign to later correct Errval (Figure A.19) ...
 
 		if (NEAR > 0) {	// For near-lossless, quantize Errval and derive reconstructed value (A.4.4)
 
 			quantizeErrval(NEAR,Errval);
-
-//cerr << "\t\tErrval quantized " << Errval << endl;
 
 			// Replace with the reconstructed value the decoder will have
 			// (obviously if in lossless mode there will be no difference)
@@ -655,15 +592,12 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 			clampPredictedValue(Rx,MAXVAL);
 					
 			Ix=(Uint16)Rx;
-//cerr << "\t\tReplaced Rx " << Rx << endl;
 		}
 
 		// Modulo reduction of the prediction error (A.4.5)
 
 		if (Errval < 0)			Errval=Errval+RANGE;
 		if (Errval >= (RANGE+1)/2)	Errval=Errval-RANGE;
-
-//cerr << "\t\tErrval modulo " << RANGE << " = " << Errval << endl;
 
 		updateErrval=Errval;
 
@@ -707,23 +641,12 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 			}
 		}
 
-//cerr << "\t\tcodecRunEndSample: EMErrval before subtraction of RItype = " << EMErrval << endl;
-
 		EMErrval-=(RItype ? 1 : 0);
-
-//cerr << "\t\tcodecRunEndSample: EMErrval after subtraction of RItype = " << EMErrval << endl;
 
 		encodeMappedErrvalWithGolomb(k,LIMIT-rk-1,qbpp,EMErrval,out, dbg_file);
 	}
 
 	// Update parameters ...
-
-//cerr << "\t\tcodecRunEndSample: Update parameters ... updateErrval used = " << updateErrval << endl;
-//cerr << "\t\tcodecRunEndSample: Update parameters ... EMErrval used = " << EMErrval << endl;
-
-//cerr << "\t\tcodecRunEndSample: A[" << Q << "]  before = " << A[Q]  << endl;
-//cerr << "\t\tcodecRunEndSample: N[" << Q << "]  before = " << N[Q]  << endl;
-//cerr << "\t\tcodecRunEndSample: Nn[" << (Q-365) << "] before = " << Nn[Q-365] << endl;
 
 	if (updateErrval < 0) ++Nn[Q-365];
 	A[Q]+=(EMErrval+1-(RItype ? 1 : 0))>>1;
@@ -733,12 +656,6 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 		Nn[Q-365]=Nn[Q-365]>>1;
 	}
 	++N[Q];
-
-//cerr << "\t\tcodecRunEndSample: A[" << Q << "]  updated = " << A[Q]  << endl;
-//cerr << "\t\tcodecRunEndSample: N[" << Q << "]  updated = " << N[Q]  << endl;
-//cerr << "\t\tcodecRunEndSample: Nn[" << (Q-365) << "] updated = " << Nn[Q-365] << endl;
-
-//if (decompressing) cerr << "\t\tcodecRunEndSample: value = " << Ix << endl;
 }
 
 int
@@ -1017,18 +934,14 @@ main(int argc,char **argv)
 	Uint16 *thisRow=rowA;
 	Uint16 *prevRow=rowB;
 	for (row=0; row<ROWS; ++row) {
-//cerr << "Row " << row << endl;
 		if (!decompressing)  {
 			Uint32 n=readRow(in,thisRow,COLUMNS,bpp);
-//cerr << "Row " << row << " read returns " << n << endl;
 			Assert (n==COLUMNS);
 		}
 
 		Uint32 col=0;
 		Uint16 prevRa0;
 		for (col=0; col<COLUMNS; ++col) {
-
-//cerr << "\tcol = " << col << endl;
 
 			//	c b d .
 			//	a x . .
@@ -1053,11 +966,6 @@ main(int argc,char **argv)
 				Rb=Rc=Rd=0;
 				Ra=(col > 0) ? thisRow[col-1] : (prevRa0=0);
 			}
-				
-//cerr << "\t\tRa = " << Ra << endl;
-//cerr << "\t\tRb = " << Rb << endl;
-//cerr << "\t\tRc = " << Rc << endl;
-//cerr << "\t\tRd = " << Rd << endl;
 
 			// NB. We want the Reconstructed values, which are the same
 			// in lossless mode, but if NEAR != 0 take care to write back
@@ -1069,74 +977,46 @@ main(int argc,char **argv)
 			Int32 D2=(Int32)Rb-Rc;
 			Int32 D3=(Int32)Rc-Ra;
 
-//cerr << "\t\tD1 = " << D1 << endl;
-//cerr << "\t\tD2 = " << D2 << endl;
-//cerr << "\t\tD3 = " << D3 << endl;
-
 			// Check for run mode ... (should check Abs() works ok for Int32)
 
 			if (Abs(D1) <= NEAR && Abs(D2) <= NEAR && Abs(D3) <= NEAR && useRunMode) {
 				// Run mode
 
-//cerr << "Row at run start " << row << endl;
-//cerr << "\tcol at run start " << col << endl;
 				if (decompressing) {
-//dumpReadBitPosition();
 					// Why is RUNIndex not reset to 0 here ?
 					Uint32 R;
 					while (readBit(in,R)) {
-//cerr << "\tcol " << col << endl;
 						if (R == 1) {
 							// Fill image with 2^J[RUNIndex] samples of Ra or till EOL
 							Int32 rm=J_rm[RUNIndex];
-//cerr << "\tRUNIndex " << RUNIndex << endl;
-//cerr << "\tFilling with " << rm << " samples of Ra " << Ra << endl;
 							while (rm-- && col < COLUMNS) {
 								thisRow[col]=Ra;
-//cerr << "pixel[" << row << "," << col << "] = " << thisRow[col] << endl;
 								++col;
 							}
 							// This will match when exact count coincides with end of row ...
 							if (rm == -1 && RUNIndex < 31) {
 								++RUNIndex;
-//cerr << "\tRUNIndex incremented to " << RUNIndex << endl;
 							}
 							if (col >= COLUMNS) {
-//cerr << "\tFilled to end of row" << endl;
-//cerr << "\tAfter having found end of row " << endl;
-//dumpReadBitPosition();
 								break;
 							}
 						}
 						else {
 							// Read J[RUNIndex] bits and fill image with that number of samples of Ra
 							Uint16 bits=J[RUNIndex];
-//cerr << "\tRUNIndex " << RUNIndex << endl;
-//cerr << "\tReading bits " << bits << endl;
 							Uint32 nfill=0;
 							Uint32 bit;
 							// msb bit is read first
 							while (bits-- && readBit(in,bit)) {
 								nfill=(nfill<<1) | bit;
 							}
-//cerr << "\tFill with " << nfill << " samples of Ra " << Ra << endl;
 							// Fill with nfill values of Ra
 							while (nfill--) {
-//if (!(col<(COLUMNS-1))) {
-//	cerr << "Fail at line 367 ... !(col<(COLUMNS-1))" << endl;
-//	cerr << "\tstill to fill " << nfill+1 << endl;
-//	cerr << "\trow is " << row << endl;
-//	cerr << "\tcol is " << col << endl;
-//}
 								Assert(col<(COLUMNS-1));
 								thisRow[col]=Ra;
-//cerr << "pixel[" << row << "," << col << "] = " << thisRow[col] << endl;
 								++col;
 							}
 							// Decode the run interruption sample ...
-//cerr << "\tcol at end of run " << col << endl;
-//cerr << "\tBefore decoding value that ends run " << endl;
-//dumpReadBitPosition();
 
 							// First update local context for interrupting sample, since weren't kept updated during run
 
@@ -1148,15 +1028,10 @@ main(int argc,char **argv)
 								Rb=0;
 								Ra=(col > 0) ? thisRow[col-1] : 0;
 							}
-//cerr << "\t\tRa = " << Ra << endl;
-//cerr << "\t\tRb = " << Rb << endl;
 							codecRunEndSample(thisRow[col],Ra,Rb,RANGE,NEAR,MAXVAL,RESET,LIMIT,qbpp,J[RUNIndex],A,N,Nn,in,out,decompressing, dbg_file);
-//cerr << "pixel[" << row << "," << col << "] = " << thisRow[col] << endl;
-//cerr << "\tValue that ends run " << thisRow[col] << endl;
-//dumpReadBitPosition();
+
 							if (RUNIndex > 0) {
 								--RUNIndex;	// NB. Do this AFTER J[RUNIndex] used in the limited length Golomb coding
-//cerr << "\tRUNIndex decremented to " << RUNIndex << endl;
 							}
 
 							break;
@@ -1164,49 +1039,32 @@ main(int argc,char **argv)
 					}
 				}
 				else {
-//dumpWriteBitPosition();
 					// Scan to determine length of run (A.7.1.1) ...
-//cerr << "\tScan to determine length of run" << endl;
-//cerr << "\tRa is " << Ra << endl;
 					Int32 RUNval=Ra;
 					Int32 RUNcnt=0;
 					while (col < COLUMNS && (thisRow[col] == RUNval || (NEAR > 0 && Abs(Int32(thisRow[col])-RUNval) <= NEAR) ) ) {
-//cerr << "\tpixel[" << row << "," << col << "] = " << thisRow[col] << endl;
 						++RUNcnt;
 						if (NEAR > 0) thisRow[col]=RUNval;	// Replace with "reconstructed value"
 						++col;
 					}
-//cerr << "\tAt end of run, thisRow[" << row << "," << col << "] = " << thisRow[col] << " and RUNval = " << RUNval << endl;
-//cerr << "\tAbs(Int32(thisRow[col])-RUNval) = " << Abs(Int32(thisRow[col])-RUNval) << endl;
-//cerr << "\tNEAR = " << NEAR << endl;
-//cerr << "\tRUNcnt " << RUNcnt << endl;
 					// Encode length of run (A.7.1.2) ...
 
 					Uint16 rm;
 					while (RUNcnt >= (rm=J_rm[RUNIndex])) {
-//cerr << "\tRUNIndex " << RUNIndex << endl;
-//cerr << "\trm " << rm << endl;
 						writeBit(out,1);
 						RUNcnt-=rm;
-//cerr << "\tRUNcnt decremented to " << RUNcnt << endl;
 						Assert(RUNcnt >= 0);	// is why int not unsigned
 						if (RUNIndex < 31) {	// ie. value ranges from 0..31
 							++RUNIndex;
-//cerr << "\tRUNIndex incremented to " << RUNIndex << endl;
 						}
 					}
 
 					if (col < COLUMNS) {	// Must have been terminated by different value
-//cerr << "pixel[" << row << "," << col << "] = " << thisRow[col] << endl;
-//cerr << "\tcol " << col << endl;
-//cerr << "\tDifferent value is " << thisRow[col] << endl;
 						writeBit(out,0);
 						// Append least significant J[RUNIndex] bits
 						Uint16 bits=J[RUNIndex];
 						Uint32 value=RUNcnt;
 						Assert(value < J_rm[RUNIndex]);	// Does it really fit in this ? It should else would have been coded by J_rm[RUNIndex]
-//cerr << "\tRemaining RUNcnt " << RUNcnt << endl;
-//cerr << "\tEncoding in bits " << bits << endl;
 						// msb bit is written first
 						while (bits--) {
 							Uint32 bit=(value>>bits)&1;
@@ -1214,11 +1072,7 @@ main(int argc,char **argv)
 						}
 
 						// Encode run interruption sample (A.7.2) ...
-//cerr << "\tcol at end of run " << col << endl;
 						Assert(col<COLUMNS);
-//cerr << "\tBefore encoding value that ends run " << endl;
-//dumpWriteBitPosition();
-//cerr << "\tValue that ends run " << thisRow[col] << endl;
 
 						// First update local context for interrupting sample, since weren't kept updated during run
 
@@ -1230,27 +1084,18 @@ main(int argc,char **argv)
 							Rb=0;
 							Ra=(col > 0) ? thisRow[col-1] : 0;
 						}
-//cerr << "\t\tUpdated Ra = " << Ra << endl;
-//cerr << "\t\tUpdated Rb = " << Rb << endl;
 
 						codecRunEndSample(thisRow[col],Ra,Rb,RANGE,NEAR,MAXVAL,RESET,LIMIT,qbpp,J[RUNIndex],A,N,Nn,in,out,decompressing, dbg_file);
 
-//cerr << "\tAfter encoding value that ends run " << endl;
-//dumpWriteBitPosition();
 						if (RUNIndex > 0) {
 							--RUNIndex;	// NB. Do this AFTER J[RUNIndex] used in the limited length Golomb coding
-//cerr << "\tRUNIndex decremented to " << RUNIndex << endl;
 						}
 					}
 					else {						// Aborted at end of row
-//cerr << "\tEnd of row" << endl;
 						if (RUNcnt > 0) {
 							writeBit(out,1);		// Append an extra 1
 											// decoder knows to stop at end of row
 											// though remainder can't be > 1<<J[RUNIndex]
-//cerr << "1 for end of row" << endl;
-//cerr << "\tAfter indicating end of row " << endl;
-//dumpWriteBitPosition();
 						}
 					}
 				}
@@ -1295,10 +1140,6 @@ main(int argc,char **argv)
 				else if (D3 <   T3)   Q3= 3;
 				else                  Q3= 4;
 
-//cerr << "\t\tQ1 = " << Q1 << endl;
-//cerr << "\t\tQ2 = " << Q2 << endl;
-//cerr << "\t\tQ3 = " << Q3 << endl;
-
 				// Context merging and determination of SIGN ... (A.3.4)
 
 				Int16 SIGN;
@@ -1316,12 +1157,6 @@ main(int argc,char **argv)
 				else {
 					SIGN=1;		// signifies +ve
 				}
-
-//cerr << "\t\tSIGN= " << SIGN << endl;
-
-//cerr << "\t\tQ1 after SIGN = " << Q1 << endl;
-//cerr << "\t\tQ2 after SIGN = " << Q2 << endl;
-//cerr << "\t\tQ3 after SIGN = " << Q3 << endl;
 
 				// The derivation of Q is not specified in the standard :(
 
@@ -1348,14 +1183,6 @@ main(int argc,char **argv)
 					Q=(Q1-1)*81+(Q2+4)*9+(Q3+4);	// fills 0..323
 				}
 
-//cerr << "\t\tQ = " << Q << endl;
-
-//if (Q >= nContexts) {
-//	cerr << "\t\tQ1 after SIGN = " << Q1 << endl;
-//	cerr << "\t\tQ2 after SIGN = " << Q2 << endl;
-//	cerr << "\t\tQ3 after SIGN = " << Q3 << endl;
-//	cerr << "\t\tQ itself = " << Q << endl;
-//}
 				Assert(Q<nContexts);	// Just in case
 
 				// Figure A.5 Edge detecting predictor ...
@@ -1366,18 +1193,11 @@ main(int argc,char **argv)
 				else if (Rc <= Minimum(Ra,Rb))	Px = Maximum(Ra,Rb);
 				else				Px = (Int32)Ra+Rb-Rc;
 
-//cerr << "\t\tPx = " << Px << endl;
-
 				// Figure A.6 Prediction correction and clamping ...
 
 				Px = Px + ((SIGN > 0) ? C[Q] : -C[Q]);
 
-//cerr << "\t\tC[Q] = " << C[Q] << endl;
-//cerr << "\t\tPx corrected = " << Px << endl;
-
 				clampPredictedValue(Px,MAXVAL);
-
-//cerr << "\t\tPx clamped = " << Px << endl;
 
 				// Figure A.10 Prediction error Golomb encoding and decoding...
 
@@ -1390,8 +1210,6 @@ main(int argc,char **argv)
 				if (decompressing) {
 					// Decode Golomb mapped error from input...
 					decodeMappedErrvalWithGolomb(k,LIMIT,qbpp,MErrval,in);
-
-//cerr << "\t\tMErrval = " << MErrval << endl;
 
 					// Unmap error from non-negative (inverse of A.5.2 Figure A.11) ...
 
@@ -1412,11 +1230,7 @@ main(int argc,char **argv)
 
 					deQuantizeErrval(NEAR,Errval);
 
-//cerr << "\t\tErrval SIGN uncorrected = " << Errval << endl;
-
 					if (SIGN < 0) Errval=-Errval;		// if "context type" was negative
-
-//cerr << "\t\tErrval result = " << Errval << endl;
 
 					Rx=Px+Errval;
 
@@ -1434,20 +1248,14 @@ main(int argc,char **argv)
 					// Apply inverse point transform and mapping table when implemented
 
 					thisRow[col]=(Uint16)Rx;
-//cerr << "pixel[" << row << "," << col << "] = " << thisRow[col] << endl;
 				}
 				else {	// compressing ...
 
 					Int32 Ix = thisRow[col];	// Input value - not Uint16 to allow overrange before clamping
-//cerr << "pixel[" << row << "," << col << "] = " << thisRow[col] << endl;
 
 					Errval = Ix - Px;		// watch this for bad unsigned->signed conversion :(
 
-//cerr << "\t\tErrval start = " << Errval << endl;
-
 					if (SIGN < 0) Errval=-Errval;	// if "context type" was negative
-
-//cerr << "\t\tErrval SIGN corrected = " << Errval << endl;
 
 					if (NEAR > 0) {	// For near-lossless, quantize Errval and derive reconstructed value (A.4.4)
 
@@ -1466,8 +1274,6 @@ main(int argc,char **argv)
 
 					if (Errval < 0)			Errval=Errval+RANGE;
 					if (Errval >= (RANGE+1)/2)	Errval=Errval-RANGE;
-
-//cerr << "\t\tErrval modulo " << RANGE << " = " << Errval << endl;
 
 					updateErrval=Errval;			// NB. After sign correction but before mapping
 
@@ -1490,18 +1296,10 @@ main(int argc,char **argv)
 							MErrval = -2*Errval - 1;	// -1 becomes 1, -2 becomes 3
 					}
 
-//cerr << "\t\tMErrval = " << MErrval << endl;
-
 					encodeMappedErrvalWithGolomb(k,LIMIT,qbpp,MErrval,out, dbg_file);
 				}
 
 				// Update variables (A.6) ...
-
-//cerr << "\t\tUpdate variables with error updateErrval = " << updateErrval << endl;
-//cerr << "\t\tA[Q] old = " << A[Q] << endl;
-//cerr << "\t\tB[Q] old = " << B[Q] << endl;
-//cerr << "\t\tC[Q] old = " << C[Q] << endl;
-//cerr << "\t\tN[Q] old = " << N[Q] << endl;
 
 				// A.6.1 Use the signed error after modulo reduction (figure A.12 note). which is updateErrval
 
@@ -1513,11 +1311,6 @@ main(int argc,char **argv)
 					N[Q]=N[Q]>>1;
 				}
 				++N[Q];
-
-//cerr << "\t\tA[Q] updated = " << A[Q] << endl;
-//cerr << "\t\tB[Q] updated = " << B[Q] << endl;
-//cerr << "\t\tC[Q] updated = " << C[Q] << endl;
-//cerr << "\t\tN[Q] updated = " << N[Q] << endl;
 
 				// A.6.2 Context dependent bias cancellation ...
 
@@ -1531,11 +1324,6 @@ main(int argc,char **argv)
 					if (C[Q] < MAX_C) ++C[Q];
 					if (B[Q] > 0) B[Q]=0;
 				}
-
-//cerr << "\t\tA[Q] bias cancelled = " << A[Q] << endl;
-//cerr << "\t\tB[Q] bias cancelled = " << B[Q] << endl;
-//cerr << "\t\tC[Q] bias cancelled = " << C[Q] << endl;
-//cerr << "\t\tN[Q] bias cancelled = " << N[Q] << endl;
 
 			}
 		}
