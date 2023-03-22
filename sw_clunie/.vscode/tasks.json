@@ -5,19 +5,11 @@
             "label": "C/C++: g++ build active file",
             "command": "/usr/bin/g++",
             "args": [
-                "-DUSEOWNLOG2=1",
-                "-DHASGETHOSTID=1",
-                "-DHASGETHOSTIDPROTOTYPE=1",
-                "-Wno-deprecated",
                 "-fdiagnostics-color=always",
                 "-g",
+                "${file}",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}",
-                "rawnjl2.cc",
-                "getoptns.cc",
-                "bnopti.cc",
-                "bnopto.cc",
-                "mesgtext.cc"
+                "${fileDirname}/${fileBasenameNoExtension}"
             ],
             "options": {
                 "cwd": "${fileDirname}"
