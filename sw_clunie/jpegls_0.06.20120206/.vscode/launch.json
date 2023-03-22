@@ -5,7 +5,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": ["-nomarkers", "-noruns", "-rows", "500", "-columns", "583", "-bits", "8", "-input-file", "${fileDirname}/../test_image.pgm", "-input-endian", "big", "-output-file", "${fileDirname}/../test_immage_unmarked.jls"],
+            "args": ["-nomarkers", "-noruns", "-rows", "500", "-columns", "583", "-bits", "8", "-input-file", "${fileDirname}/../test_image.pgm", "-input-endian", "big", "-output-file", "${fileDirname}/../test_image_unmarked.jls"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
