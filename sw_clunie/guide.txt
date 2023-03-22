@@ -1,0 +1,13 @@
+WITH JPEG MARKERS:
+To compress e.g.:
+./rawnjl2 -rows 500 -columns 583 -bits 8 -input-file ../test_image.pgm -input-endian big -output-file ../test_image.jls
+
+To decompress e.g.:
+./rawnjl2 -d -input-file ../test_image.jls -output-file ../test_image_outp.pgm -output-endian big
+
+WITHOUT JPEG MARKERS:
+To compress e.g.:
+./rawnjl2 -nomarkers -rows 500 -columns 583 -bits 8 -input-file ../test_image.pgm -input-endian big -output-file ../test_image_unmarked.jls
+
+To decompress e.g.:
+./rawnjl2 -d -nomarkers -input-file ../test_image_unmarked.jls -output-file ../test_image_outp_unmarked.pgm -output-endian big
