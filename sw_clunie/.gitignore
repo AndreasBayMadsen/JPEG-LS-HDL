@@ -1,2 +1,4 @@
 /jpegls_0.06.20120206/data/
 /jpegls_0.06.20120206/rawnjl2
+/image_split/*.pgm
+*.txt

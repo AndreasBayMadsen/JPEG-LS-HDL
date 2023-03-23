@@ -502,5 +502,8 @@ begin
         encoded     => encoded_b,
         size        => encoded_size_b
     );
+    
+    -- Signal assignments
+    new_pixel <= new_pixel_3;
 
 end Behavioral;

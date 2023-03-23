@@ -3,6 +3,7 @@
 #include "mesgtext.h"
 #include <fstream>
 #include <string>
+#include <cmath>
 
 // Test of new lossless JPEG proposal ISO/IEC WD 14495
 
@@ -99,29 +100,29 @@ readBit(BinaryInputStream &in,Uint32 &bit)
 		}
 		else {
 			in.read((char *)&readBitByte,1);
-			if (readBitByte == 0xff) {	// could be marker segment or data 0xff with following stuffed zero bit
-				Assert(readHaveForwardByte == false);
-				//while (in.read((char *)&readForwardByte,1) && readForwardByte == 0xff);	// skip padding bytes (strings of 0xff)
-				in.read((char *)&readForwardByte,1);
-				if (in) {
-					if ((readForwardByte & 0x80) == 0) {	// stuffed zero bit after valid 0xff
-						readHaveForwardByte=true;
-						// the valid 0xff is already in readBitByte
-						readBitCount=8;
-					}
-					else {	// marker segment
-						// marker identifier is 0xff00+readForwardByte
-cerr << "readBitByte=" << hex << unsigned(readBitByte) << dec << endl;
-cerr << "readForwardByte=" << hex << unsigned(readForwardByte) << dec << endl;
-						Assert(0);	// for now
-					}
-				}
-				else {
-					readBitCount=0;	// just in case ... will trigger assertion next time
-					return in;	// failed miserably (ie. can't be valid JPEG syntax if have 0xff as last byte in file)
-				}
-			}
-			else
+// 			if (readBitByte == 0xff) {	// could be marker segment or data 0xff with following stuffed zero bit
+// 				Assert(readHaveForwardByte == false);
+// 				//while (in.read((char *)&readForwardByte,1) && readForwardByte == 0xff);	// skip padding bytes (strings of 0xff)
+// 				in.read((char *)&readForwardByte,1);
+// 				if (in) {
+// 					if ((readForwardByte & 0x80) == 0) {	// stuffed zero bit after valid 0xff
+// 						readHaveForwardByte=true;
+// 						// the valid 0xff is already in readBitByte
+// 						readBitCount=8;
+// 					}
+// 					else {	// marker segment
+// 						// marker identifier is 0xff00+readForwardByte
+// cerr << "readBitByte=" << hex << unsigned(readBitByte) << dec << endl;
+// cerr << "readForwardByte=" << hex << unsigned(readForwardByte) << dec << endl;
+// 						Assert(0);	// for now
+// 					}
+// 				}
+// 				else {
+// 					readBitCount=0;	// just in case ... will trigger assertion next time
+// 					return in;	// failed miserably (ie. can't be valid JPEG syntax if have 0xff as last byte in file)
+// 				}
+// 			}
+// 			else
 				readBitCount=8;
 		}
 	}
@@ -663,7 +664,6 @@ main(int argc,char **argv)
 {
 	// Create file for debugging
 	ofstream dbg_file;
-	dbg_file.open("../jpeg_ls_dump.txt");
 
 	bool bad=false;
 
@@ -933,6 +933,30 @@ main(int argc,char **argv)
 	Uint32 row=0;
 	Uint16 *thisRow=rowA;
 	Uint16 *prevRow=rowB;
+
+	// Skip header of .pgm file when compressing
+	if (!decompressing)
+	{
+		dbg_file.open("../jpeg_ls_dump.txt");	// Debugging
+		readRow(in, thisRow, 3, 8);								// Magic number 'P5\n'
+		readRow(in, thisRow, ceil(log10(ROWS))+1, 8);			// Number of rows
+		readRow(in, thisRow, ceil(log10(COLUMNS))+1, 8);		// Number of columns
+		readRow(in, thisRow, ceil(log10(pow(2, bits)-1))+1, 8);	// Color resolution
+	} else	// Add header of .pgm file when decompressing
+	{
+		string header = "P5\n";
+		header += to_string(ROWS) + ' ';
+		header += to_string(COLUMNS) + '\n';
+		header += to_string(MAXVAL) + '\n';
+
+		for (Uint8 idx=0; idx<header.length(); idx++)
+		{
+			thisRow[idx] = (Uint16)header[idx];
+		}
+
+		writeRow(out, thisRow, header.length(), 8);
+	}
+
 	for (row=0; row<ROWS; ++row) {
 		if (!decompressing)  {
 			Uint32 n=readRow(in,thisRow,COLUMNS,bpp);
@@ -1349,7 +1373,10 @@ main(int argc,char **argv)
 	if (N) delete[] N;
 
 	// Close debugging file
-	dbg_file.close();
+	if (!decompressing)
+	{
+		dbg_file.close();
+	}
 
 	return success ? 0 : 1;
 }
