@@ -102,7 +102,7 @@ begin
     
     pred_er_3 <= pred_er_2 when pred_er_2 < mod_lim else pred_er_2 - alpha;
     
-    mapped_0_flag <= '1' when (k = to_unsigned(0, k'length) and shift_left(resize(B, B'length + 1), 1) < -signed('0' & N)) else '0';    -- BURDE DETTE IKKE VÆRE '<='?
+    mapped_0_flag <= '1' when (k = to_unsigned(0, k'length) and shift_left(resize(B, B'length + 1), 1) <= -signed('0' & N)) else '0';    -- BURDE DETTE IKKE VÆRE '<='?
     error_positive_flag <= '1' when pred_er_3 >= to_signed(0, pred_er_3'length) else '0';
     
     mapped_er_1 <= unsigned(shift_left(pred_er_3, 1) + 1) when mapped_0_flag = '1' and error_positive_flag = '1' else

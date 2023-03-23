@@ -11,12 +11,12 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="3,039,952.742 ns"></ZoomStartTime>
-      <ZoomEndTime time="3,043,897.743 ns"></ZoomEndTime>
-      <Cursor1Time time="3,042,137.742 ns"></Cursor1Time>
+      <ZoomStartTime time="3,202,383.907 ns"></ZoomStartTime>
+      <ZoomEndTime time="3,205,243.908 ns"></ZoomEndTime>
+      <Cursor1Time time="3,203,907.070 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="144"></NameColumnWidth>
+      <NameColumnWidth column_width="140"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="20" />
@@ -239,6 +239,18 @@
          <obj_property name="ObjectShortName">D[4:0]</obj_property>
          <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
+      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/grad/G">
+         <obj_property name="ElementShortName">G[0:2]</obj_property>
+         <obj_property name="ObjectShortName">G[0:2]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/grad/Q">
+         <obj_property name="ElementShortName">Q[0:2]</obj_property>
+         <obj_property name="ObjectShortName">Q[0:2]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/grad/Q_corr">
+         <obj_property name="ElementShortName">Q_corr[0:2]</obj_property>
+         <obj_property name="ObjectShortName">Q_corr[0:2]</obj_property>
+      </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/ctxt_idx">
          <obj_property name="ElementShortName">ctxt_idx[8:0]</obj_property>
          <obj_property name="ObjectShortName">ctxt_idx[8:0]</obj_property>
@@ -252,6 +264,7 @@
    <wvobject type="group" fp_name="group49">
       <obj_property name="label">Predictor</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/A">
          <obj_property name="ElementShortName">A[4:0]</obj_property>
          <obj_property name="ObjectShortName">A[4:0]</obj_property>
@@ -270,6 +283,7 @@
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/X_pred">
          <obj_property name="ElementShortName">X_pred[4:0]</obj_property>
          <obj_property name="ObjectShortName">X_pred[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="divider12" type="divider">
@@ -287,6 +301,7 @@
    <wvobject type="group" fp_name="group98">
       <obj_property name="label">Context modeller</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/idx">
          <obj_property name="ElementShortName">idx[8:0]</obj_property>
          <obj_property name="ObjectShortName">idx[8:0]</obj_property>
@@ -310,10 +325,12 @@
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/B_read">
          <obj_property name="ElementShortName">B_read[8:0]</obj_property>
          <obj_property name="ObjectShortName">B_read[8:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/C_read">
          <obj_property name="ElementShortName">C_read[4:0]</obj_property>
          <obj_property name="ObjectShortName">C_read[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/N_read">
          <obj_property name="ElementShortName">N_read[6:0]</obj_property>
@@ -358,6 +375,7 @@
    <wvobject type="group" fp_name="group105">
       <obj_property name="label">Summation</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/TB_full_sim/DUT/mod_2_r/adder/sign_flag_latch">
          <obj_property name="DisplayName">label</obj_property>
          <obj_property name="ElementShortName">sign_flag_latch</obj_property>
@@ -369,24 +387,29 @@
          <obj_property name="ElementShortName">pixel_latch[4:0]</obj_property>
          <obj_property name="ObjectShortName">pixel_latch[4:0]</obj_property>
          <obj_property name="label">pixel</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/fixed_pred_latch">
          <obj_property name="DisplayName">label</obj_property>
          <obj_property name="ElementShortName">fixed_pred_latch[4:0]</obj_property>
          <obj_property name="ObjectShortName">fixed_pred_latch[4:0]</obj_property>
          <obj_property name="label">prediction</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/B_ctxt">
          <obj_property name="ElementShortName">B_ctxt[8:0]</obj_property>
          <obj_property name="ObjectShortName">B_ctxt[8:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/C_ctxt">
          <obj_property name="ElementShortName">C_ctxt[4:0]</obj_property>
          <obj_property name="ObjectShortName">C_ctxt[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/N_ctxt">
          <obj_property name="ElementShortName">N_ctxt[6:0]</obj_property>
          <obj_property name="ObjectShortName">N_ctxt[6:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/k_golomb">
          <obj_property name="ElementShortName">k_golomb[4:0]</obj_property>
@@ -401,6 +424,33 @@
          <obj_property name="ElementShortName">mapped_error[4:0]</obj_property>
          <obj_property name="ObjectShortName">mapped_error[4:0]</obj_property>
          <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_1">
+         <obj_property name="ElementShortName">pred_1[6:0]</obj_property>
+         <obj_property name="ObjectShortName">pred_1[6:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_2">
+         <obj_property name="ElementShortName">pred_2[6:0]</obj_property>
+         <obj_property name="ObjectShortName">pred_2[6:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_3">
+         <obj_property name="ElementShortName">pred_3[6:0]</obj_property>
+         <obj_property name="ObjectShortName">pred_3[6:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_er_1">
+         <obj_property name="ElementShortName">pred_er_1[6:0]</obj_property>
+         <obj_property name="ObjectShortName">pred_er_1[6:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_er_2">
+         <obj_property name="ElementShortName">pred_er_2[6:0]</obj_property>
+         <obj_property name="ObjectShortName">pred_er_2[6:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_er_3">
+         <obj_property name="ElementShortName">pred_er_3[6:0]</obj_property>
+         <obj_property name="ObjectShortName">pred_er_3[6:0]</obj_property>
       </wvobject>
    </wvobject>
    <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_2_5">
@@ -418,6 +468,7 @@
    <wvobject type="group" fp_name="group156">
       <obj_property name="label">Golomb coder</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/golomb_r/k">
          <obj_property name="ElementShortName">k[4:0]</obj_property>
          <obj_property name="ObjectShortName">k[4:0]</obj_property>
@@ -431,7 +482,6 @@
          <obj_property name="ElementShortName">encoded[31:0]</obj_property>
          <obj_property name="ObjectShortName">encoded[31:0]</obj_property>
          <obj_property name="Radix">BINARYRADIX</obj_property>
-         <obj_property name="isExpanded"></obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/golomb_r/size">
          <obj_property name="ElementShortName">size[5:0]</obj_property>

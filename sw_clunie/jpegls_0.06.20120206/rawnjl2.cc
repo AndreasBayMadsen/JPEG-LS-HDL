@@ -153,7 +153,8 @@ writeBit(BinaryOutputStream &out,Uint32 bit)
 		++writeBitByteOffset;
 		out.write((char *)&writeBitByte,1);
 		// need to stuff with a following zero bit to distinguish from JPEG marker
-		writeBitCount=(writeBitByte == 0xff) ? 1 : 0;
+		// writeBitCount=(writeBitByte == 0xff) ? 1 : 0;	// Nope
+		writeBitCount=0;
 		writeBitByte=0;
 	}
 	return out;
@@ -945,8 +946,8 @@ main(int argc,char **argv)
 	} else	// Add header of .pgm file when decompressing
 	{
 		string header = "P5\n";
-		header += to_string(ROWS) + ' ';
-		header += to_string(COLUMNS) + '\n';
+		header += to_string(COLUMNS) + ' ';
+		header += to_string(ROWS) + '\n';
 		header += to_string(MAXVAL) + '\n';
 
 		for (Uint8 idx=0; idx<header.length(); idx++)
