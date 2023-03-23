@@ -864,7 +864,8 @@ main(int argc,char **argv)
 
 	Uint16 bpp = Maximum(2,Ceiling(Log(MAXVAL+1)));	// Number of bits needed to represent MAXVAL with a minumum of 2
 	Uint16 qbpp = Ceiling(Log(RANGE));		// Number of bits needed to represent a mapped error value
-	Uint16 LIMIT = 2*(bpp+Maximum(8,bpp));		// the value of glimit for a sample encoded in regular mode
+	// Uint16 LIMIT = 2*(bpp+Maximum(8,bpp));		// the value of glimit for a sample encoded in regular mode
+	Uint16 LIMIT = 32;
 
 	if (verbose) cerr << "bpp = " << bpp << endl;
 	if (verbose) cerr << "qbpp = " << qbpp << endl;
