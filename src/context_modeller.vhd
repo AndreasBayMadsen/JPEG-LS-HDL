@@ -39,12 +39,8 @@ entity context_modeller is
         n_size      :   integer := 7;       -- KUNNE DEN IKKE SÆTTES TIL ceil(log2(n_reset+1))?
         a_size      :   integer := 15;      -- KUNNE DEN IKKE SÆTTES TIL ceil(log2(n_reset*(2**(data_width-1))))?
         b_size      :   integer := 9;       -- I VÆRSTE FALD KUNNE DEN VEL SÆTTES TIL 1+ceil(log2(n_reset*(2**(data_width-1))))?
-        c_size      :   integer := 8;       -- KUNNE DEN IKKE BARE ALTID SÆTTES TIL DATA_WIDTH?
         n_reset     :   integer := 64;
-        min_c       :   integer := -128;    -- KUNNE VEL SÆTTES TIL -2**(c_size-1)?
-        max_c       :   integer := 127;     -- KUNNE VEL SÆTTES TIL 2**(c_size-1)-1?
-        no_contexts :   integer := 365;
-        alpha       :   integer := 256      -- KUNNE VEL SÆTTES TIL 2**data_width?
+        no_contexts :   integer := 365
         );
     Port (
         pclk :          in  STD_LOGIC;
@@ -74,6 +70,12 @@ architecture Behavioral of context_modeller is
         doutb   : OUT   STD_LOGIC_VECTOR(39 DOWNTO 0)
       );
     END component;
+    
+    -- System constants
+    constant alpha  : INTEGER   := 2**data_width;
+    constant c_size : INTEGER   := data_width;
+    constant min_c  : INTEGER   := -2**(c_size-1);
+    constant max_c  : INTEGER   := 2**(c_size-1)-1;
     
     -- RAM constants
     constant A_offset : integer := 0;

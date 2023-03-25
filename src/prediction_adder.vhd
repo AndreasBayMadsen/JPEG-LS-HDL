@@ -34,7 +34,6 @@ use IEEE.MATH_REAL.ALL;
 
 entity prediction_adder is
     Generic(
-        alpha           :   INTEGER := 256; -- KUNNE VEL BEREGNES UD FRA 'color_res' SOM 2**color_res?
         color_res       :   INTEGER := 8;
         n_size          :   integer := 7;
         a_size          :   integer := 15;
@@ -58,6 +57,9 @@ entity prediction_adder is
 end prediction_adder;
 
 architecture Behavioral of prediction_adder is
+
+    -- System constants
+    constant alpha  : INTEGER   := 2**color_res;
 
     constant mod_lim : signed(color_res + 1 downto 0) := to_signed(integer(ceil(real(alpha) / 2.0)), color_res + 2);
 

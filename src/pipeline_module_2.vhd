@@ -61,12 +61,8 @@ architecture Behavioral of pipeline_module_2 is
             n_size      :   integer := 7;       -- KUNNE DEN IKKE SÆTTES TIL ceil(log2(n_reset+1))?
             a_size      :   integer := 15;      -- KUNNE DEN IKKE SÆTTES TIL ceil(log2(n_reset*(2**(data_width-1))))?
             b_size      :   integer := 9;       -- I VÆRSTE FALD KUNNE DEN VEL SÆTTES TIL 1+ceil(log2(n_reset*(2**(data_width-1))))?
-            c_size      :   integer := 8;       -- KUNNE DEN IKKE BARE ALTID SÆTTES TIL DATA_WIDTH?
             n_reset     :   integer := 64;
-            min_c       :   integer := -128;    -- KUNNE VEL SÆTTES TIL -2**(c_size-1)?
-            max_c       :   integer := 127;     -- KUNNE VEL SÆTTES TIL 2**(c_size-1)-1?
-            no_contexts :   integer := 365;
-            alpha       :   integer := 256      -- KUNNE VEL SÆTTES TIL 2**data_width?
+            no_contexts :   integer := 365
             );
         Port (
             pclk :          in  STD_LOGIC;
@@ -83,7 +79,6 @@ architecture Behavioral of pipeline_module_2 is
     
     component prediction_adder
         Generic(
-            alpha           :   INTEGER := 256; -- KUNNE VEL BEREGNES UD FRA 'color_res' SOM 2**color_res?
             color_res       :   INTEGER := 8;
             n_size          :   integer := 7;
             a_size          :   integer := 15;
@@ -133,12 +128,8 @@ begin
         n_size      => N_ctxt_size,
         a_size      => A_ctxt_size,
         b_size      => B_ctxt_size,
-        c_size      => color_res,
         n_reset     => N_reset,
-        min_c       => -2**(color_res-1),
-        max_c       => 2**(color_res-1)-1,
-        no_contexts => no_ctxt,
-        alpha       => 2**color_res
+        no_contexts => no_ctxt
     )
     port map(
         pclk        => clk,
@@ -155,7 +146,6 @@ begin
     
     adder: prediction_adder
     generic map(
-        alpha       => 2**color_res,
         color_res   => color_res,
         n_size      => N_ctxt_size,
         a_size      => A_ctxt_size,
