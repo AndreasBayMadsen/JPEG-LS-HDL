@@ -37,8 +37,8 @@ use STD.TEXTIO.ALL;
 entity camera_simulator is
     Generic (
         pclk_freq_MHz   : REAL      := 12.0;
-        file_name_1     : STRING    := "../../../../../kodak_dataset/no_border.ppm";  -- Path to image file
-        file_name_2     : STRING    := "../../../../../kodak_dataset/kodim01.ppm";  -- Path to image file
+        file_name_1     : STRING    := "../../../../../../kodak_dataset/no_border.ppm";  -- Path to image file
+        file_name_2     : STRING    := "../../../../../../kodak_dataset/kodim01.ppm";  -- Path to image file
         format          : STRING    := "RGB565";
         pre_clocks      : INTEGER   := 0    -- Number of clocks before image
     );

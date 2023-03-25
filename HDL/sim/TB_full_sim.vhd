@@ -43,8 +43,8 @@ architecture Behavioral of TB_full_sim is
     component camera_simulator
         Generic (
             pclk_freq_MHz   : REAL      := 12.0;
-            file_name_1     : STRING    := "../../../../../kodak_dataset/no_border.ppm";  -- Path to image file
-            file_name_2     : STRING    := "../../../../../kodak_dataset/kodim01.ppm";  -- Path to image file
+            file_name_1     : STRING    := "../../../../../../kodak_dataset/no_border.ppm";  -- Path to image file
+            file_name_2     : STRING    := "../../../../../../kodak_dataset/kodim01.ppm";  -- Path to image file
             format          : STRING    := "RGB565";
             pre_clocks      : INTEGER   := 0    -- Number of clocks before image
         );
@@ -82,7 +82,7 @@ architecture Behavioral of TB_full_sim is
     -- Constant declarations
         -- Base
     constant PCLK_FREQ_MHZ  : REAL      := 12.0;
-    constant IMAGE_FILE     : STRING    := "../../../../../kodak_dataset/no_border.ppm";
+    constant IMAGE_FILE     : STRING    := "../../../../../../kodak_dataset/no_border.ppm";
     constant IMAGE_HEIGHT   : INTEGER   := 512;
     constant IMAGE_WIDTH    : INTEGER   := 768;
     
@@ -163,9 +163,9 @@ begin
         
     begin
         -- Open files
-        file_open(fstatus, red_compressed_ascii, "../../../../../kodak_dataset/sim_output_red.txt", write_mode);
-        file_open(fstatus, green_compressed_ascii, "../../../../../kodak_dataset/sim_output_green.txt", write_mode);
-        file_open(fstatus, blue_compressed_ascii, "../../../../../kodak_dataset/sim_output_blue.txt", write_mode);
+        file_open(fstatus, red_compressed_ascii, "../../../../../../kodak_dataset/sim_output_red.txt", write_mode);
+        file_open(fstatus, green_compressed_ascii, "../../../../../../kodak_dataset/sim_output_green.txt", write_mode);
+        file_open(fstatus, blue_compressed_ascii, "../../../../../../kodak_dataset/sim_output_blue.txt", write_mode);
         
         while pixel_count < IMAGE_HEIGHT*IMAGE_WIDTH-1 loop
             wait until rising_edge(new_pixel);
