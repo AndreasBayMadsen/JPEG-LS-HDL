@@ -5,6 +5,7 @@ The source code has been modified. The following things should be noted:
 - The limit to the size of Golomb codes has been fixed to 32 and can only be changed in the source code
 - The code has been modified to support .pgm images
 - A debugging feature has been added that writes the raw Golomb codes to a file in ASCII format
+- For some of these reasons, the tests that are performed when building the codec will fail, but the program will work
 
 In case of problems, check:
 - Are T1, T2 and T3 set to the right value?
