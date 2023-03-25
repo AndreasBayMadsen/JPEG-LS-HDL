@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "args": ["../kodak_dataset/sim_output", "-r", "512", "-c", "768", "--analyze", "-o", "../kodak_dataset/no_border.ppm"],
+            "args": ["../kodak_dataset/sim_output_2", "-r", "512", "-c", "768", "--analyze", "-o", "../kodak_dataset/kodim01.ppm"],
             "console": "integratedTerminal",
             "justMyCode": true
         }
