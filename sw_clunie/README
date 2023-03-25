@@ -1,0 +1,19 @@
+NOTES REGARDING DAVID CLUNIE'S CODEC
+-------------------------------------
+The source code has been modified. The following things should be noted:
+- Using JPEG markers might not work and will not be standard compliant
+- The limit to the size of Golomb codes has been fixed to 32 and can only be changed in the source code
+- The code has been modified to support .pgm images
+- A debugging feature has been added that writes the raw Golomb codes to a file in ASCII format
+
+In case of problems, check:
+- Are T1, T2 and T3 set to the right value?
+	* These are fixed in the HDL implementation but calculated based on number of bits in the SW
+		implementation if not specified
+- Is the limit to the Golomb code length set to the same in both HDL and SW?
+
+When compressing use:
+	./rawnjl2 -nomarkers -noruns -rows <NUMBER OF ROWS IN IMAGE> -columns <NUMBER OF COLUMNS IN IMAGE> -bits <COLOR RESOLUTION> -T1 <T1 VALUE SET IN HDL> -T2 <T2 VALUE SET IN HDL> -T3 <T3 VALUE SET IN HDL> -input-file <PATH TO .PGM FILE> -input-endian big -output-file <PATH TO OUTPUT FILE>
+	
+When decompressing use:
+	./rawnjl2 -d -nomarkers -noruns -rows <NUMBER OF ROWS IN IMAGE> -columns <NUMBER OF COLUMNS IN IMAGE> -bits <COLOR RESOLUTION> -T1 <T1 VALUE SET IN HDL> -T2 <T2 VALUE SET IN HDL> -T3 <T3 VALUE SET IN HDL> -input-file <PATH TO .PGM FILE> -output-file <PATH TO OUTPUT FILE> -output-endian big

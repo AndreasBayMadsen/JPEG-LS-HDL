@@ -84,7 +84,6 @@ static Uint32 		readBitByteOffset=0;
 static Int16 		readBitCount=0;
 static unsigned char 	readBitByte=0;
 static unsigned char 	readForwardByte;
-static bool		readHaveForwardByte=false;
 
 static BinaryInputStream &
 readBit(BinaryInputStream &in,Uint32 &bit)
@@ -93,38 +92,8 @@ readBit(BinaryInputStream &in,Uint32 &bit)
 	Assert(readBitCount >= 0);
 	if (readBitCount < 1) {
 		++readBitByteOffset;
-		if (readHaveForwardByte) {
-			readHaveForwardByte=false;
-			readBitByte=readForwardByte;
-			readBitCount=7;			// skip the stuffed zero bit (otherwise would have been marker)(hence never 0xff)
-		}
-		else {
-			in.read((char *)&readBitByte,1);
-// 			if (readBitByte == 0xff) {	// could be marker segment or data 0xff with following stuffed zero bit
-// 				Assert(readHaveForwardByte == false);
-// 				//while (in.read((char *)&readForwardByte,1) && readForwardByte == 0xff);	// skip padding bytes (strings of 0xff)
-// 				in.read((char *)&readForwardByte,1);
-// 				if (in) {
-// 					if ((readForwardByte & 0x80) == 0) {	// stuffed zero bit after valid 0xff
-// 						readHaveForwardByte=true;
-// 						// the valid 0xff is already in readBitByte
-// 						readBitCount=8;
-// 					}
-// 					else {	// marker segment
-// 						// marker identifier is 0xff00+readForwardByte
-// cerr << "readBitByte=" << hex << unsigned(readBitByte) << dec << endl;
-// cerr << "readForwardByte=" << hex << unsigned(readForwardByte) << dec << endl;
-// 						Assert(0);	// for now
-// 					}
-// 				}
-// 				else {
-// 					readBitCount=0;	// just in case ... will trigger assertion next time
-// 					return in;	// failed miserably (ie. can't be valid JPEG syntax if have 0xff as last byte in file)
-// 				}
-// 			}
-// 			else
-				readBitCount=8;
-		}
+		in.read((char *)&readBitByte,1);
+		readBitCount=8;
 	}
 	bit=(readBitByte>>(--readBitCount)) & 1;
 
@@ -152,8 +121,6 @@ writeBit(BinaryOutputStream &out,Uint32 bit)
 	if (++writeBitCount >= 8) {
 		++writeBitByteOffset;
 		out.write((char *)&writeBitByte,1);
-		// need to stuff with a following zero bit to distinguish from JPEG marker
-		// writeBitCount=(writeBitByte == 0xff) ? 1 : 0;	// Nope
 		writeBitCount=0;
 		writeBitByte=0;
 	}
@@ -864,7 +831,6 @@ main(int argc,char **argv)
 
 	Uint16 bpp = Maximum(2,Ceiling(Log(MAXVAL+1)));	// Number of bits needed to represent MAXVAL with a minumum of 2
 	Uint16 qbpp = Ceiling(Log(RANGE));		// Number of bits needed to represent a mapped error value
-	// Uint16 LIMIT = 2*(bpp+Maximum(8,bpp));		// the value of glimit for a sample encoded in regular mode
 	Uint16 LIMIT = 32;
 
 	if (verbose) cerr << "bpp = " << bpp << endl;
@@ -939,7 +905,12 @@ main(int argc,char **argv)
 	// Skip header of .pgm file when compressing
 	if (!decompressing)
 	{
-		dbg_file.open("../jpeg_ls_dump.txt");	// Debugging
+		// Open debugging dump file
+		size_t filename_ext_idx = string(input_options.filename).find_last_of(".");
+		string dump_filename = string(input_options.filename).substr(0, filename_ext_idx);	// Input file name without extension
+		dump_filename = dump_filename + "jpeg_ls_dump.txt";
+		dbg_file.open(dump_filename);	// Debugging
+
 		readRow(in, thisRow, 3, 8);								// Magic number 'P5\n'
 		readRow(in, thisRow, ceil(log10(ROWS))+1, 8);			// Number of rows
 		readRow(in, thisRow, ceil(log10(COLUMNS))+1, 8);		// Number of columns
