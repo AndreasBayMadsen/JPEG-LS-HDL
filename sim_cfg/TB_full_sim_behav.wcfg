@@ -11,12 +11,12 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="3,202,383.907 ns"></ZoomStartTime>
-      <ZoomEndTime time="3,205,243.908 ns"></ZoomEndTime>
-      <Cursor1Time time="3,203,907.070 ns"></Cursor1Time>
+      <ZoomStartTime time="0.021003958 ms"></ZoomStartTime>
+      <ZoomEndTime time="103.221003959 ms"></ZoomEndTime>
+      <Cursor1Time time="20.321003958 ms"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="140"></NameColumnWidth>
+      <NameColumnWidth column_width="136"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="20" />
@@ -443,14 +443,17 @@
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_er_1">
          <obj_property name="ElementShortName">pred_er_1[6:0]</obj_property>
          <obj_property name="ObjectShortName">pred_er_1[6:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_er_2">
          <obj_property name="ElementShortName">pred_er_2[6:0]</obj_property>
          <obj_property name="ObjectShortName">pred_er_2[6:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_er_3">
          <obj_property name="ElementShortName">pred_er_3[6:0]</obj_property>
          <obj_property name="ObjectShortName">pred_er_3[6:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
    </wvobject>
    <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_2_5">

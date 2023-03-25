@@ -39,11 +39,11 @@ entity gradient is
                 color_res   : INTEGER   := 5);  -- Number of bits in color
     Port (  clk         : in    STD_LOGIC                       := '0';
             resetn      : in    STD_LOGIC                       := '1';
-            A           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
+            A           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');   -- Pixels surrounding X
             B           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
             C           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
             D           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
-            ctxt_idx    : out   UNSIGNED(8 downto 0)            := (others=>'0');
+            ctxt_idx    : out   UNSIGNED(8 downto 0)            := (others=>'0');   -- Index of current context
             sign        : out   STD_LOGIC                       := '0'
             );
 end gradient;

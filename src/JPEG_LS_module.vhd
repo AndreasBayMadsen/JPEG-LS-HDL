@@ -87,14 +87,14 @@ architecture Behavioral of JPEG_LS_module is
                 clk         : in    STD_LOGIC                       := '1';
                 resetn      : in    STD_LOGIC                       := '1';
                 -- Inputs
-                A           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
+                A           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');   -- Pixels surrounding X
                 B           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
                 C           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
                 D           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
                 -- Outputs
-                ctxt_idx    : out   UNSIGNED(8 downto 0)            := (others=>'0');
+                ctxt_idx    : out   UNSIGNED(8 downto 0)            := (others=>'0');   -- Index of current context
                 sign        : out   STD_LOGIC                       := '0';
-                X_pred      : out   UNSIGNED(color_res-1 downto 0)  := (others=>'0')
+                X_pred      : out   UNSIGNED(color_res-1 downto 0)  := (others=>'0')    -- Prediction of X
                 );
     end component;
     

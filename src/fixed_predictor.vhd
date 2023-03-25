@@ -38,11 +38,11 @@ entity fixed_predictor is
         color_res   : INTEGER   := 5);
     Port ( 
         pclk :          in  STD_LOGIC;
-        A :             in  unsigned    (color_res - 1 downto 0);
+        A :             in  unsigned    (color_res - 1 downto 0);   -- Pixels surrounding X
         B :             in  unsigned    (color_res - 1 downto 0);
         C :             in  unsigned    (color_res - 1 downto 0);
            
-        x_pred :        out unsigned    (color_res - 1 downto 0));
+        x_pred :        out unsigned    (color_res - 1 downto 0));  -- Prediction of X
 end fixed_predictor;
 
 architecture Behavioral of fixed_predictor is

@@ -38,14 +38,14 @@ entity pipeline_module_1 is
             clk         : in    STD_LOGIC                       := '1';
             resetn      : in    STD_LOGIC                       := '1';
             -- Inputs
-            A           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
+            A           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');   -- Pixels surrounding X
             B           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
             C           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
             D           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
             -- Outputs
-            ctxt_idx    : out   UNSIGNED(8 downto 0)            := (others=>'0');
+            ctxt_idx    : out   UNSIGNED(8 downto 0)            := (others=>'0');   -- Index of current context
             sign        : out   STD_LOGIC                       := '0';
-            X_pred      : out   UNSIGNED(color_res-1 downto 0)  := (others=>'0')
+            X_pred      : out   UNSIGNED(color_res-1 downto 0)  := (others=>'0')    -- Prediction of X
             );
 end pipeline_module_1;
 
@@ -58,11 +58,11 @@ architecture Behavioral of pipeline_module_1 is
                     color_res   : INTEGER   := 5);  -- Number of bits in color
         Port (  clk         : in    STD_LOGIC                       := '0';
                 resetn      : in    STD_LOGIC                       := '1';
-                A           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
+                A           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');   -- Pixels surrounding X
                 B           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
                 C           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
                 D           : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
-                ctxt_idx    : out   UNSIGNED(8 downto 0)            := (others=>'0');
+                ctxt_idx    : out   UNSIGNED(8 downto 0)            := (others=>'0');   -- Index of current context
                 sign        : out   STD_LOGIC                       := '0');
     end component;
     
@@ -71,11 +71,11 @@ architecture Behavioral of pipeline_module_1 is
             color_res   :    INTEGER := 5);
         Port ( 
             pclk :          in  STD_LOGIC;
-            A :             in  unsigned    (color_res - 1 downto 0);
+            A :             in  unsigned    (color_res - 1 downto 0);   -- Pixels surrounding X
             B :             in  unsigned    (color_res - 1 downto 0);
             C :             in  unsigned    (color_res - 1 downto 0);
                
-            x_pred :        out unsigned    (color_res - 1 downto 0));
+            x_pred :        out unsigned    (color_res - 1 downto 0));  -- Prediction of X
     end component;
     
 begin

@@ -69,19 +69,19 @@ architecture Behavioral of collector is
       );
     end component;
     
---    -- Type declarations
+    -- Type declarations
     type DESERIALIZER_FSM_TYPE is (IDLE, RUNNING, END_OF_LINE);
     type FIFO_FSM_TYPE is (RUNNING, RESET);
     
     -- Signal declarations
-    signal resetn_int       : STD_LOGIC := '1';
+    signal resetn_int           : STD_LOGIC := '1';
     
         -- Receiving of bytes
     signal deserializer_state   : DESERIALIZER_FSM_TYPE := IDLE;
     signal first_byte           : STD_LOGIC := '1';
     signal pixel_received       : STD_LOGIC := '0';
     signal X_buffer             : UNSIGNED(15 downto 0) := (others=>'0');
-    signal border_fill_count    : INTEGER := 0;
+    signal border_fill_count    : INTEGER range 0 to 3  := 0;
     
         -- FIFO
     signal write_enable         : STD_LOGIC                     := '0';
@@ -213,7 +213,7 @@ begin
         -- Variable declarations
         variable tail_pointer_var   : UNSIGNED(read_addr_vector'high downto read_addr_vector'low)   := (others=>'0');
         variable head_pointer_var   : UNSIGNED(read_addr_vector'high downto read_addr_vector'low)   := to_unsigned(image_width-2, read_addr_vector'length);
-        variable write_addr_var     : UNSIGNED(write_addr'high downto write_addr'low)   := (others=>'0');
+        variable write_addr_var     : UNSIGNED(write_addr'high downto write_addr'low)               := (others=>'0');
     begin
         if rising_edge(pclk) then
             if resetn_int = '0' or resetn = '0' then
