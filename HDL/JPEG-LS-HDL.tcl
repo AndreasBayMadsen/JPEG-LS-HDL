@@ -184,7 +184,7 @@ set_property -name "webtalk.questa_export_sim" -value "25" -objects $obj
 set_property -name "webtalk.riviera_export_sim" -value "25" -objects $obj
 set_property -name "webtalk.vcs_export_sim" -value "25" -objects $obj
 set_property -name "webtalk.xsim_export_sim" -value "25" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "322" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "329" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_CDC XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -210,6 +210,7 @@ set files [list \
  [file normalize "${origin_dir}/src/pipeline_module_1.vhd"] \
  [file normalize "${origin_dir}/src/pipeline_module_2.vhd"] \
  [file normalize "${origin_dir}/src/prediction_adder.vhd"] \
+ [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -301,24 +302,6 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
-
-# Set 'sources_1' fileset file properties for local files
-# None
-
-# Set 'sources_1' fileset properties
-set obj [get_filesets sources_1]
-set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
-set_property -name "top" -value "JPEG_LS_module" -objects $obj
-set_property -name "top_auto_set" -value "0" -objects $obj
-
-# Set 'sources_1' fileset object
-set obj [get_filesets sources_1]
-set files [list \
- [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
-]
-add_files -norecurse -fileset $obj $files
-
-# Set 'sources_1' fileset file properties for remote files
 set file "$origin_dir/ip/context_memory_block/context_memory_block.xci"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
@@ -331,6 +314,12 @@ if { ![get_property "is_locked" $file_obj] } {
 
 # Set 'sources_1' fileset file properties for local files
 # None
+
+# Set 'sources_1' fileset properties
+set obj [get_filesets sources_1]
+set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
+set_property -name "top" -value "JPEG_LS_module" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -508,7 +497,6 @@ if { $obj != "" } {
 
 }
 set obj [get_runs synth_1]
-set_property -name "needs_refresh" -value "1" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
 

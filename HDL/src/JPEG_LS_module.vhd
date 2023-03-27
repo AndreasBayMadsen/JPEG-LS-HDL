@@ -209,12 +209,17 @@ architecture Behavioral of JPEG_LS_module is
     signal mapped_error_r_3 : UNSIGNED(R_size-1 downto 0)           := (others=>'0');
     signal mapped_error_g_3 : UNSIGNED(G_size-1 downto 0)           := (others=>'0');
     signal mapped_error_b_3 : UNSIGNED(B_size-1 downto 0)           := (others=>'0');
---    signal encoded_r        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
---    signal encoded_g        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
---    signal encoded_b        : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
---    signal encoded_size_r   : UNSIGNED(k_width downto 0)            := (others=>'0');
---    signal encoded_size_g   : UNSIGNED(k_width downto 0)            := (others=>'0');
---    signal encoded_size_b   : UNSIGNED(k_width downto 0)            := (others=>'0');
+    signal encoded_r_3      : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+    signal encoded_g_3      : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+    signal encoded_b_3      : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
+    signal encoded_size_r_3 : UNSIGNED(k_width downto 0)            := (others=>'0');
+    signal encoded_size_g_3 : UNSIGNED(k_width downto 0)            := (others=>'0');
+    signal encoded_size_b_3 : UNSIGNED(k_width downto 0)            := (others=>'0');
+    
+        -- PIPELINE REGION 4 - Output
+    signal valid_data_4     : STD_LOGIC                             := '0';
+    signal new_pixel_4_buf  : STD_LOGIC                             := '0';
+    signal new_pixel_4      : STD_LOGIC                             := '0';
     
 begin
 
@@ -468,8 +473,8 @@ begin
         valid_data  => valid_data_3,
         k           => k_r_3,
         error       => mapped_error_r_3,
-        encoded     => encoded_r,
-        size        => encoded_size_r
+        encoded     => encoded_r_3,
+        size        => encoded_size_r_3
     );
     
     golomb_g: golomb_coder  -- Golomb coder for green color
@@ -484,8 +489,8 @@ begin
         valid_data  => valid_data_3,
         k           => k_g_3,
         error       => mapped_error_g_3,
-        encoded     => encoded_g,
-        size        => encoded_size_g
+        encoded     => encoded_g_3,
+        size        => encoded_size_g_3
     );
 
     golomb_b: golomb_coder  -- Golomb coder for blue color
@@ -500,11 +505,43 @@ begin
         valid_data  => valid_data_3,
         k           => k_b_3,
         error       => mapped_error_b_3,
-        encoded     => encoded_b,
-        size        => encoded_size_b
+        encoded     => encoded_b_3,
+        size        => encoded_size_b_3
     );
     
+    -- Pipeline register 3
+    pipeline_register_3: process(pclk)
+    begin
+        if rising_edge(pclk) then
+            if resetn = '0' then
+                -- Synchronous reset
+                valid_data_4        <= '0';
+                encoded_r           <= (others=>'0');
+                encoded_g           <= (others=>'0');
+                encoded_b           <= (others=>'0');
+                encoded_size_r      <= (others=>'0');
+                encoded_size_g      <= (others=>'0');
+                encoded_size_b      <= (others=>'0');
+                new_pixel_4_buf     <= '0';
+                new_pixel_4         <= '0';
+            else
+                if new_pixel_3 = '1' then
+                    valid_data_4        <= valid_data_3;
+                    encoded_r           <= encoded_r_3;     
+                    encoded_g           <= encoded_g_3;     
+                    encoded_b           <= encoded_b_3;
+                    encoded_size_r      <= encoded_size_r_3;
+                    encoded_size_g      <= encoded_size_g_3;
+                    encoded_size_b      <= encoded_size_b_3;
+                end if;
+                
+                new_pixel_4_buf <= new_pixel_3;
+                new_pixel_4     <= new_pixel_4_buf;
+            end if;
+        end if;
+    end process;
+    
     -- Signal assignments
-    new_pixel <= new_pixel_3;
+    new_pixel <= new_pixel_4;
 
 end Behavioral;
