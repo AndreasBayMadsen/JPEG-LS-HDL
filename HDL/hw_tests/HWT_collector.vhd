@@ -297,7 +297,7 @@ begin
                         debug_1(3)  <= '1';
                         href <= '1';
                         
-                        if low_byte then
+                        if low_byte then    -- I THINK THE ORDER IS WRONG! IT SHOULD START WITH THE HIGH BYTE!
                             debug_1(7 downto 4) <= "0001";
                             pixel       <= image(row_count, col_count)(7 downto 0);
                             low_byte    <= FALSE;
