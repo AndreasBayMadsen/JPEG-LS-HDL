@@ -34,9 +34,12 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/ip/HWT_collector_ila/HWT_collector_ila.xci"]"\
  "[file normalize "$origin_dir/ip/HWT_collector_clk/HWT_collector_clk.xci"]"\
  "[file normalize "$origin_dir/hw_tests/HWT_cam_sim.vhd"]"\
+ "[file normalize "$origin_dir/hw_tests/no_border_low_res.coe"]"\
  "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
  "[file normalize "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"]"\
+ "[file normalize "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
+ "[file normalize "$origin_dir/sim/TB_HWT_cam_sim.vhd"]"\
  "[file normalize "$origin_dir/src/collector.vhd"]"\
  "[file normalize "$origin_dir/src/fixed_predictor.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_collector.vhd"]"\
@@ -49,6 +52,7 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/sim_cfg/TB_gradient_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_golomb_coder_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_context_modeller_behav.wcfg"]"\
+ "[file normalize "$origin_dir/sim_cfg/TB_HWT_cam_sim_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/camera_simulator.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
@@ -178,16 +182,17 @@ set_property -name "simulator.xsim_gcc_version" -value "6.2.0" -objects $obj
 set_property -name "simulator.xsim_version" -value "2022.2" -objects $obj
 set_property -name "simulator_language" -value "Mixed" -objects $obj
 set_property -name "sim_compile_state" -value "1" -objects $obj
+set_property -name "source_mgmt_mode" -value "DisplayOnly" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
-set_property -name "webtalk.activehdl_export_sim" -value "33" -objects $obj
-set_property -name "webtalk.modelsim_export_sim" -value "33" -objects $obj
-set_property -name "webtalk.questa_export_sim" -value "33" -objects $obj
-set_property -name "webtalk.riviera_export_sim" -value "33" -objects $obj
-set_property -name "webtalk.vcs_export_sim" -value "33" -objects $obj
+set_property -name "webtalk.activehdl_export_sim" -value "37" -objects $obj
+set_property -name "webtalk.modelsim_export_sim" -value "37" -objects $obj
+set_property -name "webtalk.questa_export_sim" -value "37" -objects $obj
+set_property -name "webtalk.riviera_export_sim" -value "37" -objects $obj
+set_property -name "webtalk.vcs_export_sim" -value "37" -objects $obj
 set_property -name "webtalk.xcelium_export_sim" -value "1" -objects $obj
-set_property -name "webtalk.xsim_export_sim" -value "33" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "332" -objects $obj
-set_property -name "xpm_libraries" -value "XPM_CDC XPM_MEMORY" -objects $obj
+set_property -name "webtalk.xsim_export_sim" -value "37" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "350" -objects $obj
+set_property -name "xpm_libraries" -value "XPM_CDC XPM_FIFO XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
 if {[string equal [get_filesets -quiet sources_1] ""]} {
@@ -212,15 +217,8 @@ set files [list \
  [file normalize "${origin_dir}/ip/HWT_collector_bram/HWT_collector_bram.xci"] \
  [file normalize "${origin_dir}/ip/HWT_collector_ila/HWT_collector_ila.xci"] \
  [file normalize "${origin_dir}/ip/HWT_collector_clk/HWT_collector_clk.xci"] \
- [file normalize "${origin_dir}/src/context_modeller.vhd"] \
- [file normalize "${origin_dir}/src/golomb_coder.vhd"] \
- [file normalize "${origin_dir}/src/JPEG_LS_module.vhd"] \
- [file normalize "${origin_dir}/src/pipeline_module_1.vhd"] \
- [file normalize "${origin_dir}/src/pipeline_module_2.vhd"] \
- [file normalize "${origin_dir}/src/prediction_adder.vhd"] \
- [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
  [file normalize "${origin_dir}/hw_tests/HWT_cam_sim.vhd"] \
- [file normalize "${origin_dir}/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"] \
+ [file normalize "${origin_dir}/hw_tests/no_border_low_res.coe"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -317,6 +315,23 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
+
+# Set 'sources_1' fileset file properties for local files
+# None
+
+# Set 'sources_1' fileset properties
+set obj [get_filesets sources_1]
+set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
+set_property -name "top" -value "JPEG_LS_module" -objects $obj
+
+# Set 'sources_1' fileset object
+set obj [get_filesets sources_1]
+set files [list \
+ [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'sources_1' fileset file properties for remote files
 set file "$origin_dir/ip/context_memory_block/context_memory_block.xci"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
@@ -330,11 +345,47 @@ if { ![get_property "is_locked" $file_obj] } {
 # Set 'sources_1' fileset file properties for local files
 # None
 
-# Set 'sources_1' fileset properties
+# Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
-set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
-set_property -name "top" -value "JPEG_LS_module" -objects $obj
-set_property -name "top_auto_set" -value "0" -objects $obj
+set files [list \
+ [file normalize "${origin_dir}/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'sources_1' fileset file properties for remote files
+set file "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+
+# Set 'sources_1' fileset file properties for local files
+# None
+
+# Set 'sources_1' fileset object
+set obj [get_filesets sources_1]
+set files [list \
+ [file normalize "${origin_dir}/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'sources_1' fileset file properties for remote files
+set file "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+
+# Set 'sources_1' fileset file properties for local files
+# None
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -378,6 +429,7 @@ if {[string equal [get_filesets -quiet block_tests] ""]} {
 # Set 'block_tests' fileset object
 set obj [get_filesets block_tests]
 set files [list \
+ [file normalize "${origin_dir}/sim/TB_HWT_cam_sim.vhd"] \
  [file normalize "${origin_dir}/src/collector.vhd"] \
  [file normalize "${origin_dir}/src/fixed_predictor.vhd"] \
  [file normalize "${origin_dir}/sim/TB_collector.vhd"] \
@@ -390,10 +442,16 @@ set files [list \
  [file normalize "${origin_dir}/sim_cfg/TB_gradient_behav.wcfg"] \
  [file normalize "${origin_dir}/sim_cfg/TB_golomb_coder_behav.wcfg"] \
  [file normalize "${origin_dir}/sim_cfg/TB_context_modeller_behav.wcfg"] \
+ [file normalize "${origin_dir}/sim_cfg/TB_HWT_cam_sim_behav.wcfg"] \
 ]
 add_files -norecurse -fileset $obj $files
 
 # Set 'block_tests' fileset file properties for remote files
+set file "$origin_dir/sim/TB_HWT_cam_sim.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 set file "$origin_dir/src/collector.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
@@ -440,7 +498,8 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 # Set 'block_tests' fileset properties
 set obj [get_filesets block_tests]
-set_property -name "top" -value "JPEG_LS_module" -objects $obj
+set_property -name "top" -value "TB_HWT_cam_sim" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
 # Create 'full_simulation' fileset (if not found)
@@ -1151,9 +1210,8 @@ proc cr_bd_BD_full_test { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
+  validate_bd_design
   save_bd_design
-common::send_gid_msg -ssname BD::TCL -id 2050 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
-
   close_bd_design $design_name 
 }
 # End of cr_bd_BD_full_test()
@@ -1191,6 +1249,7 @@ if { $obj != "" } {
 
 }
 set obj [get_runs synth_1]
+set_property -name "needs_refresh" -value "1" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
 

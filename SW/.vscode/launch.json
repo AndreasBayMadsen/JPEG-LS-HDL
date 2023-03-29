@@ -10,7 +10,8 @@
             "request": "launch",
             "program": "${file}",
             "args": [
-                "../kodak_dataset/caterpillar.ppm"
+                "../kodak_dataset/no_border_low_res.ppm",
+                "-w", "32"
             ],
             "console": "integratedTerminal",
             "justMyCode": true
