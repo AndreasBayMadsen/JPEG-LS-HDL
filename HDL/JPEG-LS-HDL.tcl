@@ -38,6 +38,8 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
  "[file normalize "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"]"\
  "[file normalize "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"]"\
+ "[file normalize "$origin_dir/src/output_buffer.vhd"]"\
+ "[file normalize "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
  "[file normalize "$origin_dir/sim/TB_HWT_cam_sim.vhd"]"\
  "[file normalize "$origin_dir/src/collector.vhd"]"\
@@ -53,6 +55,9 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/sim_cfg/TB_golomb_coder_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_context_modeller_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_HWT_cam_sim_behav.wcfg"]"\
+ "[file normalize "$origin_dir/src/TB_output_buffer.vhd"]"\
+ "[file normalize "$origin_dir/sim_cfg/TB_output_buffer_behav.wcfg"]"\
+ "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/camera_simulator.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
@@ -219,6 +224,15 @@ set files [list \
  [file normalize "${origin_dir}/ip/HWT_collector_clk/HWT_collector_clk.xci"] \
  [file normalize "${origin_dir}/hw_tests/HWT_cam_sim.vhd"] \
  [file normalize "${origin_dir}/hw_tests/no_border_low_res.coe"] \
+ [file normalize "${origin_dir}/src/context_modeller.vhd"] \
+ [file normalize "${origin_dir}/src/golomb_coder.vhd"] \
+ [file normalize "${origin_dir}/src/JPEG_LS_module.vhd"] \
+ [file normalize "${origin_dir}/src/pipeline_module_1.vhd"] \
+ [file normalize "${origin_dir}/src/pipeline_module_2.vhd"] \
+ [file normalize "${origin_dir}/src/prediction_adder.vhd"] \
+ [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
+ [file normalize "${origin_dir}/src/output_buffer.vhd"] \
+ [file normalize "${origin_dir}/ip/output_buffer_bram/output_buffer_bram.xci"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -341,6 +355,20 @@ if { ![get_property "is_locked" $file_obj] } {
   set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
 }
 
+set file "$origin_dir/src/output_buffer.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "generate_synth_checkpoint" -value "0" -objects $file_obj
+}
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+
 
 # Set 'sources_1' fileset file properties for local files
 # None
@@ -443,6 +471,8 @@ set files [list \
  [file normalize "${origin_dir}/sim_cfg/TB_golomb_coder_behav.wcfg"] \
  [file normalize "${origin_dir}/sim_cfg/TB_context_modeller_behav.wcfg"] \
  [file normalize "${origin_dir}/sim_cfg/TB_HWT_cam_sim_behav.wcfg"] \
+ [file normalize "${origin_dir}/src/TB_output_buffer.vhd"] \
+ [file normalize "${origin_dir}/sim_cfg/TB_output_buffer_behav.wcfg"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -488,6 +518,11 @@ set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 set file "$origin_dir/sim/camera_simulator.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/TB_output_buffer.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj

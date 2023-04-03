@@ -38,13 +38,14 @@ entity golomb_coder is
         beta_max    :   integer := 8;
         L_max       :   integer := 32
     );
-    Port ( pclk : in STD_LOGIC;
-           en : in STD_LOGIC;
-           valid_data : in STD_LOGIC;
-           k : in unsigned (k_width - 1 downto 0);
-           error : in unsigned (beta_max - 1 downto 0);
-           encoded : out STD_LOGIC_VECTOR (L_max - 1 downto 0);
-           size : out unsigned (k_width downto 0));
+    Port ( pclk         : in STD_LOGIC;
+           en           : in STD_LOGIC;
+           valid_data   : in STD_LOGIC;
+           k            : in unsigned (k_width - 1 downto 0);
+           error        : in unsigned (beta_max - 1 downto 0);
+           encoded      : out STD_LOGIC_VECTOR (L_max - 1 downto 0);
+           size         : out unsigned (k_width downto 0)
+           );
 end golomb_coder;
 
 architecture Behavioral of golomb_coder is
