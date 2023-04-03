@@ -18,35 +18,6 @@
 -- 
 ----------------------------------------------------------------------------------
 
---entity my_module is
---  port (
-
---  <s_en> : in std_logic; -- Chip Enable Signal (optional)
---  <s_dout> : out std_logic_vector(<left_bound> downto 0); -- Data Out Bus (optional)
---  <s_din> : in std_logic_vector(<left_bound> downto 0); -- Data In Bus (optional)
---  <s_we> : in std_logic_vector(<left_bound> downto 0); -- Byte Enables (optional)
---  <s_addr> : in std_logic_vector(<left_bound> downto 0); -- Address Signal (required)
---  <s_clk> : in std_logic; -- Clock Signal (required)
---  <s_rst> : in std_logic; -- Reset Signal (required)
---  --  additional ports here
-
---  );
---end my_module;
---architecture arch_impl of my_module is
-
---  ATTRIBUTE X_INTERFACE_INFO : STRING;
---  ATTRIBUTE X_INTERFACE_INFO of <s_en>: SIGNAL is "xilinx.com:interface:bram:1.0 <interface_name> EN";
---  ATTRIBUTE X_INTERFACE_INFO of <s_dout>: SIGNAL is "xilinx.com:interface:bram:1.0 <interface_name> DOUT";
---  ATTRIBUTE X_INTERFACE_INFO of <s_din>: SIGNAL is "xilinx.com:interface:bram:1.0 <interface_name> DIN";
---  ATTRIBUTE X_INTERFACE_INFO of <s_we>: SIGNAL is "xilinx.com:interface:bram:1.0 <interface_name> WE";
---  ATTRIBUTE X_INTERFACE_INFO of <s_addr>: SIGNAL is "xilinx.com:interface:bram:1.0 <interface_name> ADDR";
---  ATTRIBUTE X_INTERFACE_INFO of <s_clk>: SIGNAL is "xilinx.com:interface:bram:1.0 <interface_name> CLK";
---  ATTRIBUTE X_INTERFACE_INFO of <s_rst>: SIGNAL is "xilinx.com:interface:bram:1.0 <interface_name> RST";
---  -- Uncomment the following to set interface specific parameter on the bus interface.
---  --  ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
---  --  ATTRIBUTE X_INTERFACE_PARAMETER of <port_name>: SIGNAL is "MASTER_TYPE <value>,MEM_ECC <value>,MEM_WIDTH <value>,MEM_SIZE <value>,READ_WRITE_MODE <value>";
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -106,6 +77,16 @@ architecture Behavioral of HWT_cam_sim is
     attribute X_INTERFACE_INFO of ram_read_data     : signal is "xilinx.com:interface:bram:1.0 BRAM_interface DOUT";
     attribute X_INTERFACE_INFO of ram_write_data    : signal is "xilinx.com:interface:bram:1.0 BRAM_interface DIN";
     attribute X_INTERFACE_INFO of ram_we            : signal is "xilinx.com:interface:bram:1.0 BRAM_interface WE";
+    attribute X_INTERFACE_PARAMETER : STRING;
+    attribute X_INTERFACE_PARAMETER of ram_reset        : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_clk          : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_en           : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_addr         : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_read_data    : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_write_data   : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_we           : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
+    
+    attribute ASYNC_REG : STRING;
         
     -- Type declarations
     type FSM_TYPE is (WAIT_ENABLE, WAITING, SET_VSYNC, CLEAR_VSYNC, IN_ROW);
@@ -118,7 +99,13 @@ architecture Behavioral of HWT_cam_sim is
         -- General
     signal pclk_int         : STD_LOGIC := '1';
     
+        -- Synchronization
+    signal enable_sync_1    : STD_LOGIC := '0';
+    signal enable_synced    : STD_LOGIC := '0';
+    attribute ASYNC_REG of enable_sync_1    : signal is "TRUE";
+    
         -- Stimuli
+    signal enable_pulse     : STD_LOGIC     := '0';
     signal fsm_state        : FSM_TYPE      := WAIT_ENABLE;
     signal pclk_count       : INTEGER       := 0;
     signal wait_time        : INTEGER       := 0;
@@ -143,6 +130,31 @@ begin
     );
     
     -- Processes
+    sync: process(pclk_int)
+    begin
+        if falling_edge(pclk_int) then
+            enable_sync_1   <= enable;
+            enable_synced   <= enable_sync_1;
+        end if;
+    end process;
+    
+    en_pulse: process(pclk_int)
+        variable enable_shift   : STD_LOGIC_VECTOR(1 downto 0)  := (others=>'0');
+    begin
+        if falling_edge(pclk_int) then
+            if resetn = '0' then
+                enable_shift := (others=>'0');
+            else
+                enable_shift := enable_shift(0) & enable_synced;
+                enable_pulse <= '0';
+                
+                if enable_shift = "01" then
+                    enable_pulse <= '1';
+                end if;
+            end if;
+        end if;
+    end process;
+    
     stim: process(pclk_int)
     begin
         if falling_edge(pclk_int) then
@@ -183,7 +195,7 @@ begin
                         row_count       <= 0;
                         col_count       <= 0;
                     
-                        if enable = '1' then
+                        if enable_pulse = '1' then
                             fsm_state   <= SET_VSYNC;
                         end if;
                         

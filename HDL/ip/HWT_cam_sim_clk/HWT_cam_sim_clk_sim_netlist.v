@@ -1,10 +1,10 @@
 // Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2022.2 (lin64) Build 3671981 Fri Oct 14 04:59:54 MDT 2022
-// Date        : Mon Mar 27 20:39:30 2023
+// Date        : Mon Mar 27 20:39:29 2023
 // Host        : andreas-Huawei running 64-bit Ubuntu 22.04.2 LTS
-// Command     : write_verilog -force -mode funcsim
-//               /home/andreas/Desktop/ProfileProject/JPEG-LS-HDL/HDL/ip/HWT_cam_sim_clk/HWT_cam_sim_clk_sim_netlist.v
+// Command     : write_verilog -force -mode funcsim -rename_top HWT_cam_sim_clk -prefix
+//               HWT_cam_sim_clk_ HWT_cam_sim_clk_sim_netlist.v
 // Design      : HWT_cam_sim_clk
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -22,12 +22,12 @@ module HWT_cam_sim_clk
   (* IBUF_LOW_PWR *) wire clk_in1;
   wire clk_out1;
 
-  HWT_cam_sim_clk_clk_wiz inst
+  HWT_cam_sim_clk_HWT_cam_sim_clk_clk_wiz inst
        (.clk_in1(clk_in1),
         .clk_out1(clk_out1));
 endmodule
 
-module HWT_cam_sim_clk_clk_wiz
+module HWT_cam_sim_clk_HWT_cam_sim_clk_clk_wiz
    (clk_out1,
     clk_in1);
   output clk_out1;

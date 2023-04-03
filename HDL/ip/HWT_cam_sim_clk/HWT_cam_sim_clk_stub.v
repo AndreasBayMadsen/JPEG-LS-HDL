@@ -1,10 +1,10 @@
 // Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2022.2 (lin64) Build 3671981 Fri Oct 14 04:59:54 MDT 2022
-// Date        : Mon Mar 27 20:39:29 2023
+// Date        : Mon Mar 27 20:39:28 2023
 // Host        : andreas-Huawei running 64-bit Ubuntu 22.04.2 LTS
-// Command     : write_verilog -force -mode synth_stub
-//               /home/andreas/Desktop/ProfileProject/JPEG-LS-HDL/HDL/ip/HWT_cam_sim_clk/HWT_cam_sim_clk_stub.v
+// Command     : write_verilog -force -mode synth_stub -rename_top HWT_cam_sim_clk -prefix
+//               HWT_cam_sim_clk_ HWT_cam_sim_clk_stub.v
 // Design      : HWT_cam_sim_clk
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7z020clg400-1
