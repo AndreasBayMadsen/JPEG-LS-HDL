@@ -11,7 +11,7 @@
             "program": "${file}",
             "args": [
                 "../kodak_dataset/no_border_low_res.ppm",
-                "-p", "/dev/ttyUSB1"
+                "-ptx", "/dev/ttyUSB1"
             ],
             "console": "integratedTerminal",
             "justMyCode": false

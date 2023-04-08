@@ -2,13 +2,23 @@
 # This program takes a .ppm image, converts it to
 # RGB565 and transmits the raw image over UART.
 
+import os
 import cv2
 import serial
 import struct
 import argparse
 import numpy as np
+from bitarray import bitarray
 
-def main(image_path, port, baud):
+def main(image_path, port_tx, port_rx, baud, output_path):
+    # Determine output path
+    if output_path==None:
+        output_path = os.path.splitext(image_path)[0] + '.jls'
+
+    # Delete output file if it already exists
+    if os.path.exists(output_path):
+        os.remove(output_path)
+
     # Read image file
     img = cv2.imread(image_path)
 
@@ -20,13 +30,24 @@ def main(image_path, port, baud):
     rgb565_img  = red_img*(2**11) + green_img*(2**5) + blue_img*(2**0)
     rgb565_img  = np.asarray(rgb565_img).astype('uint16')
 
-    # Transmit image
-    ser = serial.Serial(port, baud,
+    # Set up ports
+    ser_tx = serial.Serial(port_tx, baud,
                         serial.EIGHTBITS,
                         serial.PARITY_NONE,
                         serial.STOPBITS_ONE,
                         timeout=5)
-    
+
+    if port_rx==None:
+        ser_rx = ser_tx
+    else:
+        ser_rx = serial.Serial(port_rx, baud,
+                            serial.EIGHTBITS,
+                            serial.PARITY_NONE,
+                            serial.STOPBITS_ONE,
+                            timeout=5)
+
+
+    # Transmit image
     orig_array = []
     for row in range(rgb565_img.shape[0]):
         for col in range(rgb565_img.shape[1]):
@@ -36,64 +57,35 @@ def main(image_path, port, baud):
             temp[0::2] = values[1::2]
             temp[1::2] = values[0::2]
             values = temp
-            ser.write(values)
+            ser_tx.write(values)
 
-    # Store received data
-    bram_array = []
+    # Receive compressed bitstream
+    bits = bitarray()
     while True:
-        read_data = ser.read()
+        read_data = ser_rx.read()
 
         if len(read_data) < 1:
             break
         else:
-            bram_array.append(read_data)
+            bits.frombytes(read_data)
 
-    ser.close()
+    ser_tx.close()
+    ser_rx.close()
 
-    # Rewrite into 32-bit lines
-    bram_array_temp = []
-    byte_shift_count = 3
-    temp = 0
-    for val in bram_array:
-        temp = temp + int.from_bytes(val, 'big')*(2**(8*byte_shift_count))
-        byte_shift_count = byte_shift_count - 1
+    # Write binary data to file
+    with open(output_path, 'wb') as ofile:
+        bits.tofile(ofile)
 
-        if byte_shift_count < 0:
-            bram_array_temp.append(temp)
-            byte_shift_count = 3
-            temp = 0
-    bram_array = bram_array_temp
-
-    # Write received data to file
-    with open("dump.txt", 'w') as file:
-        for val in bram_array:
-            file.write(f"{val:08x}\n")
-
-    # Write original data to file to compare
-    orig_array_temp = []
-    word_shift_count = 1
-    temp = 0
-    for val in orig_array:
-        temp = temp + val*(2**(16*word_shift_count))
-        word_shift_count = word_shift_count - 1
-
-        if word_shift_count < 0:
-            orig_array_temp.append(temp)
-            word_shift_count = 1
-            temp = 0
-    orig_array = orig_array_temp
-
-    with open("dump_orig.txt", 'w') as file:
-        for val in orig_array:
-            file.write(f"{val:08x}\n")
 
 if __name__ == "__main__":
     # Run argument parser
     parser = argparse.ArgumentParser(description="Program used to transmit a .ppm image over UART")
     parser.add_argument('image_path', help="Path to the .ppm image")
-    parser.add_argument('-p', '--port', required=True, help="Serial port to use")
+    parser.add_argument('-ptx', '--port_tx', required=True, help="Serial port to use for transmission")
+    parser.add_argument('-prx', '--port_rx', required=False, help="Serial port to use for receiving")
     parser.add_argument('-b', '--baud', required=False, default=115200, help="Baud rate - defaults to 115200")
+    parser.add_argument('-o', '--output_path', required=False, help="Path to the .jls output file")
 
     args = parser.parse_args()
 
-    main(args.image_path, args.port, args.baud)
+    main(args.image_path, args.port_tx, args.port_rx, args.baud, args.output_path)
