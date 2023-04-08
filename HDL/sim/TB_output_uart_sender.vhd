@@ -110,7 +110,6 @@ begin
         end_of_data <= '1';
         
         wait;
-        
     end process;
 
 end Behavioral;
