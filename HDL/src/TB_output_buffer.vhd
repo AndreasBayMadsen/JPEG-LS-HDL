@@ -63,7 +63,7 @@ architecture Behavioral of TB_output_buffer is
                );
     end component;
 
-    constant CLK_FREQ   : REAL  := 24.0;    -- Clock frequency in MHz
+    constant CLK_FREQ   : REAL  := 12.0;    -- Clock frequency in MHz
     
         -- Derived
     constant CLK_PER    : TIME  := (1.0/CLK_FREQ)*1 us;
