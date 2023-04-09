@@ -40,8 +40,9 @@ entity output_buffer is
                 k_width_g     : integer := 5;
                 k_width_b     : integer := 5
     );
-    Port (  pclk            : in    STD_LOGIC;
-            en              : in    STD_LOGIC;
+    Port (  resetn          : in    STD_LOGIC;
+            pclk            : in    STD_LOGIC;
+            new_pixel       : in    STD_LOGIC;
             valid_data      : in    STD_LOGIC;
             encoded_r       : in    STD_LOGIC_VECTOR (L_max_r - 1 downto 0);
             encoded_g       : in    STD_LOGIC_VECTOR (L_max_g - 1 downto 0);
@@ -133,7 +134,18 @@ begin
     
     writer : process(pclk)
     begin
-        if rising_edge(pclk) then
+        if resetn = '0' then
+            
+            we <= '0';
+            read_allow <= '0';
+            bram_din <= (others => '0');
+            write_addr <= (others => '0');
+            write_pointer <= (others => '0');
+            reg <= (others => '0');
+            reg_end <= (others => '0');
+            writer_state <= WAITING_WRITE;
+        
+        elsif rising_edge(pclk) then
             
             we <= '0';
             read_allow <= '0';
@@ -156,7 +168,7 @@ begin
                         reg_end <= reg_shift_end;
                     end if;
                 
-                    if (en = '1' and valid_data = '1') then
+                    if (new_pixel = '1' and valid_data = '1') then
                         
                         writer_state <= UPDATE_REG;
                     end if;
@@ -171,16 +183,16 @@ begin
                     if valid_data = '1' then
                     
                         reg_end <= reg_end_temp;
+                        
+                        reg <= (others => '0');
                     
                         if reg_empty = '0' then
-                            reg <= (reg_width - 1 downto to_integer(reg_end_temp) => '0') 
-                            & encoded_b(to_integer(encoded_size_b - to_unsigned(1, encoded_size_b'length)) downto 0)
+                            reg(to_integer(reg_end_temp) downto 0) <= encoded_b(to_integer(encoded_size_b - to_unsigned(1, encoded_size_b'length)) downto 0)
                             & encoded_g(to_integer(encoded_size_g - to_unsigned(1, encoded_size_g'length)) downto 0)
                             & encoded_r(to_integer(encoded_size_r - to_unsigned(1, encoded_size_r'length)) downto 0)
                             & reg(to_integer(reg_end - to_unsigned(1, reg_end'length)) downto 0);
                         else
-                            reg <= (reg_width - 1 downto to_integer(reg_end_temp) => '0') 
-                            & encoded_b(to_integer(encoded_size_b - to_unsigned(1, encoded_size_b'length)) downto 0)
+                            reg(to_integer(reg_end_temp) downto 0) <= encoded_b(to_integer(encoded_size_b - to_unsigned(1, encoded_size_b'length)) downto 0)
                             & encoded_g(to_integer(encoded_size_g - to_unsigned(1, encoded_size_g'length)) downto 0)
                             & encoded_r(to_integer(encoded_size_r - to_unsigned(1, encoded_size_r'length)) downto 0);
                         end if;
@@ -194,17 +206,22 @@ begin
         end if;
     end process;
     
-    
     read_allowed <= read_allow;
     
     data_available <= '0' when write_pointer = read_pointer else '1';
     
-     
-
     reader : process(pclk)
     begin
-  
-        if rising_edge(pclk) then
+        if resetn = '0' then
+            new_data_ready <= '0';
+            end_of_data <= '1';
+            ram_waiting <= '0';
+            dout <= (others => '0');
+            addr_written <= '0';
+            read_addr <= (others => '0');
+            read_pointer <= (others => '0');
+        
+        elsif rising_edge(pclk) then
         
             new_data_ready <= '0';
                 
@@ -236,11 +253,8 @@ begin
                 read_pointer <= read_pointer + 1;
                 
                 addr_written <= '1';
-                
             end if;
-                
         end if;
     end process;
-
 
 end Behavioral;

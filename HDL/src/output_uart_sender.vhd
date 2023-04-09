@@ -29,11 +29,13 @@ use IEEE.MATH_REAL.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+library UNISIM;
+use UNISIM.VComponents.all;
 
 entity output_uart_sender is
-    Port (  pclk            : in  STD_LOGIC;
+    Port (  
+            resetn          : in  STD_LOGIC;
+            pclk            : in  STD_LOGIC;
             sig             : out STD_LOGIC;
             
             request_next    : out STD_LOGIC;  -- Set high for getting next value, when it is ready.
@@ -97,9 +99,21 @@ begin
     rising_clk_uart         <= '1' when old_clk_uart = '0' and clk_uart = '1' else '0';
     rising_data_send_uart   <= '1' when old_data_is_send_uart = '0' and data_is_send_uart = '1' else '0';
     
-    process(pclk)
+    process(pclk, resetn)
     begin
-        if rising_edge(pclk) then
+    
+        if resetn = '0' then
+            data_uart              <= (others => '0');
+            new_data_uart          <= '0';
+            old_data_is_send_uart  <= '0';
+            old_clk_uart           <= '0';
+            
+            buffer_data            <= (others => '0');
+            data_byte_idx          <= (others => '0');
+            
+            tx_states <= WAITING;
+        
+        elsif rising_edge(pclk) then
             old_data_is_send_uart <= data_is_send_uart;
             old_clk_uart <= clk_uart;
             request_next <= '0';

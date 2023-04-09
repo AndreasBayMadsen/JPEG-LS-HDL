@@ -19,6 +19,7 @@ proc checkRequiredFiles { origin_dir} {
   set status true
   set files [list \
  "[file normalize "$origin_dir/vivado_project/JPEG-LS-HDL.srcs/sources_1/ip/uart_576000_clock/uart_576000_clock.xci"]"\
+ "[file normalize "$origin_dir/vivado_project/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_uart_sender.dcp"]"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -28,6 +29,9 @@ proc checkRequiredFiles { origin_dir} {
   }
 
   set files [list \
+ "[file normalize "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"]"\
+ "[file normalize "$origin_dir/hw_tests/HWT_cam_sim.vhd"]"\
+ "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
  "[file normalize "$origin_dir/ip/collector_bram/collector_bram.xci"]"\
  "[file normalize "$origin_dir/src/collector.vhd"]"\
  "[file normalize "$origin_dir/src/context_modeller.vhd"]"\
@@ -38,21 +42,19 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/src/pipeline_module_2.vhd"]"\
  "[file normalize "$origin_dir/src/prediction_adder.vhd"]"\
  "[file normalize "$origin_dir/src/JPEG_LS_module.vhd"]"\
- "[file normalize "$origin_dir/hw_tests/HWT_collector.vhd"]"\
+ "[file normalize "$origin_dir/src/uart_module.vhd"]"\
+ "[file normalize "$origin_dir/src/output_uart_sender.vhd"]"\
  "[file normalize "$origin_dir/src/debounce.vhd"]"\
+ "[file normalize "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"]"\
+ "[file normalize "$origin_dir/src/output_buffer.vhd"]"\
+ "[file normalize "$origin_dir/hw_tests/HWT_collector.vhd"]"\
  "[file normalize "$origin_dir/ip/HWT_collector_bram/HWT_collector_bram.xci"]"\
  "[file normalize "$origin_dir/ip/HWT_collector_ila/HWT_collector_ila.xci"]"\
  "[file normalize "$origin_dir/ip/HWT_collector_clk/HWT_collector_clk.xci"]"\
- "[file normalize "$origin_dir/hw_tests/HWT_cam_sim.vhd"]"\
  "[file normalize "$origin_dir/hw_tests/no_border_low_res.coe"]"\
- "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
- "[file normalize "$origin_dir/src/output_buffer.vhd"]"\
- "[file normalize "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"]"\
- "[file normalize "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"]"\
  "[file normalize "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"]"\
- "[file normalize "$origin_dir/src/uart_module.vhd"]"\
- "[file normalize "$origin_dir/src/output_uart_sender.vhd"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
+ "[file normalize "$origin_dir/sim/TB_output_uart_sender.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_HWT_cam_sim.vhd"]"\
  "[file normalize "$origin_dir/src/collector.vhd"]"\
  "[file normalize "$origin_dir/src/fixed_predictor.vhd"]"\
@@ -69,7 +71,6 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/sim_cfg/TB_HWT_cam_sim_behav.wcfg"]"\
  "[file normalize "$origin_dir/src/TB_output_buffer.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_output_buffer_behav.wcfg"]"\
- "[file normalize "$origin_dir/sim/TB_output_uart_sender.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_output_uart_sender_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim/camera_simulator.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
@@ -200,16 +201,14 @@ set_property -name "simulator.xsim_gcc_version" -value "6.2.0" -objects $obj
 set_property -name "simulator.xsim_version" -value "2022.2" -objects $obj
 set_property -name "simulator_language" -value "Mixed" -objects $obj
 set_property -name "sim_compile_state" -value "1" -objects $obj
-set_property -name "source_mgmt_mode" -value "DisplayOnly" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
-set_property -name "webtalk.activehdl_export_sim" -value "40" -objects $obj
-set_property -name "webtalk.modelsim_export_sim" -value "40" -objects $obj
-set_property -name "webtalk.questa_export_sim" -value "40" -objects $obj
-set_property -name "webtalk.riviera_export_sim" -value "40" -objects $obj
-set_property -name "webtalk.vcs_export_sim" -value "40" -objects $obj
-set_property -name "webtalk.xcelium_export_sim" -value "4" -objects $obj
-set_property -name "webtalk.xsim_export_sim" -value "40" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "368" -objects $obj
+set_property -name "webtalk.activehdl_export_sim" -value "41" -objects $obj
+set_property -name "webtalk.modelsim_export_sim" -value "41" -objects $obj
+set_property -name "webtalk.questa_export_sim" -value "41" -objects $obj
+set_property -name "webtalk.riviera_export_sim" -value "41" -objects $obj
+set_property -name "webtalk.vcs_export_sim" -value "41" -objects $obj
+set_property -name "webtalk.xsim_export_sim" -value "41" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "369" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_CDC XPM_FIFO XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -220,6 +219,9 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
 set files [list \
+ [file normalize "${origin_dir}/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"] \
+ [file normalize "${origin_dir}/hw_tests/HWT_cam_sim.vhd"] \
+ [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
  [file normalize "${origin_dir}/ip/collector_bram/collector_bram.xci"] \
  [file normalize "${origin_dir}/src/collector.vhd"] \
  [file normalize "${origin_dir}/src/context_modeller.vhd"] \
@@ -230,20 +232,16 @@ set files [list \
  [file normalize "${origin_dir}/src/pipeline_module_2.vhd"] \
  [file normalize "${origin_dir}/src/prediction_adder.vhd"] \
  [file normalize "${origin_dir}/src/JPEG_LS_module.vhd"] \
- [file normalize "${origin_dir}/hw_tests/HWT_collector.vhd"] \
+ [file normalize "${origin_dir}/src/uart_module.vhd"] \
+ [file normalize "${origin_dir}/src/output_uart_sender.vhd"] \
  [file normalize "${origin_dir}/src/debounce.vhd"] \
+ [file normalize "${origin_dir}/ip/output_buffer_bram/output_buffer_bram.xci"] \
+ [file normalize "${origin_dir}/src/output_buffer.vhd"] \
+ [file normalize "${origin_dir}/hw_tests/HWT_collector.vhd"] \
  [file normalize "${origin_dir}/ip/HWT_collector_bram/HWT_collector_bram.xci"] \
  [file normalize "${origin_dir}/ip/HWT_collector_ila/HWT_collector_ila.xci"] \
  [file normalize "${origin_dir}/ip/HWT_collector_clk/HWT_collector_clk.xci"] \
- [file normalize "${origin_dir}/hw_tests/HWT_cam_sim.vhd"] \
  [file normalize "${origin_dir}/hw_tests/no_border_low_res.coe"] \
- [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
- [file normalize "${origin_dir}/src/output_buffer.vhd"] \
- [file normalize "${origin_dir}/ip/output_buffer_bram/output_buffer_bram.xci"] \
- [file normalize "${origin_dir}/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"] \
- [file normalize "${origin_dir}/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"] \
- [file normalize "${origin_dir}/src/uart_module.vhd"] \
- [file normalize "${origin_dir}/src/output_uart_sender.vhd"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -254,6 +252,29 @@ set files [list \
 set added_files [add_files -fileset sources_1 $files]
 
 # Set 'sources_1' fileset file properties for remote files
+set file "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+set file "$origin_dir/hw_tests/HWT_cam_sim.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/ip/context_memory_block/context_memory_block.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
 set file "$origin_dir/ip/collector_bram/collector_bram.xci"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
@@ -308,13 +329,36 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
-set file "$origin_dir/hw_tests/HWT_collector.vhd"
+set file "$origin_dir/src/uart_module.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
-set_property -name "is_enabled" -value "0" -objects $file_obj
+
+set file "$origin_dir/src/output_uart_sender.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 set file "$origin_dir/src/debounce.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "generate_synth_checkpoint" -value "0" -objects $file_obj
+}
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+
+set file "$origin_dir/src/output_buffer.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/hw_tests/HWT_collector.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -341,62 +385,6 @@ set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
 set_property -name "is_enabled" -value "0" -objects $file_obj
 set_property -name "registered_with_manager" -value "1" -objects $file_obj
 
-set file "$origin_dir/hw_tests/HWT_cam_sim.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/ip/context_memory_block/context_memory_block.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
-set file "$origin_dir/src/output_buffer.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "generate_synth_checkpoint" -value "0" -objects $file_obj
-}
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-
-set file "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
-set file "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
-set file "$origin_dir/src/uart_module.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/src/output_uart_sender.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
 
 # Set 'sources_1' fileset file properties for local files
 set file "uart_576000_clock/uart_576000_clock.xci"
@@ -411,8 +399,29 @@ set_property -name "registered_with_manager" -value "1" -objects $file_obj
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
 set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
-set_property -name "top" -value "JPEG_LS_module" -objects $obj
+set_property -name "top" -value "BD_full_test_wrapper" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
+
+# Set 'sources_1' fileset object
+set obj [get_filesets sources_1]
+set files [list \
+ [file normalize "${origin_dir}/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'sources_1' fileset file properties for remote files
+set file "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+
+# Set 'sources_1' fileset file properties for local files
+# None
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -456,6 +465,7 @@ if {[string equal [get_filesets -quiet block_tests] ""]} {
 # Set 'block_tests' fileset object
 set obj [get_filesets block_tests]
 set files [list \
+ [file normalize "${origin_dir}/sim/TB_output_uart_sender.vhd"] \
  [file normalize "${origin_dir}/sim/TB_HWT_cam_sim.vhd"] \
  [file normalize "${origin_dir}/src/collector.vhd"] \
  [file normalize "${origin_dir}/src/fixed_predictor.vhd"] \
@@ -472,12 +482,16 @@ set files [list \
  [file normalize "${origin_dir}/sim_cfg/TB_HWT_cam_sim_behav.wcfg"] \
  [file normalize "${origin_dir}/src/TB_output_buffer.vhd"] \
  [file normalize "${origin_dir}/sim_cfg/TB_output_buffer_behav.wcfg"] \
- [file normalize "${origin_dir}/sim/TB_output_uart_sender.vhd"] \
  [file normalize "${origin_dir}/sim_cfg/TB_output_uart_sender_behav.wcfg"] \
 ]
 add_files -norecurse -fileset $obj $files
 
 # Set 'block_tests' fileset file properties for remote files
+set file "$origin_dir/sim/TB_output_uart_sender.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 set file "$origin_dir/sim/TB_HWT_cam_sim.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
@@ -528,17 +542,14 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
-set file "$origin_dir/sim/TB_output_uart_sender.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets block_tests] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
 
 # Set 'block_tests' fileset file properties for local files
 # None
 
 # Set 'block_tests' fileset properties
 set obj [get_filesets block_tests]
+set_property -name "nl.mode" -value "funcsim" -objects $obj
+set_property -name "sim_mode" -value "post-synthesis" -objects $obj
 set_property -name "top" -value "TB_output_uart_sender" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
@@ -580,17 +591,92 @@ set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
 # Set 'utils_1' fileset object
 set obj [get_filesets utils_1]
-# Empty (no sources present)
+# Add local files from the original project (-no_copy_sources specified)
+set files [list \
+ [file normalize "${origin_dir}/vivado_project/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_uart_sender.dcp" ]\
+]
+set added_files [add_files -fileset utils_1 $files]
+
+# Set 'utils_1' fileset file properties for remote files
+# None
+
+# Set 'utils_1' fileset file properties for local files
+set file "synth_1/output_uart_sender.dcp"
+set file_obj [get_files -of_objects [get_filesets utils_1] [list "*$file"]]
+set_property -name "netlist_only" -value "0" -objects $file_obj
+
 
 # Set 'utils_1' fileset properties
 set obj [get_filesets utils_1]
 
 
 # Adding sources referenced in BDs, if not already added
+if { [get_files HWT_cam_sim_clk.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
+}
+if { [get_files HWT_cam_sim.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/hw_tests/HWT_cam_sim.vhd"
+}
+if { [get_files context_memory_block.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/context_memory_block/context_memory_block.xci"
+}
+if { [get_files collector_bram.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/collector_bram/collector_bram.xci"
+}
+if { [get_files collector.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/collector.vhd"
+}
+if { [get_files context_modeller.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/context_modeller.vhd"
+}
+if { [get_files fixed_predictor.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/fixed_predictor.vhd"
+}
+if { [get_files golomb_coder.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/golomb_coder.vhd"
+}
+if { [get_files gradient.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/gradient.vhd"
+}
+if { [get_files pipeline_module_1.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/pipeline_module_1.vhd"
+}
+if { [get_files pipeline_module_2.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/pipeline_module_2.vhd"
+}
+if { [get_files prediction_adder.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/prediction_adder.vhd"
+}
+if { [get_files JPEG_LS_module.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/JPEG_LS_module.vhd"
+}
+if { [get_files uart_576000_clock.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/vivado_project/JPEG-LS-HDL.srcs/sources_1/ip/uart_576000_clock/uart_576000_clock.xci"
+}
+if { [get_files uart_module.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/uart_module.vhd"
+}
+if { [get_files output_uart_sender.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/output_uart_sender.vhd"
+}
+if { [get_files debounce.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/debounce.vhd"
+}
+if { [get_files output_buffer_bram.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
+}
+if { [get_files output_buffer.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/output_buffer.vhd"
+}
 
 
 # Proc to create BD BD_full_test
 proc cr_bd_BD_full_test { parentCell } {
+# The design that will be created by this Tcl proc contains the following 
+# module references:
+# HWT_cam_sim, JPEG_LS_module, output_buffer, output_uart_sender, debounce
+
+
 
   # CHANGE DESIGN NAME HERE
   set design_name BD_full_test
@@ -608,9 +694,11 @@ proc cr_bd_BD_full_test { parentCell } {
      set list_check_ips "\ 
   xilinx.com:ip:axi_bram_ctrl:4.1\
   xilinx.com:ip:blk_mem_gen:8.4\
+  xilinx.com:ip:axi_gpio:2.0\
   xilinx.com:ip:smartconnect:1.0\
   xilinx.com:ip:processing_system7:5.5\
   xilinx.com:ip:proc_sys_reset:5.0\
+  xilinx.com:ip:util_vector_logic:2.0\
   "
 
    set list_ips_missing ""
@@ -629,6 +717,35 @@ proc cr_bd_BD_full_test { parentCell } {
    }
 
   }
+
+  ##################################################################
+  # CHECK Modules
+  ##################################################################
+  set bCheckModules 1
+  if { $bCheckModules == 1 } {
+     set list_check_mods "\ 
+  HWT_cam_sim\
+  JPEG_LS_module\
+  output_buffer\
+  output_uart_sender\
+  debounce\
+  "
+
+   set list_mods_missing ""
+   common::send_gid_msg -ssname BD::TCL -id 2020 -severity "INFO" "Checking if the following modules exist in the project's sources: $list_check_mods ."
+
+   foreach mod_vlnv $list_check_mods {
+      if { [can_resolve_reference $mod_vlnv] == 0 } {
+         lappend list_mods_missing $mod_vlnv
+      }
+   }
+
+   if { $list_mods_missing ne "" } {
+      catch {common::send_gid_msg -ssname BD::TCL -id 2021 -severity "ERROR" "The following module(s) are not found in the project: $list_mods_missing" }
+      common::send_gid_msg -ssname BD::TCL -id 2022 -severity "INFO" "Please add source files for the missing module(s) above."
+      set bCheckIPsPassed 0
+   }
+}
 
   if { $bCheckIPsPassed != 1 } {
     common::send_gid_msg -ssname BD::TCL -id 2023 -severity "WARNING" "Will not continue with creation of design due to the error(s) above."
@@ -663,21 +780,38 @@ proc cr_bd_BD_full_test { parentCell } {
 
 
   # Create interface ports
-  set BRAM_PORTB_0 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:bram_rtl:1.0 BRAM_PORTB_0 ]
-  set_property -dict [ list \
-   CONFIG.MASTER_TYPE {BRAM_CTRL} \
-   CONFIG.READ_WRITE_MODE {READ_WRITE} \
-   ] $BRAM_PORTB_0
-
   set DDR [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 DDR ]
 
   set FIXED_IO [ create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO ]
 
 
   # Create ports
-  set rsta_busy_0 [ create_bd_port -dir O rsta_busy_0 ]
-  set rstb_busy_0 [ create_bd_port -dir O rstb_busy_0 ]
+  set clk [ create_bd_port -dir I -type clk clk ]
+  set rst [ create_bd_port -dir I rst ]
+  set uart_tx [ create_bd_port -dir O uart_tx ]
 
+  # Create instance: HWT_cam_sim_0, and set properties
+  set block_name HWT_cam_sim
+  set block_cell_name HWT_cam_sim_0
+  if { [catch {set HWT_cam_sim_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $HWT_cam_sim_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: JPEG_LS_module_0, and set properties
+  set block_name JPEG_LS_module
+  set block_cell_name JPEG_LS_module_0
+  if { [catch {set JPEG_LS_module_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $JPEG_LS_module_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: axi_bram_ctrl_0, and set properties
   set axi_bram_ctrl_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_bram_ctrl:4.1 axi_bram_ctrl_0 ]
   set_property CONFIG.SINGLE_PORT_BRAM {1} $axi_bram_ctrl_0
@@ -688,11 +822,46 @@ proc cr_bd_BD_full_test { parentCell } {
   set_property CONFIG.Memory_Type {True_Dual_Port_RAM} $axi_bram_ctrl_0_bram
 
 
+  # Create instance: axi_gpio_0, and set properties
+  set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0 ]
+  set_property -dict [list \
+    CONFIG.C_ALL_INPUTS {0} \
+    CONFIG.C_ALL_OUTPUTS {1} \
+    CONFIG.C_GPIO_WIDTH {1} \
+    CONFIG.C_IS_DUAL {0} \
+  ] $axi_gpio_0
+
+
   # Create instance: axi_smc, and set properties
   set axi_smc [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 axi_smc ]
-  set_property CONFIG.NUM_SI {1} $axi_smc
+  set_property -dict [list \
+    CONFIG.NUM_MI {2} \
+    CONFIG.NUM_SI {1} \
+  ] $axi_smc
 
 
+  # Create instance: output_buffer_0, and set properties
+  set block_name output_buffer
+  set block_cell_name output_buffer_0
+  if { [catch {set output_buffer_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $output_buffer_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: output_uart_sender_0, and set properties
+  set block_name output_uart_sender
+  set block_cell_name output_uart_sender_0
+  if { [catch {set output_uart_sender_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $output_uart_sender_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: processing_system7_0, and set properties
   set processing_system7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0 ]
   set_property -dict [list \
@@ -1226,26 +1395,68 @@ proc cr_bd_BD_full_test { parentCell } {
   ] $processing_system7_0
 
 
+  # Create instance: reset_btn, and set properties
+  set block_name debounce
+  set block_cell_name reset_btn
+  if { [catch {set reset_btn [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $reset_btn eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: rst_ps7_0_100M, and set properties
   set rst_ps7_0_100M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_ps7_0_100M ]
 
+  # Create instance: util_vector_logic_0, and set properties
+  set util_vector_logic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0 ]
+  set_property -dict [list \
+    CONFIG.C_OPERATION {not} \
+    CONFIG.C_SIZE {1} \
+  ] $util_vector_logic_0
+
+
   # Create interface connections
-  connect_bd_intf_net -intf_net BRAM_PORTB_0_1 [get_bd_intf_ports BRAM_PORTB_0] [get_bd_intf_pins axi_bram_ctrl_0_bram/BRAM_PORTB]
+  connect_bd_intf_net -intf_net HWT_cam_sim_0_BRAM_interface [get_bd_intf_pins HWT_cam_sim_0/BRAM_interface] [get_bd_intf_pins axi_bram_ctrl_0_bram/BRAM_PORTB]
   connect_bd_intf_net -intf_net axi_bram_ctrl_0_BRAM_PORTA [get_bd_intf_pins axi_bram_ctrl_0/BRAM_PORTA] [get_bd_intf_pins axi_bram_ctrl_0_bram/BRAM_PORTA]
   connect_bd_intf_net -intf_net axi_smc_M00_AXI [get_bd_intf_pins axi_bram_ctrl_0/S_AXI] [get_bd_intf_pins axi_smc/M00_AXI]
+  connect_bd_intf_net -intf_net axi_smc_M01_AXI [get_bd_intf_pins axi_gpio_0/S_AXI] [get_bd_intf_pins axi_smc/M01_AXI]
   connect_bd_intf_net -intf_net processing_system7_0_DDR [get_bd_intf_ports DDR] [get_bd_intf_pins processing_system7_0/DDR]
   connect_bd_intf_net -intf_net processing_system7_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins processing_system7_0/FIXED_IO]
   connect_bd_intf_net -intf_net processing_system7_0_M_AXI_GP0 [get_bd_intf_pins axi_smc/S00_AXI] [get_bd_intf_pins processing_system7_0/M_AXI_GP0]
 
   # Create port connections
-  connect_bd_net -net axi_bram_ctrl_0_bram_rsta_busy [get_bd_ports rsta_busy_0] [get_bd_pins axi_bram_ctrl_0_bram/rsta_busy]
-  connect_bd_net -net axi_bram_ctrl_0_bram_rstb_busy [get_bd_ports rstb_busy_0] [get_bd_pins axi_bram_ctrl_0_bram/rstb_busy]
-  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axi_smc/aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins rst_ps7_0_100M/slowest_sync_clk]
+  connect_bd_net -net HWT_cam_sim_0_href [get_bd_pins HWT_cam_sim_0/href] [get_bd_pins JPEG_LS_module_0/href]
+  connect_bd_net -net HWT_cam_sim_0_pclk [get_bd_pins HWT_cam_sim_0/pclk] [get_bd_pins JPEG_LS_module_0/pclk] [get_bd_pins output_buffer_0/pclk] [get_bd_pins output_uart_sender_0/pclk]
+  connect_bd_net -net HWT_cam_sim_0_pixel [get_bd_pins HWT_cam_sim_0/pixel] [get_bd_pins JPEG_LS_module_0/pixel]
+  connect_bd_net -net HWT_cam_sim_0_vsync [get_bd_pins HWT_cam_sim_0/vsync] [get_bd_pins JPEG_LS_module_0/vsync]
+  connect_bd_net -net JPEG_LS_module_0_encoded_b [get_bd_pins JPEG_LS_module_0/encoded_b] [get_bd_pins output_buffer_0/encoded_b]
+  connect_bd_net -net JPEG_LS_module_0_encoded_g [get_bd_pins JPEG_LS_module_0/encoded_g] [get_bd_pins output_buffer_0/encoded_g]
+  connect_bd_net -net JPEG_LS_module_0_encoded_r [get_bd_pins JPEG_LS_module_0/encoded_r] [get_bd_pins output_buffer_0/encoded_r]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_b [get_bd_pins JPEG_LS_module_0/encoded_size_b] [get_bd_pins output_buffer_0/encoded_size_b]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_g [get_bd_pins JPEG_LS_module_0/encoded_size_g] [get_bd_pins output_buffer_0/encoded_size_g]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_r [get_bd_pins JPEG_LS_module_0/encoded_size_r] [get_bd_pins output_buffer_0/encoded_size_r]
+  connect_bd_net -net JPEG_LS_module_0_new_pixel [get_bd_pins JPEG_LS_module_0/new_pixel] [get_bd_pins output_buffer_0/new_pixel]
+  connect_bd_net -net JPEG_LS_module_0_valid_data [get_bd_pins JPEG_LS_module_0/valid_data] [get_bd_pins output_buffer_0/valid_data]
+  connect_bd_net -net axi_gpio_0_gpio2_io_o [get_bd_pins HWT_cam_sim_0/resetn] [get_bd_pins JPEG_LS_module_0/resetn] [get_bd_pins output_buffer_0/resetn] [get_bd_pins output_uart_sender_0/resetn] [get_bd_pins util_vector_logic_0/Res]
+  connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins HWT_cam_sim_0/enable] [get_bd_pins axi_gpio_0/gpio_io_o]
+  connect_bd_net -net clk_0_1 [get_bd_ports clk] [get_bd_pins HWT_cam_sim_0/clk] [get_bd_pins reset_btn/clk]
+  connect_bd_net -net output_buffer_0_dout [get_bd_pins output_buffer_0/dout] [get_bd_pins output_uart_sender_0/dout]
+  connect_bd_net -net output_buffer_0_end_of_data [get_bd_pins output_buffer_0/end_of_data] [get_bd_pins output_uart_sender_0/end_of_data]
+  connect_bd_net -net output_buffer_0_new_data_ready [get_bd_pins output_buffer_0/new_data_ready] [get_bd_pins output_uart_sender_0/new_data_ready]
+  connect_bd_net -net output_buffer_0_read_allowed [get_bd_pins output_buffer_0/read_allowed] [get_bd_pins output_uart_sender_0/read_allowed]
+  connect_bd_net -net output_uart_sender_0_request_next [get_bd_pins output_buffer_0/request_next] [get_bd_pins output_uart_sender_0/request_next]
+  connect_bd_net -net output_uart_sender_0_sig [get_bd_ports uart_tx] [get_bd_pins output_uart_sender_0/sig]
+  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_smc/aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins rst_ps7_0_100M/slowest_sync_clk]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins rst_ps7_0_100M/ext_reset_in]
-  connect_bd_net -net rst_ps7_0_100M_peripheral_aresetn [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins axi_smc/aresetn] [get_bd_pins rst_ps7_0_100M/peripheral_aresetn]
+  connect_bd_net -net reset_btn_sig_out [get_bd_pins reset_btn/sig_out] [get_bd_pins util_vector_logic_0/Op1]
+  connect_bd_net -net rst_ps7_0_100M_peripheral_aresetn [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_smc/aresetn] [get_bd_pins rst_ps7_0_100M/peripheral_aresetn]
+  connect_bd_net -net sig_in_0_1 [get_bd_ports rst] [get_bd_pins reset_btn/sig_in]
 
   # Create address segments
   assign_bd_address -offset 0x40000000 -range 0x00040000 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_bram_ctrl_0/S_AXI/Mem0] -force
+  assign_bd_address -offset 0x41200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_gpio_0/S_AXI/Reg] -force
 
 
   # Restore current instance
@@ -1290,6 +1501,8 @@ if { $obj != "" } {
 
 }
 set obj [get_runs synth_1]
+set_property -name "needs_refresh" -value "1" -objects $obj
+set_property -name "incremental_checkpoint" -value "$proj_dir/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_uart_sender.dcp" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
 
@@ -1512,6 +1725,7 @@ set_property -name "options.warn_on_violation" -value "1" -objects $obj
 
 }
 set obj [get_runs impl_1]
+set_property -name "needs_refresh" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Implementation Defaults" -objects $obj
 set_property -name "steps.write_bitstream.args.readback_file" -value "0" -objects $obj
 set_property -name "steps.write_bitstream.args.verbose" -value "0" -objects $obj

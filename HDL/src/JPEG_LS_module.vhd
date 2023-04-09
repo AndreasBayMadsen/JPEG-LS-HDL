@@ -36,8 +36,12 @@ use IEEE.MATH_REAL.ALL;
 entity JPEG_LS_module is
     Generic (   image_height    : INTEGER   := 500;     -- Image dimensions in number of pixels
                 image_width     : INTEGER   := 500;
-                L_max           : INTEGER   := 32;      -- Maximum code size per pixel
-                k_width         : INTEGER   := 5
+                L_max_r         : integer   := 20;      -- Maximum code size per pixel
+                L_max_g         : integer   := 24;
+                L_max_b         : integer   := 20;
+                k_width_r       : integer := 5;
+                k_width_g       : integer := 5;
+                k_width_b       : integer := 5     
                 );
     Port (  resetn  : in    STD_LOGIC                       := '1';             -- Active LOW reset signal
             -- Camera interface
@@ -47,12 +51,13 @@ entity JPEG_LS_module is
             vsync   : in    STD_LOGIC                       := '0';             -- Frame synchronization signal
             -- Output
             new_pixel       : out   STD_LOGIC                           := '0';
-            encoded_r       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-            encoded_g       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-            encoded_b       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-            encoded_size_r  : out UNSIGNED(k_width downto 0)            := (others=>'0');
-            encoded_size_g  : out UNSIGNED(k_width downto 0)            := (others=>'0');
-            encoded_size_b  : out UNSIGNED(k_width downto 0)            := (others=>'0')
+            valid_data      : out   STD_LOGIC                           := '0';
+            encoded_r       : out STD_LOGIC_VECTOR(L_max_r-1 downto 0)    := (others=>'0');
+            encoded_g       : out STD_LOGIC_VECTOR(L_max_g-1 downto 0)    := (others=>'0');
+            encoded_b       : out STD_LOGIC_VECTOR(L_max_b-1 downto 0)    := (others=>'0');
+            encoded_size_r  : out UNSIGNED(k_width_r downto 0)            := (others=>'0');
+            encoded_size_g  : out UNSIGNED(k_width_g downto 0)            := (others=>'0');
+            encoded_size_b  : out UNSIGNED(k_width_b downto 0)            := (others=>'0')
             );
 end JPEG_LS_module;
 
@@ -192,9 +197,9 @@ architecture Behavioral of JPEG_LS_module is
     signal sign_r_2         : STD_LOGIC                     := '0';
     signal sign_g_2         : STD_LOGIC                     := '0';
     signal sign_b_2         : STD_LOGIC                     := '0';
-    signal k_r_2            : UNSIGNED(k_width-1 downto 0)  := (others=>'0');
-    signal k_g_2            : UNSIGNED(k_width-1 downto 0)  := (others=>'0');
-    signal k_b_2            : UNSIGNED(k_width-1 downto 0)  := (others=>'0');
+    signal k_r_2            : UNSIGNED(k_width_r-1 downto 0)  := (others=>'0');
+    signal k_g_2            : UNSIGNED(k_width_g-1 downto 0)  := (others=>'0');
+    signal k_b_2            : UNSIGNED(k_width_b-1 downto 0)  := (others=>'0');
     signal mapped_error_r_2 : UNSIGNED(R_size-1 downto 0)   := (others=>'0');
     signal mapped_error_g_2 : UNSIGNED(G_size-1 downto 0)   := (others=>'0');
     signal mapped_error_b_2 : UNSIGNED(B_size-1 downto 0)   := (others=>'0');
@@ -203,18 +208,18 @@ architecture Behavioral of JPEG_LS_module is
     signal valid_data_3     : STD_LOGIC                             := '0';
     signal new_pixel_3_buf  : STD_LOGIC                             := '0';
     signal new_pixel_3      : STD_LOGIC                             := '0';
-    signal k_r_3            : UNSIGNED(k_width-1 downto 0)          := (others=>'0');    
-    signal k_g_3            : UNSIGNED(k_width-1 downto 0)          := (others=>'0');    
-    signal k_b_3            : UNSIGNED(k_width-1 downto 0)          := (others=>'0');
+    signal k_r_3            : UNSIGNED(k_width_r-1 downto 0)          := (others=>'0');    
+    signal k_g_3            : UNSIGNED(k_width_g-1 downto 0)          := (others=>'0');    
+    signal k_b_3            : UNSIGNED(k_width_b-1 downto 0)          := (others=>'0');
     signal mapped_error_r_3 : UNSIGNED(R_size-1 downto 0)           := (others=>'0');
     signal mapped_error_g_3 : UNSIGNED(G_size-1 downto 0)           := (others=>'0');
     signal mapped_error_b_3 : UNSIGNED(B_size-1 downto 0)           := (others=>'0');
-    signal encoded_r_3      : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-    signal encoded_g_3      : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-    signal encoded_b_3      : STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-    signal encoded_size_r_3 : UNSIGNED(k_width downto 0)            := (others=>'0');
-    signal encoded_size_g_3 : UNSIGNED(k_width downto 0)            := (others=>'0');
-    signal encoded_size_b_3 : UNSIGNED(k_width downto 0)            := (others=>'0');
+    signal encoded_r_3      : STD_LOGIC_VECTOR(L_max_r-1 downto 0)    := (others=>'0');
+    signal encoded_g_3      : STD_LOGIC_VECTOR(L_max_g-1 downto 0)    := (others=>'0');
+    signal encoded_b_3      : STD_LOGIC_VECTOR(L_max_b-1 downto 0)    := (others=>'0');
+    signal encoded_size_r_3 : UNSIGNED(k_width_r downto 0)            := (others=>'0');
+    signal encoded_size_g_3 : UNSIGNED(k_width_g downto 0)            := (others=>'0');
+    signal encoded_size_b_3 : UNSIGNED(k_width_b downto 0)            := (others=>'0');
     
         -- PIPELINE REGION 4 - Output
     signal valid_data_4     : STD_LOGIC                             := '0';
@@ -362,7 +367,7 @@ begin
     mod_2_r: pipeline_module_2  -- Pipeline module 2 for red color
     generic map(
         color_res   => R_size,
-        k_width     => k_width
+        k_width     => k_width_r
     )
     port map(
         clk             => pclk,
@@ -380,7 +385,7 @@ begin
     mod_2_g: pipeline_module_2  -- Pipeline module 2 for green color
     generic map(
         color_res   => G_size,
-        k_width     => k_width
+        k_width     => k_width_g
     )
     port map(
         clk             => pclk,
@@ -398,7 +403,7 @@ begin
     mod_2_b: pipeline_module_2  -- Pipeline module 2 for blue color
     generic map(
         color_res   => B_size,
-        k_width     => k_width
+        k_width     => k_width_b
     )
     port map(
         clk             => pclk,
@@ -463,9 +468,9 @@ begin
         -- Component instantiations
     golomb_r: golomb_coder  -- Golomb coder for red color
     generic map(
-        k_width     => k_width,
+        k_width     => k_width_r,
         beta_max    => mapped_error_r_3'length,
-        L_max       => L_max
+        L_max       => L_max_r
     )
     port map(
         pclk        => pclk,
@@ -479,9 +484,9 @@ begin
     
     golomb_g: golomb_coder  -- Golomb coder for green color
     generic map(
-        k_width     => k_width,
+        k_width     => k_width_g,
         beta_max    => mapped_error_g_3'length,
-        L_max       => L_max
+        L_max       => L_max_g
     )
     port map(
         pclk        => pclk,
@@ -495,9 +500,9 @@ begin
 
     golomb_b: golomb_coder  -- Golomb coder for blue color
     generic map(
-        k_width     => k_width,
+        k_width     => k_width_b,
         beta_max    => mapped_error_b_3'length,
-        L_max       => L_max
+        L_max       => L_max_b
     )
     port map(
         pclk        => pclk,
@@ -543,5 +548,6 @@ begin
     
     -- Signal assignments
     new_pixel <= new_pixel_4;
+    valid_data <= valid_data_4;
 
 end Behavioral;
