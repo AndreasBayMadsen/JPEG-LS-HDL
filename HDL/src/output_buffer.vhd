@@ -134,75 +134,77 @@ begin
     
     writer : process(pclk)
     begin
-        if resetn = '0' then
-            
-            we <= '0';
-            read_allow <= '0';
-            bram_din <= (others => '0');
-            write_addr <= (others => '0');
-            write_pointer <= (others => '0');
-            reg <= (others => '0');
-            reg_end <= (others => '0');
-            writer_state <= WAITING_WRITE;
         
-        elsif rising_edge(pclk) then
+        if rising_edge(pclk) then
+            if resetn = '0' then
+                we <= '0';
+                read_allow <= '0';
+                bram_din <= (others => '0');
+                write_addr <= (others => '0');
+                write_pointer <= (others => '0');
+                reg <= (others => '0');
+                reg_end <= (others => '0');
+                writer_state <= WAITING_WRITE;
             
-            we <= '0';
-            read_allow <= '0';
+            else
             
-            case writer_state is
-                when WAITING_WRITE =>
+                we <= '0';
+                read_allow <= '0';
                 
-                    -- Write to RAM and from temp
-                    if reg_end >= bram_width or (valid_data = '0' and reg_empty = '0') then
-                        bram_din <= reg(bram_width - 1 downto 0);
-                        we <= '1';
-                        
-                        -- Set address;
-                        write_addr <= (others => '0');
-                        write_addr(write_pointer'range) <= STD_LOGIC_VECTOR(write_pointer);
-                        write_pointer <= write_pointer + 1;
-                        
-                        -- Register should shift.
-                        reg <= reg_shift;
-                        reg_end <= reg_shift_end;
-                    end if;
-                
-                    if (new_pixel = '1' and valid_data = '1') then
-                        
-                        writer_state <= UPDATE_REG;
-                    end if;
-                   
-                    if valid_data = '0' and reg_empty = '1' then
-                        read_allow <= '1';
-                    end if;
-                       
-                when UPDATE_REG =>
+                case writer_state is
+                    when WAITING_WRITE =>
                     
-                    -- Update only from input if data is valid.
-                    if valid_data = '1' then
-                    
-                        reg_end <= reg_end_temp;
-                        
-                        reg <= (others => '0');
-                    
-                        if reg_empty = '0' then
-                            reg(to_integer(reg_end_temp) downto 0) <= encoded_b(to_integer(encoded_size_b - to_unsigned(1, encoded_size_b'length)) downto 0)
-                            & encoded_g(to_integer(encoded_size_g - to_unsigned(1, encoded_size_g'length)) downto 0)
-                            & encoded_r(to_integer(encoded_size_r - to_unsigned(1, encoded_size_r'length)) downto 0)
-                            & reg(to_integer(reg_end - to_unsigned(1, reg_end'length)) downto 0);
-                        else
-                            reg(to_integer(reg_end_temp) downto 0) <= encoded_b(to_integer(encoded_size_b - to_unsigned(1, encoded_size_b'length)) downto 0)
-                            & encoded_g(to_integer(encoded_size_g - to_unsigned(1, encoded_size_g'length)) downto 0)
-                            & encoded_r(to_integer(encoded_size_r - to_unsigned(1, encoded_size_r'length)) downto 0);
+                        -- Write to RAM and from temp
+                        if reg_end >= bram_width or (valid_data = '0' and reg_empty = '0') then
+                            bram_din <= reg(bram_width - 1 downto 0);
+                            we <= '1';
+                            
+                            -- Set address;
+                            write_addr <= (others => '0');
+                            write_addr(write_pointer'range) <= STD_LOGIC_VECTOR(write_pointer);
+                            write_pointer <= write_pointer + 1;
+                            
+                            -- Register should shift.
+                            reg <= reg_shift;
+                            reg_end <= reg_shift_end;
                         end if;
-                    end if;
                     
-                    writer_state <= WAITING_WRITE;
-                    
-                when others =>
-                    writer_state <= WAITING_WRITE;
-            end case;
+                        if (new_pixel = '1' and valid_data = '1') then
+                            
+                            writer_state <= UPDATE_REG;
+                        end if;
+                       
+                        if valid_data = '0' and reg_empty = '1' then
+                            read_allow <= '1';
+                        end if;
+                           
+                    when UPDATE_REG =>
+                        
+                        -- Update only from input if data is valid.
+                        if valid_data = '1' then
+                        
+                            reg_end <= reg_end_temp;
+                            
+                            reg <= (others => '0');
+                        
+                            if reg_empty = '0' then
+                                reg(to_integer(reg_end_temp) downto 0) <= encoded_b(to_integer(encoded_size_b - to_unsigned(1, encoded_size_b'length)) downto 0)
+                                & encoded_g(to_integer(encoded_size_g - to_unsigned(1, encoded_size_g'length)) downto 0)
+                                & encoded_r(to_integer(encoded_size_r - to_unsigned(1, encoded_size_r'length)) downto 0)
+                                & reg(to_integer(reg_end - to_unsigned(1, reg_end'length)) downto 0);
+                            else
+                                reg(to_integer(reg_end_temp) downto 0) <= encoded_b(to_integer(encoded_size_b - to_unsigned(1, encoded_size_b'length)) downto 0)
+                                & encoded_g(to_integer(encoded_size_g - to_unsigned(1, encoded_size_g'length)) downto 0)
+                                & encoded_r(to_integer(encoded_size_r - to_unsigned(1, encoded_size_r'length)) downto 0);
+                            end if;
+                        end if;
+                        
+                        writer_state <= WAITING_WRITE;
+                        
+                    when others =>
+                        writer_state <= WAITING_WRITE;
+                end case;
+            end if;
         end if;
     end process;
     

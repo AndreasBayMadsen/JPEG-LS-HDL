@@ -78,13 +78,13 @@ architecture Behavioral of HWT_cam_sim is
     attribute X_INTERFACE_INFO of ram_write_data    : signal is "xilinx.com:interface:bram:1.0 BRAM_interface DIN";
     attribute X_INTERFACE_INFO of ram_we            : signal is "xilinx.com:interface:bram:1.0 BRAM_interface WE";
     attribute X_INTERFACE_PARAMETER : STRING;
-    attribute X_INTERFACE_PARAMETER of ram_reset        : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_clk          : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_en           : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_addr         : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_read_data    : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_write_data   : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_we           : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_reset        : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_clk          : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_en           : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_addr         : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_read_data    : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_write_data   : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_we           : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
     
     attribute ASYNC_REG : STRING;
         

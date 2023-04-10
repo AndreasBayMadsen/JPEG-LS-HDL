@@ -58,13 +58,17 @@ architecture Behavioral of output_uart_sender is
                 );
     end component;
     
-    component uart_576000_clock 
-        Port (  clk_in1 : in STD_LOGIC;
-                clk_out1 : out STD_LOGIC  -- 16 * baudrate
-                );
+    component clk_divider
+        Generic ( base_freq : integer := 125000000;
+                  out_freq  : integer := 1843200     -- 115200 baud        
+        );  
+        Port ( rst : in STD_LOGIC;
+               clk : in STD_LOGIC;
+               clk_div : out STD_LOGIC);
     end component;
     
     signal data_uart                : STD_LOGIC_VECTOR (7 downto 0);  
+    signal clk_uart_temp            : STD_LOGIC;
     signal clk_uart                 : STD_LOGIC;
     signal data_is_send_uart        : STD_LOGIC;
     signal new_data_uart            : STD_LOGIC := '0';
@@ -82,10 +86,20 @@ architecture Behavioral of output_uart_sender is
     
 begin
 
-    uart_clk : uart_576000_clock
-    port map(   clk_in1     => pclk,
-                clk_out1    => clk_uart
+    uart_clk : clk_divider
+    Generic map (   base_freq => 12000000,
+                    out_freq  => 921600     -- 57600 baud        
+                    )  
+    Port map (  rst => '0',
+                clk => pclk,
+                clk_div => clk_uart_temp
                 );
+                
+    BUFG_inst : BUFG
+    port map (
+       O => clk_uart, -- 1-bit output: Clock output
+       I => clk_uart_temp  -- 1-bit input: Clock input
+    );
 
     uart : uart_tx_module
     port map(   rst             => '0',

@@ -18,7 +18,6 @@
 proc checkRequiredFiles { origin_dir} {
   set status true
   set files [list \
- "[file normalize "$origin_dir/vivado_project/JPEG-LS-HDL.srcs/sources_1/ip/uart_576000_clock/uart_576000_clock.xci"]"\
  "[file normalize "$origin_dir/vivado_project/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_uart_sender.dcp"]"\
   ]
   foreach ifile $files {
@@ -29,8 +28,7 @@ proc checkRequiredFiles { origin_dir} {
   }
 
   set files [list \
- "[file normalize "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"]"\
- "[file normalize "$origin_dir/hw_tests/HWT_cam_sim.vhd"]"\
+ "[file normalize "$origin_dir/src/debounce.vhd"]"\
  "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
  "[file normalize "$origin_dir/ip/collector_bram/collector_bram.xci"]"\
  "[file normalize "$origin_dir/src/collector.vhd"]"\
@@ -42,9 +40,12 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/src/pipeline_module_2.vhd"]"\
  "[file normalize "$origin_dir/src/prediction_adder.vhd"]"\
  "[file normalize "$origin_dir/src/JPEG_LS_module.vhd"]"\
+ "[file normalize "$origin_dir/src/btn_pulse.vhd"]"\
+ "[file normalize "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"]"\
+ "[file normalize "$origin_dir/hw_tests/HWT_cam_sim.vhd"]"\
+ "[file normalize "$origin_dir/src/clk_divider.vhd"]"\
  "[file normalize "$origin_dir/src/uart_module.vhd"]"\
  "[file normalize "$origin_dir/src/output_uart_sender.vhd"]"\
- "[file normalize "$origin_dir/src/debounce.vhd"]"\
  "[file normalize "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"]"\
  "[file normalize "$origin_dir/src/output_buffer.vhd"]"\
  "[file normalize "$origin_dir/hw_tests/HWT_collector.vhd"]"\
@@ -72,9 +73,11 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/src/TB_output_buffer.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_output_buffer_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_output_uart_sender_behav.wcfg"]"\
+ "[file normalize "$origin_dir/sim/TB_pl_test.vhd"]"\
  "[file normalize "$origin_dir/sim/camera_simulator.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
+ "[file normalize "$origin_dir/sim_cfg/TB_pl_test_func_impl.wcfg"]"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -202,13 +205,13 @@ set_property -name "simulator.xsim_version" -value "2022.2" -objects $obj
 set_property -name "simulator_language" -value "Mixed" -objects $obj
 set_property -name "sim_compile_state" -value "1" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
-set_property -name "webtalk.activehdl_export_sim" -value "41" -objects $obj
-set_property -name "webtalk.modelsim_export_sim" -value "41" -objects $obj
-set_property -name "webtalk.questa_export_sim" -value "41" -objects $obj
-set_property -name "webtalk.riviera_export_sim" -value "41" -objects $obj
-set_property -name "webtalk.vcs_export_sim" -value "41" -objects $obj
-set_property -name "webtalk.xsim_export_sim" -value "41" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "369" -objects $obj
+set_property -name "webtalk.activehdl_export_sim" -value "45" -objects $obj
+set_property -name "webtalk.modelsim_export_sim" -value "45" -objects $obj
+set_property -name "webtalk.questa_export_sim" -value "45" -objects $obj
+set_property -name "webtalk.riviera_export_sim" -value "45" -objects $obj
+set_property -name "webtalk.vcs_export_sim" -value "45" -objects $obj
+set_property -name "webtalk.xsim_export_sim" -value "45" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "382" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_CDC XPM_FIFO XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -219,8 +222,7 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
 set files [list \
- [file normalize "${origin_dir}/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"] \
- [file normalize "${origin_dir}/hw_tests/HWT_cam_sim.vhd"] \
+ [file normalize "${origin_dir}/src/debounce.vhd"] \
  [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
  [file normalize "${origin_dir}/ip/collector_bram/collector_bram.xci"] \
  [file normalize "${origin_dir}/src/collector.vhd"] \
@@ -232,9 +234,12 @@ set files [list \
  [file normalize "${origin_dir}/src/pipeline_module_2.vhd"] \
  [file normalize "${origin_dir}/src/prediction_adder.vhd"] \
  [file normalize "${origin_dir}/src/JPEG_LS_module.vhd"] \
+ [file normalize "${origin_dir}/src/btn_pulse.vhd"] \
+ [file normalize "${origin_dir}/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"] \
+ [file normalize "${origin_dir}/hw_tests/HWT_cam_sim.vhd"] \
+ [file normalize "${origin_dir}/src/clk_divider.vhd"] \
  [file normalize "${origin_dir}/src/uart_module.vhd"] \
  [file normalize "${origin_dir}/src/output_uart_sender.vhd"] \
- [file normalize "${origin_dir}/src/debounce.vhd"] \
  [file normalize "${origin_dir}/ip/output_buffer_bram/output_buffer_bram.xci"] \
  [file normalize "${origin_dir}/src/output_buffer.vhd"] \
  [file normalize "${origin_dir}/hw_tests/HWT_collector.vhd"] \
@@ -245,23 +250,8 @@ set files [list \
 ]
 add_files -norecurse -fileset $obj $files
 
-# Add local files from the original project (-no_copy_sources specified)
-set files [list \
- [file normalize "${origin_dir}/vivado_project/JPEG-LS-HDL.srcs/sources_1/ip/uart_576000_clock/uart_576000_clock.xci" ]\
-]
-set added_files [add_files -fileset sources_1 $files]
-
 # Set 'sources_1' fileset file properties for remote files
-set file "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
-set file "$origin_dir/hw_tests/HWT_cam_sim.vhd"
+set file "$origin_dir/src/debounce.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -329,17 +319,36 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
+set file "$origin_dir/src/btn_pulse.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+set file "$origin_dir/hw_tests/HWT_cam_sim.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/clk_divider.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 set file "$origin_dir/src/uart_module.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 set file "$origin_dir/src/output_uart_sender.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/src/debounce.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -387,19 +396,12 @@ set_property -name "registered_with_manager" -value "1" -objects $file_obj
 
 
 # Set 'sources_1' fileset file properties for local files
-set file "uart_576000_clock/uart_576000_clock.xci"
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "generate_synth_checkpoint" -value "0" -objects $file_obj
-}
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-
+# None
 
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
 set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
-set_property -name "top" -value "BD_full_test_wrapper" -objects $obj
+set_property -name "top" -value "BD_pl_test_wrapper" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 
 # Set 'sources_1' fileset object
@@ -549,7 +551,7 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 # Set 'block_tests' fileset properties
 set obj [get_filesets block_tests]
 set_property -name "nl.mode" -value "funcsim" -objects $obj
-set_property -name "sim_mode" -value "post-synthesis" -objects $obj
+set_property -name "sim_mode" -value "post-implementation" -objects $obj
 set_property -name "top" -value "TB_output_uart_sender" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
@@ -562,13 +564,20 @@ if {[string equal [get_filesets -quiet full_simulation] ""]} {
 # Set 'full_simulation' fileset object
 set obj [get_filesets full_simulation]
 set files [list \
+ [file normalize "${origin_dir}/sim/TB_pl_test.vhd"] \
  [file normalize "${origin_dir}/sim/camera_simulator.vhd"] \
  [file normalize "${origin_dir}/sim/TB_full_sim.vhd"] \
  [file normalize "${origin_dir}/sim_cfg/TB_full_sim_behav.wcfg"] \
+ [file normalize "${origin_dir}/sim_cfg/TB_pl_test_func_impl.wcfg"] \
 ]
 add_files -norecurse -fileset $obj $files
 
 # Set 'full_simulation' fileset file properties for remote files
+set file "$origin_dir/sim/TB_pl_test.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 set file "$origin_dir/sim/camera_simulator.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
@@ -585,7 +594,9 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 # Set 'full_simulation' fileset properties
 set obj [get_filesets full_simulation]
-set_property -name "top" -value "TB_full_sim" -objects $obj
+set_property -name "nl.mode" -value "funcsim" -objects $obj
+set_property -name "sim_mode" -value "post-implementation" -objects $obj
+set_property -name "top" -value "TB_pl_test" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
@@ -611,11 +622,8 @@ set obj [get_filesets utils_1]
 
 
 # Adding sources referenced in BDs, if not already added
-if { [get_files HWT_cam_sim_clk.xci] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
-}
-if { [get_files HWT_cam_sim.vhd] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/hw_tests/HWT_cam_sim.vhd"
+if { [get_files debounce.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/debounce.vhd"
 }
 if { [get_files context_memory_block.xci] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/ip/context_memory_block/context_memory_block.xci"
@@ -650,8 +658,17 @@ if { [get_files prediction_adder.vhd] == "" } {
 if { [get_files JPEG_LS_module.vhd] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/src/JPEG_LS_module.vhd"
 }
-if { [get_files uart_576000_clock.xci] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/vivado_project/JPEG-LS-HDL.srcs/sources_1/ip/uart_576000_clock/uart_576000_clock.xci"
+if { [get_files btn_pulse.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/btn_pulse.vhd"
+}
+if { [get_files HWT_cam_sim_clk.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
+}
+if { [get_files HWT_cam_sim.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/hw_tests/HWT_cam_sim.vhd"
+}
+if { [get_files clk_divider.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/clk_divider.vhd"
 }
 if { [get_files uart_module.vhd] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/src/uart_module.vhd"
@@ -659,8 +676,329 @@ if { [get_files uart_module.vhd] == "" } {
 if { [get_files output_uart_sender.vhd] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/src/output_uart_sender.vhd"
 }
+if { [get_files output_buffer_bram.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
+}
+if { [get_files output_buffer.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/output_buffer.vhd"
+}
+
+
+# Proc to create BD BD_pl_test
+proc cr_bd_BD_pl_test { parentCell } {
+# The design that will be created by this Tcl proc contains the following 
+# module references:
+# HWT_cam_sim, JPEG_LS_module, btn_pulse, output_buffer, output_uart_sender, debounce
+
+
+
+  # CHANGE DESIGN NAME HERE
+  set design_name BD_pl_test
+
+  common::send_gid_msg -ssname BD::TCL -id 2010 -severity "INFO" "Currently there is no design <$design_name> in project, so creating one..."
+
+  create_bd_design $design_name
+
+  set bCheckIPsPassed 1
+  ##################################################################
+  # CHECK IPs
+  ##################################################################
+  set bCheckIPs 1
+  if { $bCheckIPs == 1 } {
+     set list_check_ips "\ 
+  xilinx.com:ip:blk_mem_gen:8.4\
+  xilinx.com:ip:util_vector_logic:2.0\
+  "
+
+   set list_ips_missing ""
+   common::send_gid_msg -ssname BD::TCL -id 2011 -severity "INFO" "Checking if the following IPs exist in the project's IP catalog: $list_check_ips ."
+
+   foreach ip_vlnv $list_check_ips {
+      set ip_obj [get_ipdefs -all $ip_vlnv]
+      if { $ip_obj eq "" } {
+         lappend list_ips_missing $ip_vlnv
+      }
+   }
+
+   if { $list_ips_missing ne "" } {
+      catch {common::send_gid_msg -ssname BD::TCL -id 2012 -severity "ERROR" "The following IPs are not found in the IP Catalog:\n  $list_ips_missing\n\nResolution: Please add the repository containing the IP(s) to the project." }
+      set bCheckIPsPassed 0
+   }
+
+  }
+
+  ##################################################################
+  # CHECK Modules
+  ##################################################################
+  set bCheckModules 1
+  if { $bCheckModules == 1 } {
+     set list_check_mods "\ 
+  HWT_cam_sim\
+  JPEG_LS_module\
+  btn_pulse\
+  output_buffer\
+  output_uart_sender\
+  debounce\
+  "
+
+   set list_mods_missing ""
+   common::send_gid_msg -ssname BD::TCL -id 2020 -severity "INFO" "Checking if the following modules exist in the project's sources: $list_check_mods ."
+
+   foreach mod_vlnv $list_check_mods {
+      if { [can_resolve_reference $mod_vlnv] == 0 } {
+         lappend list_mods_missing $mod_vlnv
+      }
+   }
+
+   if { $list_mods_missing ne "" } {
+      catch {common::send_gid_msg -ssname BD::TCL -id 2021 -severity "ERROR" "The following module(s) are not found in the project: $list_mods_missing" }
+      common::send_gid_msg -ssname BD::TCL -id 2022 -severity "INFO" "Please add source files for the missing module(s) above."
+      set bCheckIPsPassed 0
+   }
+}
+
+  if { $bCheckIPsPassed != 1 } {
+    common::send_gid_msg -ssname BD::TCL -id 2023 -severity "WARNING" "Will not continue with creation of design due to the error(s) above."
+    return 3
+  }
+
+  variable script_folder
+
+  if { $parentCell eq "" } {
+     set parentCell [get_bd_cells /]
+  }
+
+  # Get object for parentCell
+  set parentObj [get_bd_cells $parentCell]
+  if { $parentObj == "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2090 -severity "ERROR" "Unable to find parent cell <$parentCell>!"}
+     return
+  }
+
+  # Make sure parentObj is hier blk
+  set parentType [get_property TYPE $parentObj]
+  if { $parentType ne "hier" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2091 -severity "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
+     return
+  }
+
+  # Save current instance; Restore later
+  set oldCurInst [current_bd_instance .]
+
+  # Set parent object as current
+  current_bd_instance $parentObj
+
+
+  # Create interface ports
+
+  # Create ports
+  set LED0 [ create_bd_port -dir O LED0 ]
+  set LED1 [ create_bd_port -dir O LED1 ]
+  set LED2 [ create_bd_port -dir O LED2 ]
+  set clk [ create_bd_port -dir I -type clk clk ]
+  set en [ create_bd_port -dir I -type clk en ]
+  set rst [ create_bd_port -dir I rst ]
+  set uart_tx [ create_bd_port -dir O uart_tx ]
+
+  # Create instance: HWT_cam_sim_0, and set properties
+  set block_name HWT_cam_sim
+  set block_cell_name HWT_cam_sim_0
+  if { [catch {set HWT_cam_sim_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $HWT_cam_sim_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+    set_property -dict [list \
+    CONFIG.image_height {240} \
+    CONFIG.image_width {320} \
+  ] $HWT_cam_sim_0
+
+
+  # Create instance: JPEG_LS_module_0, and set properties
+  set block_name JPEG_LS_module
+  set block_cell_name JPEG_LS_module_0
+  if { [catch {set JPEG_LS_module_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $JPEG_LS_module_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+    set_property -dict [list \
+    CONFIG.image_height {240} \
+    CONFIG.image_width {320} \
+  ] $JPEG_LS_module_0
+
+
+  # Create instance: PL_test_cam_rom, and set properties
+  set PL_test_cam_rom [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 PL_test_cam_rom ]
+  set_property -dict [list \
+    CONFIG.Byte_Size {8} \
+    CONFIG.Coe_File {/home/faurskov/Documents/PP/JPEG-LS-HDL/HDL/hw_tests/no_border_low_res.coe} \
+    CONFIG.EN_SAFETY_CKT {true} \
+    CONFIG.Fill_Remaining_Memory_Locations {true} \
+    CONFIG.Load_Init_File {true} \
+    CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
+    CONFIG.Use_Byte_Write_Enable {true} \
+    CONFIG.Use_RSTA_Pin {true} \
+    CONFIG.Write_Depth_A {65536} \
+    CONFIG.Write_Width_A {32} \
+    CONFIG.use_bram_block {Stand_Alone} \
+  ] $PL_test_cam_rom
+
+
+  # Create instance: btn_pulse_0, and set properties
+  set block_name btn_pulse
+  set block_cell_name btn_pulse_0
+  if { [catch {set btn_pulse_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $btn_pulse_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: output_buffer_0, and set properties
+  set block_name output_buffer
+  set block_cell_name output_buffer_0
+  if { [catch {set output_buffer_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $output_buffer_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: output_uart_sender_0, and set properties
+  set block_name output_uart_sender
+  set block_cell_name output_uart_sender_0
+  if { [catch {set output_uart_sender_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $output_uart_sender_0 eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: reset_btn, and set properties
+  set block_name debounce
+  set block_cell_name reset_btn
+  if { [catch {set reset_btn [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $reset_btn eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  # Create instance: util_vector_logic_0, and set properties
+  set util_vector_logic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0 ]
+  set_property -dict [list \
+    CONFIG.C_OPERATION {not} \
+    CONFIG.C_SIZE {1} \
+  ] $util_vector_logic_0
+
+
+  # Create interface connections
+  connect_bd_intf_net -intf_net HWT_cam_sim_0_BRAM_interface [get_bd_intf_pins HWT_cam_sim_0/BRAM_interface] [get_bd_intf_pins PL_test_cam_rom/BRAM_PORTA]
+
+  # Create port connections
+  connect_bd_net -net HWT_cam_sim_0_href [get_bd_pins HWT_cam_sim_0/href] [get_bd_pins JPEG_LS_module_0/href]
+  connect_bd_net -net HWT_cam_sim_0_pclk [get_bd_pins HWT_cam_sim_0/pclk] [get_bd_pins JPEG_LS_module_0/pclk] [get_bd_pins btn_pulse_0/clk] [get_bd_pins output_buffer_0/pclk] [get_bd_pins output_uart_sender_0/pclk]
+  connect_bd_net -net HWT_cam_sim_0_pixel [get_bd_pins HWT_cam_sim_0/pixel] [get_bd_pins JPEG_LS_module_0/pixel]
+  connect_bd_net -net HWT_cam_sim_0_vsync [get_bd_pins HWT_cam_sim_0/vsync] [get_bd_pins JPEG_LS_module_0/vsync]
+  connect_bd_net -net JPEG_LS_module_0_encoded_b [get_bd_pins JPEG_LS_module_0/encoded_b] [get_bd_pins output_buffer_0/encoded_b]
+  connect_bd_net -net JPEG_LS_module_0_encoded_g [get_bd_pins JPEG_LS_module_0/encoded_g] [get_bd_pins output_buffer_0/encoded_g]
+  connect_bd_net -net JPEG_LS_module_0_encoded_r [get_bd_pins JPEG_LS_module_0/encoded_r] [get_bd_pins output_buffer_0/encoded_r]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_b [get_bd_pins JPEG_LS_module_0/encoded_size_b] [get_bd_pins output_buffer_0/encoded_size_b]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_g [get_bd_pins JPEG_LS_module_0/encoded_size_g] [get_bd_pins output_buffer_0/encoded_size_g]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_r [get_bd_pins JPEG_LS_module_0/encoded_size_r] [get_bd_pins output_buffer_0/encoded_size_r]
+  connect_bd_net -net JPEG_LS_module_0_new_pixel [get_bd_pins JPEG_LS_module_0/new_pixel] [get_bd_pins output_buffer_0/new_pixel]
+  connect_bd_net -net JPEG_LS_module_0_valid_data [get_bd_pins JPEG_LS_module_0/valid_data] [get_bd_pins output_buffer_0/valid_data]
+  connect_bd_net -net axi_gpio_0_gpio2_io_o [get_bd_pins HWT_cam_sim_0/resetn] [get_bd_pins JPEG_LS_module_0/resetn] [get_bd_pins output_buffer_0/resetn] [get_bd_pins output_uart_sender_0/resetn] [get_bd_pins util_vector_logic_0/Res]
+  connect_bd_net -net btn_pulse_0_out1 [get_bd_pins HWT_cam_sim_0/enable] [get_bd_pins btn_pulse_0/out1]
+  connect_bd_net -net clk_0_1 [get_bd_ports clk] [get_bd_pins HWT_cam_sim_0/clk] [get_bd_pins reset_btn/clk]
+  connect_bd_net -net en_1 [get_bd_ports en] [get_bd_pins btn_pulse_0/in1]
+  connect_bd_net -net output_buffer_0_dout [get_bd_pins output_buffer_0/dout] [get_bd_pins output_uart_sender_0/dout]
+  connect_bd_net -net output_buffer_0_end_of_data [get_bd_ports LED0] [get_bd_pins output_buffer_0/end_of_data] [get_bd_pins output_uart_sender_0/end_of_data]
+  connect_bd_net -net output_buffer_0_new_data_ready [get_bd_pins output_buffer_0/new_data_ready] [get_bd_pins output_uart_sender_0/new_data_ready]
+  connect_bd_net -net output_buffer_0_read_allowed [get_bd_ports LED1] [get_bd_pins output_buffer_0/read_allowed] [get_bd_pins output_uart_sender_0/read_allowed]
+  connect_bd_net -net output_uart_sender_0_request_next [get_bd_pins output_buffer_0/request_next] [get_bd_pins output_uart_sender_0/request_next]
+  connect_bd_net -net output_uart_sender_0_sig [get_bd_ports uart_tx] [get_bd_pins output_uart_sender_0/sig]
+  connect_bd_net -net reset_btn_sig_out [get_bd_pins reset_btn/sig_out] [get_bd_pins util_vector_logic_0/Op1]
+  connect_bd_net -net sig_in_0_1 [get_bd_ports rst] [get_bd_pins reset_btn/sig_in]
+
+  # Create address segments
+
+
+  # Restore current instance
+  current_bd_instance $oldCurInst
+
+  validate_bd_design
+  save_bd_design
+  close_bd_design $design_name 
+}
+# End of cr_bd_BD_pl_test()
+cr_bd_BD_pl_test ""
+set_property GENERATE_SYNTH_CHECKPOINT "0" [get_files BD_pl_test.bd ] 
+set_property REGISTERED_WITH_MANAGER "1" [get_files BD_pl_test.bd ] 
+
+
+# Create wrapper file for BD_pl_test.bd
+make_wrapper -files [get_files BD_pl_test.bd] -import -top
+
 if { [get_files debounce.vhd] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/src/debounce.vhd"
+}
+if { [get_files context_memory_block.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/context_memory_block/context_memory_block.xci"
+}
+if { [get_files collector_bram.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/collector_bram/collector_bram.xci"
+}
+if { [get_files collector.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/collector.vhd"
+}
+if { [get_files context_modeller.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/context_modeller.vhd"
+}
+if { [get_files fixed_predictor.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/fixed_predictor.vhd"
+}
+if { [get_files golomb_coder.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/golomb_coder.vhd"
+}
+if { [get_files gradient.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/gradient.vhd"
+}
+if { [get_files pipeline_module_1.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/pipeline_module_1.vhd"
+}
+if { [get_files pipeline_module_2.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/pipeline_module_2.vhd"
+}
+if { [get_files prediction_adder.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/prediction_adder.vhd"
+}
+if { [get_files JPEG_LS_module.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/JPEG_LS_module.vhd"
+}
+if { [get_files HWT_cam_sim_clk.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
+}
+if { [get_files HWT_cam_sim.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/hw_tests/HWT_cam_sim.vhd"
+}
+if { [get_files clk_divider.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/clk_divider.vhd"
+}
+if { [get_files uart_module.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/uart_module.vhd"
+}
+if { [get_files output_uart_sender.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/output_uart_sender.vhd"
 }
 if { [get_files output_buffer_bram.xci] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
@@ -786,6 +1124,8 @@ proc cr_bd_BD_full_test { parentCell } {
 
 
   # Create ports
+  set LED0 [ create_bd_port -dir O LED0 ]
+  set LED1 [ create_bd_port -dir O LED1 ]
   set clk [ create_bd_port -dir I -type clk clk ]
   set rst [ create_bd_port -dir I rst ]
   set uart_tx [ create_bd_port -dir O uart_tx ]
@@ -811,7 +1151,12 @@ proc cr_bd_BD_full_test { parentCell } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
-  
+    set_property -dict [list \
+    CONFIG.image_height {240} \
+    CONFIG.image_width {320} \
+  ] $JPEG_LS_module_0
+
+
   # Create instance: axi_bram_ctrl_0, and set properties
   set axi_bram_ctrl_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_bram_ctrl:4.1 axi_bram_ctrl_0 ]
   set_property CONFIG.SINGLE_PORT_BRAM {1} $axi_bram_ctrl_0
@@ -1443,9 +1788,9 @@ proc cr_bd_BD_full_test { parentCell } {
   connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins HWT_cam_sim_0/enable] [get_bd_pins axi_gpio_0/gpio_io_o]
   connect_bd_net -net clk_0_1 [get_bd_ports clk] [get_bd_pins HWT_cam_sim_0/clk] [get_bd_pins reset_btn/clk]
   connect_bd_net -net output_buffer_0_dout [get_bd_pins output_buffer_0/dout] [get_bd_pins output_uart_sender_0/dout]
-  connect_bd_net -net output_buffer_0_end_of_data [get_bd_pins output_buffer_0/end_of_data] [get_bd_pins output_uart_sender_0/end_of_data]
+  connect_bd_net -net output_buffer_0_end_of_data [get_bd_ports LED0] [get_bd_pins output_buffer_0/end_of_data] [get_bd_pins output_uart_sender_0/end_of_data]
   connect_bd_net -net output_buffer_0_new_data_ready [get_bd_pins output_buffer_0/new_data_ready] [get_bd_pins output_uart_sender_0/new_data_ready]
-  connect_bd_net -net output_buffer_0_read_allowed [get_bd_pins output_buffer_0/read_allowed] [get_bd_pins output_uart_sender_0/read_allowed]
+  connect_bd_net -net output_buffer_0_read_allowed [get_bd_ports LED1] [get_bd_pins output_buffer_0/read_allowed] [get_bd_pins output_uart_sender_0/read_allowed]
   connect_bd_net -net output_uart_sender_0_request_next [get_bd_pins output_buffer_0/request_next] [get_bd_pins output_uart_sender_0/request_next]
   connect_bd_net -net output_uart_sender_0_sig [get_bd_ports uart_tx] [get_bd_pins output_uart_sender_0/sig]
   connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_smc/aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins rst_ps7_0_100M/slowest_sync_clk]
@@ -1462,14 +1807,15 @@ proc cr_bd_BD_full_test { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
-  validate_bd_design
   save_bd_design
+common::send_gid_msg -ssname BD::TCL -id 2050 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
+
   close_bd_design $design_name 
 }
 # End of cr_bd_BD_full_test()
 cr_bd_BD_full_test ""
+set_property GENERATE_SYNTH_CHECKPOINT "0" [get_files BD_full_test.bd ] 
 set_property REGISTERED_WITH_MANAGER "1" [get_files BD_full_test.bd ] 
-set_property SYNTH_CHECKPOINT_MODE "Hierarchical" [get_files BD_full_test.bd ] 
 
 
 # Create wrapper file for BD_full_test.bd
