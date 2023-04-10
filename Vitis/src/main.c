@@ -77,10 +77,12 @@ int main()
 			for(uint32_t i=0; i<100000; i++);
 		}
 
-		// Start image compression
-		gpio_set(&GPIO_0);
-		for (uint8_t i=0; i<200; i++);	// Wait
-		gpio_clear(&GPIO_0);
+		while (1) {
+			// Start image compression
+			gpio_set(&GPIO_0);
+			for (uint8_t i=0; i<200; i++);	// Wait
+			gpio_clear(&GPIO_0);
+		}
 
 		// Reset
 		buffer_8 = 0;
