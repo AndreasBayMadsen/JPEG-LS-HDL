@@ -183,7 +183,7 @@ begin
                             col_counter <= 0;
                             deserializer_state <= END_OF_LINE;
                             
-                        elsif vsync_shift = "01" then
+                        elsif (vsync_shift = "01") or (row_counter >= image_height) then
                             resetn_int <= '0';
                         end if;
                         
