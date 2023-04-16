@@ -36,6 +36,7 @@ entity output_uart_sender is
     Port (  
             resetn          : in  STD_LOGIC;
             pclk            : in  STD_LOGIC;
+            clk             : in  STD_LOGIC;
             sig             : out STD_LOGIC;
             
             request_next    : out STD_LOGIC;  -- Set high for getting next value, when it is ready.
@@ -79,7 +80,7 @@ architecture Behavioral of output_uart_sender is
     signal rising_data_send_uart    : STD_LOGIC := '0';
     
     signal buffer_data              : STD_LOGIC_VECTOR (63 downto 0) := (others => '0');
-    signal data_byte_idx            : UNSIGNED(2 downto 0) := (others => '0');
+    signal data_byte_idx            : UNSIGNED(2 downto 0) := (others => '1');
     
     type   tx_enum is (WAITING, FETCH, SEND, WAIT_SEND);
     signal tx_states : tx_enum := WAITING;
@@ -87,11 +88,11 @@ architecture Behavioral of output_uart_sender is
 begin
 
     uart_clk : clk_divider
-    Generic map (   base_freq => 12000000,
+    Generic map (   base_freq => 125000000,
                     out_freq  => 921600     -- 57600 baud        
                     )  
     Port map (  rst => '0',
-                clk => pclk,
+                clk => clk,
                 clk_div => clk_uart_temp
                 );
                 
@@ -123,7 +124,7 @@ begin
             old_clk_uart           <= '0';
             
             buffer_data            <= (others => '0');
-            data_byte_idx          <= (others => '0');
+            data_byte_idx          <= (others => '1');
             
             tx_states <= WAITING;
         
@@ -158,13 +159,13 @@ begin
                     end if;
                     if rising_data_send_uart = '1' then
                     
-                        if data_byte_idx /= 7 then
+                        if data_byte_idx /= 0 then
                             tx_states <= SEND;
                         else 
                             tx_states <= WAITING;
                         end if;
                         
-                        data_byte_idx <= data_byte_idx + 1;
+                        data_byte_idx <= data_byte_idx - 1;
                     end if;
                     
                 when others =>

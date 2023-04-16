@@ -38,7 +38,9 @@ end TB_output_uart_sender;
 architecture Behavioral of TB_output_uart_sender is
 
     component output_uart_sender
-    Port (  pclk            : in  STD_LOGIC;
+    Port (  resetn          : in  STD_LOGIC;
+            pclk            : in  STD_LOGIC;
+            clk             : in  STD_LOGIC;
             sig             : out STD_LOGIC;
             
             request_next    : out STD_LOGIC;  -- Set high for getting next value, when it is ready.
@@ -49,13 +51,21 @@ architecture Behavioral of TB_output_uart_sender is
             );
     end component;
     
+    constant BASE_CLK_FREQ   : REAL  := 125.0;    -- Clock frequency in MHz
+    
+        -- Derived
+    constant BASE_CLK_PER    : TIME  := (1.0/BASE_CLK_FREQ)*1 us;
+    constant BASE_CLK_HPER   : TIME  := BASE_CLK_PER/2;
+    
+    
     constant CLK_FREQ   : REAL  := 12.0;    -- Clock frequency in MHz
     
         -- Derived
     constant CLK_PER    : TIME  := (1.0/CLK_FREQ)*1 us;
     constant CLK_HPER   : TIME  := CLK_PER/2;
     
-    signal pclk            :  STD_LOGIC := '1';                  
+    signal pclk            :  STD_LOGIC := '1';
+    signal clk             :  STD_LOGIC := '1';                  
     signal sig             :  STD_LOGIC;                     
     signal request_next    :  STD_LOGIC;  
     signal read_allowed    :  STD_LOGIC := '0';  
@@ -66,7 +76,9 @@ architecture Behavioral of TB_output_uart_sender is
 begin
 
     dut : output_uart_sender
-        Port map(   pclk           => pclk          ,
+        Port map(   resetn => '1'                   ,
+                    pclk           => pclk          ,
+                    clk            => clk           ,
                     sig            => sig           ,
                     request_next   => request_next  ,
                     read_allowed   => read_allowed  ,
@@ -77,6 +89,7 @@ begin
                     
     -- Clock
     pclk <= not pclk after CLK_HPER;
+    clk <= not clk after BASE_CLK_HPER;
                     
     stimuli : process
     begin
