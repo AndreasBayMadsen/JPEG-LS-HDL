@@ -40,6 +40,8 @@ architecture Behavioral of TB_pl_test is
       port (
         LED0        : out STD_LOGIC;
         LED1        : out STD_LOGIC;
+        LED2        : out STD_LOGIC;
+        LED3        : out STD_LOGIC;
         clk         : in STD_LOGIC;
         en          : in STD_LOGIC;
         rst         : in STD_LOGIC;
@@ -49,6 +51,8 @@ architecture Behavioral of TB_pl_test is
     
     signal LED0      : STD_LOGIC;
     signal LED1      : STD_LOGIC;
+    signal LED2      : STD_LOGIC;
+    signal LED3      : STD_LOGIC;
     signal clk       : STD_LOGIC := '1';
     signal en        : STD_LOGIC := '0';
     signal rst       : STD_LOGIC := '0';
@@ -66,6 +70,8 @@ begin
       port map(
         LED0        => LED0   ,
         LED1        => LED1   ,
+        LED2        => LED2   ,
+        LED3        => LED3   ,
         clk         => clk   ,
         en          => en     ,
         rst         => rst    ,
@@ -77,11 +83,6 @@ begin
     stimuli : process
     begin
         wait for 1 ms;
-        en <= '1';
-        wait for 1 ms;
-        en <= '0';
-        
-        wait for 30 ms;
         en <= '1';
         wait for 1 ms;
         en <= '0';

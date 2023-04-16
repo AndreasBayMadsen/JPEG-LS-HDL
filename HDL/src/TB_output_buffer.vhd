@@ -45,15 +45,16 @@ architecture Behavioral of TB_output_buffer is
                     k_width_g     : integer := 5;
                     k_width_b     : integer := 5
         );
-        Port (  pclk            : in    STD_LOGIC;
-                en              : in    STD_LOGIC;
+        Port (  resetn          : in    STD_LOGIC;
+                pclk            : in    STD_LOGIC;
+                new_pixel       : in    STD_LOGIC;
                 valid_data      : in    STD_LOGIC;
                 encoded_r       : in    STD_LOGIC_VECTOR (L_max_r - 1 downto 0);
                 encoded_g       : in    STD_LOGIC_VECTOR (L_max_g - 1 downto 0);
                 encoded_b       : in    STD_LOGIC_VECTOR (L_max_b - 1 downto 0);
-                encoded_size_r  : in    UNSIGNED (k_width_r downto 0);
-                encoded_size_g  : in    UNSIGNED (k_width_g downto 0);
-                encoded_size_b  : in    UNSIGNED (k_width_b downto 0);
+                encoded_size_r  : in    STD_LOGIC_VECTOR (k_width_r downto 0);
+                encoded_size_g  : in    STD_LOGIC_VECTOR (k_width_g downto 0);
+                encoded_size_b  : in    STD_LOGIC_VECTOR (k_width_b downto 0);
                 
                 request_next    : in    STD_LOGIC;  -- Set high for getting next value, when it is ready.
                 read_allowed    : out   STD_LOGIC;  -- Flag for when clock is connected to logic and BRAM
@@ -97,15 +98,16 @@ begin
 
     DUT : output_buffer
         Port Map(
+        resetn           =>  '1'            ,
         pclk             =>  pclk           ,
-        en               =>  en             ,
+        new_pixel        =>  en             ,
         valid_data       =>  valid_data     ,
         encoded_r        =>  encoded_r      ,
         encoded_g        =>  encoded_g      ,
         encoded_b        =>  encoded_b      ,
-        encoded_size_r   =>  encoded_size_r ,
-        encoded_size_g   =>  encoded_size_g ,
-        encoded_size_b   =>  encoded_size_b ,
+        encoded_size_r   =>  STD_LOGIC_VECTOR(encoded_size_r) ,
+        encoded_size_g   =>  STD_LOGIC_VECTOR(encoded_size_g) ,
+        encoded_size_b   =>  STD_LOGIC_VECTOR(encoded_size_b) ,
 
         request_next     =>  request_next   ,
         read_allowed     =>  read_allowed   ,
@@ -165,6 +167,8 @@ begin
         
         en <= not en; wait for CLK_PER; en <= not en; wait for CLK_PER;   
         
+        
+        wait for 3 * CLK_PER;
         request_next <= '1';
         wait for CLK_PER;
         request_next <= '0';
@@ -173,6 +177,61 @@ begin
         wait for 5 * CLK_PER;
         wait for CLK_PER;
         request_next <= '0';
+        
+        
+        -- Enable stream,
+        en <= '1';
+        valid_data <= '1';
+        
+        
+        -- Set data        
+        encoded_r <= x"11111";
+        encoded_g <= x"222222";
+        encoded_b <= x"33333";
+        
+        encoded_size_r <= to_unsigned(8, encoded_size_r'length);
+        encoded_size_g <= to_unsigned(8, encoded_size_g'length);
+        encoded_size_b <= to_unsigned(8, encoded_size_b'length);
+        
+        wait for CLK_PER; en <= not en; wait for CLK_PER;
+        
+        encoded_r <= x"44444";
+        encoded_g <= x"555555";
+        encoded_b <= x"66666";
+        
+        encoded_size_r <= to_unsigned(16, encoded_size_r'length);
+        encoded_size_g <= to_unsigned(16, encoded_size_g'length);
+        encoded_size_b <= to_unsigned(16, encoded_size_b'length);
+        
+        en <= not en; wait for CLK_PER; en <= not en; wait for CLK_PER;
+        
+        encoded_r <= x"77777";
+        encoded_g <= x"888888";
+        encoded_b <= x"99999";
+        
+        encoded_size_r <= to_unsigned(4, encoded_size_r'length);
+        encoded_size_g <= to_unsigned(4, encoded_size_g'length);
+        encoded_size_b <= to_unsigned(4, encoded_size_b'length);
+        
+        en <= not en; wait for CLK_PER; en <= not en; wait for CLK_PER; 
+        
+        wait for 4 * CLK_PER;
+        
+        valid_data <= '0';
+        
+        en <= not en; wait for CLK_PER; en <= not en; wait for CLK_PER;   
+        
+        
+        wait for 3 * CLK_PER;
+        request_next <= '1';
+        wait for CLK_PER;
+        request_next <= '0';
+        wait for CLK_PER;
+        request_next <= '1';
+        wait for 5 * CLK_PER;
+        wait for CLK_PER;
+        request_next <= '0';
+        
         
         -- Enable stream,
         en <= '1';

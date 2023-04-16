@@ -55,9 +55,9 @@ entity JPEG_LS_module is
             encoded_r       : out STD_LOGIC_VECTOR(L_max_r-1 downto 0)    := (others=>'0');
             encoded_g       : out STD_LOGIC_VECTOR(L_max_g-1 downto 0)    := (others=>'0');
             encoded_b       : out STD_LOGIC_VECTOR(L_max_b-1 downto 0)    := (others=>'0');
-            encoded_size_r  : out UNSIGNED(k_width_r downto 0)            := (others=>'0');
-            encoded_size_g  : out UNSIGNED(k_width_g downto 0)            := (others=>'0');
-            encoded_size_b  : out UNSIGNED(k_width_b downto 0)            := (others=>'0')
+            encoded_size_r  : out STD_LOGIC_VECTOR(k_width_r downto 0)    := (others=>'0');
+            encoded_size_g  : out STD_LOGIC_VECTOR(k_width_g downto 0)    := (others=>'0');
+            encoded_size_b  : out STD_LOGIC_VECTOR(k_width_b downto 0)    := (others=>'0')
             );
 end JPEG_LS_module;
 
@@ -535,9 +535,9 @@ begin
                     encoded_r           <= encoded_r_3;     
                     encoded_g           <= encoded_g_3;     
                     encoded_b           <= encoded_b_3;
-                    encoded_size_r      <= encoded_size_r_3;
-                    encoded_size_g      <= encoded_size_g_3;
-                    encoded_size_b      <= encoded_size_b_3;
+                    encoded_size_r      <= STD_LOGIC_VECTOR(encoded_size_r_3);
+                    encoded_size_g      <= STD_LOGIC_VECTOR(encoded_size_g_3);
+                    encoded_size_b      <= STD_LOGIC_VECTOR(encoded_size_b_3);
                 end if;
                 
                 new_pixel_4_buf <= new_pixel_3;

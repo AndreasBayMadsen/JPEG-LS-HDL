@@ -47,9 +47,9 @@ entity output_buffer is
             encoded_r       : in    STD_LOGIC_VECTOR (L_max_r - 1 downto 0);
             encoded_g       : in    STD_LOGIC_VECTOR (L_max_g - 1 downto 0);
             encoded_b       : in    STD_LOGIC_VECTOR (L_max_b - 1 downto 0);
-            encoded_size_r  : in    UNSIGNED (k_width_r downto 0);
-            encoded_size_g  : in    UNSIGNED (k_width_g downto 0);
-            encoded_size_b  : in    UNSIGNED (k_width_b downto 0);
+            encoded_size_r  : in    STD_LOGIC_VECTOR (k_width_r downto 0);
+            encoded_size_g  : in    STD_LOGIC_VECTOR (k_width_g downto 0);
+            encoded_size_b  : in    STD_LOGIC_VECTOR (k_width_b downto 0);
             
             request_next    : in    STD_LOGIC;  -- Set high for getting next value, when it is ready.
             read_allowed    : out   STD_LOGIC;  -- Flag for when clock is connected to logic and BRAM
@@ -92,25 +92,36 @@ architecture Behavioral of output_buffer is
     
     -- READ LOGIC FLAGS.
     
-    signal addr_written     : STD_LOGIC;
-    signal ram_waiting      : STD_LOGIC;
+    signal addr_written     : STD_LOGIC := '0';
+    signal ram_waiting      : STD_LOGIC := '0';
     
     -- LOGIC signals
     
-    signal reg_end_temp     : UNSIGNED(integer(ceil(log2(real(reg_width + 1)))) - 1 downto 0)         := (others => '0');
-    signal reg_end          : UNSIGNED(integer(ceil(log2(real(reg_width + 1)))) - 1 downto 0)         := (others => '0');
-    signal reg_shift_end    : UNSIGNED(integer(ceil(log2(real(reg_width + 1)))) - 1 downto 0)         := (others => '0');
-    signal reg_temp         : STD_LOGIC_VECTOR(reg_width - 1 downto 0) := (others => '0');
-    signal reg              : STD_LOGIC_VECTOR(reg_width - 1 downto 0) := (others => '0');
-    signal reg_shift        : STD_LOGIC_VECTOR(reg_width - 1 downto 0) := (others => '0');
+    signal reg_size_left        : UNSIGNED(integer(ceil(log2(real(bram_width + 1)))) - 1 downto 0) := (others => '0'); -- Number of valid bits in left part of reg_int
+    signal reg_size_right_com   : UNSIGNED(integer(ceil(log2(real(bram_width + 1)))) - 1 downto 0) := (others => '0'); -- Number of valid bits in right part of reg_int accoring to input
+    signal reg_size_right       : UNSIGNED(integer(ceil(log2(real(bram_width + 1)))) - 1 downto 0) := (others => '0'); -- Number of valid bits in right part of reg_int
+    signal reg_int              : STD_LOGIC_VECTOR(reg_width - 1 downto 0) := (others => '0');
     
-    signal read_allow       : STD_LOGIC := '0'; -- Writer sets this high, when reader process can continue. Reader process must stop immedietly, when this goes low again.
-    signal reg_empty        : STD_LOGIC;
+    signal reg_size_overflow    : STD_LOGIC; -- Goes high when reg_size_left + reg_size_right is higher than bram_width.
+    signal reg_empty            : STD_LOGIC;
+    
+    signal read_allow           : STD_LOGIC := '0'; -- Writer sets this high, when reader process can continue. Reader process must stop immedietly, when this goes low again.
+    
         
-    type writer_enum is (WAITING_WRITE, UPDATE_REG);
+    type writer_enum is (WAIT_NEW_INPUT, UPDATE);
     signal writer_state : writer_enum;
     
+    
+    -- Convert STD_LOGIC_VECTOR to UNSIGNED.
+    signal encoded_size_r_int : UNSIGNED(k_width_r downto 0);
+    signal encoded_size_g_int : UNSIGNED(k_width_g downto 0);
+    signal encoded_size_b_int : UNSIGNED(k_width_b downto 0);
+    
 begin
+
+    encoded_size_r_int <= UNSIGNED(encoded_size_r);
+    encoded_size_g_int <= UNSIGNED(encoded_size_g);
+    encoded_size_b_int <= UNSIGNED(encoded_size_b);
 
     memory_block : output_buffer_bram 
         Port Map(   clka    => pclk,
@@ -122,15 +133,11 @@ begin
                     
     bram_addr <= write_addr when read_allow = '0' else read_addr;
     
-    reg_end_temp  <= resize(encoded_size_r, reg_end_temp'length) + encoded_size_g + encoded_size_b + reg_end;
+    reg_empty <= '1' when resize(reg_size_right, reg_size_right'length + 1) + reg_size_left = 0 else '0';
     
-    reg_empty <= '1' when reg_end = 0 else '0';
+    reg_size_right_com  <= resize(encoded_size_r_int, reg_size_right_com'length) + encoded_size_g_int + encoded_size_b_int;
     
-    reg_shift <= (reg_width - 1 downto bram_width => '0') & reg(reg_width - 1 downto bram_width);
-    
-    reg_shift_end <= reg_end - bram_width 
-                     when reg_end > bram_width else
-                     (others => '0');
+    reg_size_overflow <= '1' when bram_width < resize(reg_size_right, reg_size_right'length + 1) + reg_size_left else '0';
     
     writer : process(pclk)
     begin
@@ -142,9 +149,8 @@ begin
                 bram_din <= (others => '0');
                 write_addr <= (others => '0');
                 write_pointer <= (others => '0');
-                reg <= (others => '0');
-                reg_end <= (others => '0');
-                writer_state <= WAITING_WRITE;
+                reg_int <= (others => '0');
+                writer_state <= WAIT_NEW_INPUT;
             
             else
             
@@ -152,11 +158,53 @@ begin
                 read_allow <= '0';
                 
                 case writer_state is
-                    when WAITING_WRITE =>
+                    when WAIT_NEW_INPUT =>
+                    
+                        if (new_pixel = '1' and valid_data = '1') or (valid_data = '0' and reg_empty = '0') then
+                        
+                            if reg_size_right > 0 and reg_size_left < bram_width then
+                            
+                                -- Shift from right to left part.
+                                reg_int <= (others => '0');
+                                if reg_size_overflow = '1' then
+                                    
+                                    reg_int(reg_int'high downto reg_width - to_integer(reg_size_left) - to_integer(reg_size_right) ) <= reg_int(bram_width + to_integer(reg_size_left) - 1 downto bram_width - to_integer(reg_size_right));
+                                    
+                                    reg_size_left <= to_unsigned(bram_width, reg_size_left'length);
+                                    reg_size_right <= reg_size_right - (to_unsigned(bram_width, reg_size_left'length) - reg_size_left);
+                                    
+                                    if valid_data = '0' then
+                                        reg_size_right <= to_unsigned(bram_width, reg_size_left'length);
+                                    end if;
+                                
+                                elsif valid_data = '1' then
+                                    
+                                    reg_int(bram_width + to_integer(reg_size_left) + to_integer(reg_size_right) - 1 downto bram_width) <= reg_int(bram_width + to_integer(reg_size_left) - 1 downto bram_width - to_integer(reg_size_right));
+                                    
+                                    reg_size_left <= reg_size_right + reg_size_left;
+                                    reg_size_right <= (others => '0');
+                                    
+                                else
+                                
+                                    reg_int(reg_int'high downto bram_width) <= reg_int(bram_width + to_integer(reg_size_left) - 1 downto to_integer(reg_size_left));
+                                    
+                                    reg_size_left <= to_unsigned(bram_width, reg_size_left'length);
+                                    reg_size_right <= (others => '0');
+
+                                end if;
+                            end if;
+                            writer_state <= UPDATE;
+                        end if;
+                       
+                        if valid_data = '0' and reg_empty = '1' then
+                            read_allow <= '1';
+                        end if;
+                           
+                    when UPDATE =>
                     
                         -- Write to RAM and from temp
-                        if reg_end >= bram_width or (valid_data = '0' and reg_empty = '0') then
-                            bram_din <= reg(bram_width - 1 downto 0);
+                        if reg_size_left = bram_width then
+                            bram_din <= reg_int(reg_int'length - 1 downto reg_int'length - bram_width);
                             we <= '1';
                             
                             -- Set address;
@@ -164,45 +212,30 @@ begin
                             write_addr(write_pointer'range) <= STD_LOGIC_VECTOR(write_pointer);
                             write_pointer <= write_pointer + 1;
                             
-                            -- Register should shift.
-                            reg <= reg_shift;
-                            reg_end <= reg_shift_end;
-                        end if;
-                    
-                        if (new_pixel = '1' and valid_data = '1') then
+                            -- Shift register.
+                            reg_int <= (others => '0');
+                            reg_int(to_integer(reg_size_right) + bram_width - 1 downto bram_width) <= reg_int(bram_width - 1 downto bram_width - to_integer(reg_size_right));
                             
-                            writer_state <= UPDATE_REG;
+                            reg_size_left <= reg_size_right;
+                            
                         end if;
-                       
-                        if valid_data = '0' and reg_empty = '1' then
-                            read_allow <= '1';
-                        end if;
-                           
-                    when UPDATE_REG =>
                         
-                        -- Update only from input if data is valid.
+                        -- Load encoded into register.
                         if valid_data = '1' then
-                        
-                            reg_end <= reg_end_temp;
+                            reg_int(bram_width - 1 downto bram_width - to_integer(reg_size_right_com)) <= 
+                                encoded_r(to_integer(encoded_size_r_int - to_unsigned(1, encoded_size_r'length)) downto 0)
+                                & encoded_g(to_integer(encoded_size_g_int - to_unsigned(1, encoded_size_g'length)) downto 0)
+                                & encoded_b(to_integer(encoded_size_b_int - to_unsigned(1, encoded_size_b'length)) downto 0);
                             
-                            reg <= (others => '0');
-                        
-                            if reg_empty = '0' then
-                                reg(to_integer(reg_end_temp) downto 0) <= encoded_b(to_integer(encoded_size_b - to_unsigned(1, encoded_size_b'length)) downto 0)
-                                & encoded_g(to_integer(encoded_size_g - to_unsigned(1, encoded_size_g'length)) downto 0)
-                                & encoded_r(to_integer(encoded_size_r - to_unsigned(1, encoded_size_r'length)) downto 0)
-                                & reg(to_integer(reg_end - to_unsigned(1, reg_end'length)) downto 0);
-                            else
-                                reg(to_integer(reg_end_temp) downto 0) <= encoded_b(to_integer(encoded_size_b - to_unsigned(1, encoded_size_b'length)) downto 0)
-                                & encoded_g(to_integer(encoded_size_g - to_unsigned(1, encoded_size_g'length)) downto 0)
-                                & encoded_r(to_integer(encoded_size_r - to_unsigned(1, encoded_size_r'length)) downto 0);
-                            end if;
+                            reg_size_right <= reg_size_right_com;
+                        else
+                            reg_size_right <= (others => '0');
                         end if;
                         
-                        writer_state <= WAITING_WRITE;
+                        writer_state <= WAIT_NEW_INPUT;
                         
                     when others =>
-                        writer_state <= WAITING_WRITE;
+                        writer_state <= WAIT_NEW_INPUT;
                 end case;
             end if;
         end if;
@@ -214,47 +247,49 @@ begin
     
     reader : process(pclk)
     begin
-        if resetn = '0' then
-            new_data_ready <= '0';
-            end_of_data <= '1';
-            ram_waiting <= '0';
-            dout <= (others => '0');
-            addr_written <= '0';
-            read_addr <= (others => '0');
-            read_pointer <= (others => '0');
         
-        elsif rising_edge(pclk) then
-        
-            new_data_ready <= '0';
-                
-            if data_available = '1' then
-                end_of_data <= '0';
-            end if;
-            
-            -- Read data from RAM.
-            if ram_waiting = '1' then
+        if rising_edge(pclk) then
+            if resetn = '0' then
+                new_data_ready <= '0';
+                end_of_data <= '1';
                 ram_waiting <= '0';
-                dout <= bram_dout;
-                new_data_ready <= '1';
-                
-                if valid_data = '0' and data_available = '0' then
-                    end_of_data <= '1';
-                end if;
-            end if;
-        
-            -- Wait a clock;
-            if addr_written = '1' then
+                dout <= (others => '0');
                 addr_written <= '0';
-                ram_waiting <= '1';
-            end if;
-            
-            if read_allow = '1' and data_available = '1' and request_next = '1' then
-                
                 read_addr <= (others => '0');
-                read_addr(read_pointer'range) <= STD_LOGIC_VECTOR(read_pointer);
-                read_pointer <= read_pointer + 1;
+                read_pointer <= (others => '0');
+            else
+            
+                new_data_ready <= '0';
+                ram_waiting <= '0';
+                addr_written <= '0';
+                    
+                if data_available = '1' then
+                    end_of_data <= '0';
+                end if;
                 
-                addr_written <= '1';
+                -- Read data from RAM.
+                if ram_waiting = '1' then
+                    dout <= bram_dout;
+                    new_data_ready <= '1';
+                    
+                    if valid_data = '0' and data_available = '0' then
+                        end_of_data <= '1';
+                    end if;
+                end if;
+            
+                -- Wait a clock;
+                if addr_written = '1' then
+                    ram_waiting <= '1';
+                end if;
+                
+                if read_allow = '1' and data_available = '1' and request_next = '1' then
+                    
+                    read_addr <= (others => '0');
+                    read_addr(read_pointer'range) <= STD_LOGIC_VECTOR(read_pointer);
+                    read_pointer <= read_pointer + 1;
+                    
+                    addr_written <= '1';
+                end if;
             end if;
         end if;
     end process;
