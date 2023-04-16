@@ -150,7 +150,7 @@ begin
               
     -- READ context from RAM.
     
-    process(din, old_addr, addr_latch)
+    process(din, old_addr, addr_latch, A_latch, B_latch, C_latch, N_latch)
     begin
     
         if old_addr /= addr_latch then

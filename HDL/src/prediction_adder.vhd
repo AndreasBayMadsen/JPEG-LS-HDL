@@ -82,7 +82,7 @@ architecture Behavioral of prediction_adder is
 
 begin
 
-    process (pclk) 
+    process (pclk, en) 
     begin
         if rising_edge(pclk) and en = '1' then
             pixel_latch <= pixel;
