@@ -485,135 +485,62 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 	Int32  updateErrval;
 	Uint32 EMErrval;
 
-	if (decompressing) {
-		decodeMappedErrvalWithGolomb(k,LIMIT-rk-1,qbpp,EMErrval,in);	// needs work :(
+	decodeMappedErrvalWithGolomb(k,LIMIT-rk-1,qbpp,EMErrval,in);	// needs work :(
 
-		Uint32 tEMErrval = EMErrval + (RItype ? 1 : 0);		// use local copy to leave original for parameter update later
+	Uint32 tEMErrval = EMErrval + (RItype ? 1 : 0);		// use local copy to leave original for parameter update later
 
-		if (tEMErrval == 0) {
-			Errval = 0;
-		}
-		else if (k == 0) {
-			if (2*Nn[Q-365] < N[Q]) {
-				if (tEMErrval%2 == 0) {
-					Errval = -Int32(tEMErrval>>1);		// "map = 0"	2 becomes -1, 4 becomes -2, 6 becomes -3
-				}
-				else {
-					Errval = (tEMErrval+1)>>1;		// "map = 1"	1 becomes 1, 3 becomes 2, 5 becomes 3
-				}
-			}
-			else {	// 2*Nn[Q-365] >= N[Q]
-				if (tEMErrval%2 == 0) {
-					Errval = tEMErrval>>1;			// "map = 0"	2 becomes 1, 4 becomes 2, 6 becomes 3
-				}
-				else {
-					Errval = -Int32((tEMErrval+1)>>1);	// "map = 1"	1 becomes -1, 3 becomes -2, 5 becomes -3
-				}
-			}
-		}
-		else {
+	if (tEMErrval == 0) {
+		Errval = 0;
+	}
+	else if (k == 0) {
+		if (2*Nn[Q-365] < N[Q]) {
 			if (tEMErrval%2 == 0) {
-				Errval = tEMErrval>>1;				// "map = 0"	2 becomes  1, 4 becomes  2, 6 becomes 3
+				Errval = -Int32(tEMErrval>>1);		// "map = 0"	2 becomes -1, 4 becomes -2, 6 becomes -3
 			}
 			else {
-				Errval = -Int32((tEMErrval+1)>>1);		// "map = 1"	1 becomes -1, 3 becomes -2, 5 becomes -3
+				Errval = (tEMErrval+1)>>1;		// "map = 1"	1 becomes 1, 3 becomes 2, 5 becomes 3
 			}
 		}
-
-		updateErrval=Errval;
-
-		if (NEAR > 0) deQuantizeErrval(NEAR,Errval);
-
-		if (SIGN < 0) Errval=-Errval;		// if "context type" was negative
-
-		Int32 Rx = Px+Errval;
-
-		// modulo(RANGE*(2*NEAR+1)) as per F.1 Item 14
-
-		// (NB. Is this really the reverse of the encoding procedure ???)
-
-		if (Rx < -NEAR)
-			Rx+=RANGE*(2*NEAR+1);
-		else if (Rx > MAXVAL+NEAR)
-			Rx-=RANGE*(2*NEAR+1);
-
-		clampPredictedValue(Rx,MAXVAL);
-
-		// Apply inverse point transform and mapping table when implemented
-
-		Ix=(Uint16)Rx;
+		else {	// 2*Nn[Q-365] >= N[Q]
+			if (tEMErrval%2 == 0) {
+				Errval = tEMErrval>>1;			// "map = 0"	2 becomes 1, 4 becomes 2, 6 becomes 3
+			}
+			else {
+				Errval = -Int32((tEMErrval+1)>>1);	// "map = 1"	1 becomes -1, 3 becomes -2, 5 becomes -3
+			}
+		}
 	}
 	else {
-		Errval = Int32(Ix) - Px;
-
-		if (SIGN < 0) Errval=-Errval;		// if "context type" was negative
-
-		// Figure out sign to later correct Errval (Figure A.19) ...
-
-		if (NEAR > 0) {	// For near-lossless, quantize Errval and derive reconstructed value (A.4.4)
-
-			quantizeErrval(NEAR,Errval);
-
-			// Replace with the reconstructed value the decoder will have
-			// (obviously if in lossless mode there will be no difference)
-
-			Int32 Rx=Px+SIGN*Errval*(2*NEAR+1);
-			clampPredictedValue(Rx,MAXVAL);
-					
-			Ix=(Uint16)Rx;
+		if (tEMErrval%2 == 0) {
+			Errval = tEMErrval>>1;				// "map = 0"	2 becomes  1, 4 becomes  2, 6 becomes 3
 		}
-
-		// Modulo reduction of the prediction error (A.4.5)
-
-		if (Errval < 0)			Errval=Errval+RANGE;
-		if (Errval >= (RANGE+1)/2)	Errval=Errval-RANGE;
-
-		updateErrval=Errval;
-
-		// Golomb stuff is outside decompress/compress decision since same
-
-		// Map error to non-negative ...
-
-		// Int16 map = ((k == 0 && Errval > 0 && 2*Nn[Q-365] < N[Q]) || (Errval < 0 && (2*Nn[Q-365] >= N[Q] || k != 0)) ? 1 : 0;
-		// EMErrval = 2*Abs(Errval) - RItype - map;
-
-		if (k == 0) {
-			if (Errval > 0) {
-				if (2*Nn[Q-365] < N[Q]) {
-					EMErrval = 2*Errval - 1;		// "map = 1"	1 becomes 1, 2 becomes 3, 3 becomes 5
-				}
-				else {	// 2*Nn[Q-365] >= N[Q]
-					EMErrval = 2*Errval;			// "map = 0"	1 becomes 2, 2 becomes 4, 3 becomes 6
-				}
-			}
-			else if (Errval < 0) {
-				if (2*Nn[Q-365] < N[Q]) {
-					EMErrval = -2*Errval;			// "map = 0"	-1 becomes 2, -2 becomes 4, -3 becomes 6
-				}
-				else {	// 2*Nn[Q-365] >= N[Q]
-					EMErrval = -2*Errval - 1;		// "map = 1"	-1 becomes 1, -2 becomes 3, -3 becomes 5
-				}
-			}
-			else { // Errval == 0
-				EMErrval = 0;					// "map = 0"	0 stays 0
-			}
+		else {
+			Errval = -Int32((tEMErrval+1)>>1);		// "map = 1"	1 becomes -1, 3 becomes -2, 5 becomes -3
 		}
-		else {	// k != 0
-			if (Errval > 0) {
-				EMErrval = 2*Errval;				// "map = 0"	1 becomes 2, 2 becomes 4, 3 becomes 6
-			}
-			else if (Errval < 0) {
-				EMErrval = -2*Errval - 1;			// "map = 1"	-1 becomes 1, -2 becomes 3, -3 becomes 5
-			}
-			else { // Errval == 0
-				EMErrval = 0;					// "map = 0"	0 stays 0
-			}
-		}
-
-		EMErrval-=(RItype ? 1 : 0);
-
-		encodeMappedErrvalWithGolomb(k,LIMIT-rk-1,qbpp,EMErrval,out, dbg_file);
 	}
+
+	updateErrval=Errval;
+
+	if (NEAR > 0) deQuantizeErrval(NEAR,Errval);
+
+	if (SIGN < 0) Errval=-Errval;		// if "context type" was negative
+
+	Int32 Rx = Px+Errval;
+
+	// modulo(RANGE*(2*NEAR+1)) as per F.1 Item 14
+
+	// (NB. Is this really the reverse of the encoding procedure ???)
+
+	if (Rx < -NEAR)
+		Rx+=RANGE*(2*NEAR+1);
+	else if (Rx > MAXVAL+NEAR)
+		Rx-=RANGE*(2*NEAR+1);
+
+	clampPredictedValue(Rx,MAXVAL);
+
+	// Apply inverse point transform and mapping table when implemented
+
+	Ix=(Uint16)Rx;
 
 	// Update parameters ...
 
@@ -626,6 +553,20 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 	}
 	++N[Q];
 }
+
+struct ColorContext {
+
+	Uint16 NEAR{0};		// Lossless if zero
+	Uint16 T1{0};
+	Uint16 T2{0};
+	Uint16 T3{0};
+	Uint16 RESET{0};
+
+	Uint32 ROWS{0};
+	Uint32 COLUMNS{0};
+	Uint16 P{0};		// Sample precision
+	Uint32 MAXVAL{0};
+};
 
 int
 main(int argc,char **argv)
@@ -641,22 +582,20 @@ main(int argc,char **argv)
 
 	bool verbose=options.get("v") || options.get("verbose");
 
-	bool decompressing=options.get("d") || options.get("decompress");
-	bool useJPEGmarkers=!options.get("nomarkers");
 	bool useRunMode=!options.get("noruns");
 
 	unsigned rows=0;
-	if ((!decompressing || !useJPEGmarkers) && !options.get("rows",rows) && !options.get("height",rows) && !options.get("h",rows)) {
+	if (!options.get("rows",rows) && !options.get("height",rows) && !options.get("h",rows)) {
 		cerr << EMsgDC(NeedOption) << " - rows" << endl;
 		bad=true;
 	}
 	unsigned cols=0;
-	if ((!decompressing || !useJPEGmarkers) && !options.get("columns",cols) && !options.get("width",cols) && !options.get("w",cols)) {
+	if (!options.get("columns",cols) && !options.get("width",cols) && !options.get("w",cols)) {
 		cerr << EMsgDC(NeedOption) << " - columns" << endl;
 		bad=true;
 	}
 	unsigned bits=0;
-	if ((!decompressing || !useJPEGmarkers) && !options.get("bits",bits) && !options.get("depth",bits)) {
+	if (!options.get("bits",bits) && !options.get("depth",bits)) {
 		cerr << EMsgDC(NeedOption) << " - bits" << endl;
 		bad=true;
 	}
@@ -667,13 +606,12 @@ main(int argc,char **argv)
 	Uint16 T2=0;
 	Uint16 T3=0;
 	Uint16 RESET=0;
-	if ((!decompressing || !useJPEGmarkers)) {
-		unsigned near;	if (options.get("near",near))				NEAR=near;
-		unsigned t1;	if (options.get("T1",t1) || options.get("Ta",t1))	T1=t1;
-		unsigned t2;	if (options.get("T2",t2) || options.get("Tb",t2))	T2=t2;
-		unsigned t3;	if (options.get("T3",t3) || options.get("Tc",t3))	T3=t3;
-		unsigned reset;	if (options.get("reset",reset))				RESET=reset;
-	}
+		
+	unsigned near;	if (options.get("near",near))				NEAR=near;
+	unsigned t1;	if (options.get("T1",t1) || options.get("Ta",t1))	T1=t1;
+	unsigned t2;	if (options.get("T2",t2) || options.get("Tb",t2))	T2=t2;
+	unsigned t3;	if (options.get("T3",t3) || options.get("Tc",t3))	T3=t3;
+	unsigned reset;	if (options.get("reset",reset))				RESET=reset;
 
 	input_options.done();
 	output_options.done();
@@ -700,7 +638,6 @@ main(int argc,char **argv)
 		cerr 	<< MMsgDC(Usage) << ": " << options.command()
 			<< input_options.usage()
 			<< output_options.usage()
-			<< " [-d|decompress]"
 			<< " -rows|height|h n"
 			<< " -columns|width|w n"
 			<< " -bits|depth n"
@@ -709,7 +646,6 @@ main(int argc,char **argv)
 			<< " [-T2|Tb n]"
 			<< " [-T3|Tc n]"
 			<< " [-reset n]"
-			<< " [-nomarkers]"
 			<< " [-noruns]"
 			<< " [-v|verbose]"
 			<< " [" << MMsgDC(InputFile)
@@ -732,75 +668,43 @@ main(int argc,char **argv)
 
 	bool haveLSE1=false;
 
-	if (decompressing && useJPEGmarkers) {
-		bool readrequiredmarkers=false;
-		Uint16 marker;
-		if (readJPEGMarker(in,marker) && readSOI(in,marker)) {
-			if (readJPEGMarker(in,marker) && readSOF55(in,marker,P,ROWS,COLUMNS)
-			 || (haveLSE1=readLSE1(in,marker,MAXVAL,T1,T2,T3,RESET)) && readJPEGMarker(in,marker) && readSOF55(in,marker,P,ROWS,COLUMNS)) {
-				if (readJPEGMarker(in,marker) && readSOS(in,marker,NEAR)
-				 || !haveLSE1 && (haveLSE1=readLSE1(in,marker,MAXVAL,T1,T2,T3,RESET)) && readJPEGMarker(in,marker) && readSOS(in,marker,NEAR)) {
+	P=bits;
+	ROWS=rows;
+	COLUMNS=cols;
 
-					readrequiredmarkers=true;
-				}
-				else {
-					cerr << "Corrupt JPEG stream ... expected SOS Marker" << endl;
-				}
-			}
-			else {
-				cerr << "Corrupt JPEG stream ... expected SOF55 Marker" << endl;
-			}
-		}
-		else {
-			cerr << "Corrupt JPEG stream ... expected SOI Marker" << endl;
-		}
+	MAXVAL=(1ul<<P)-1;
 
-		if (!readrequiredmarkers) {
-			exit(1);
-		}
-	}
-	else {
-		P=bits;
-		ROWS=rows;
-		COLUMNS=cols;
-	}
+	if (!RESET) RESET=64;		// May have been set on command line
 
-	if (!decompressing || !useJPEGmarkers || !haveLSE1) {	// Note that the LSE ID 1 marker is optional
-		MAXVAL=(1ul<<P)-1;
+	// Initialization of default parameters as per A.1 reference to C.2.4.1.1.1
 
-		if (!RESET) RESET=64;		// May have been set on command line
+	// Thresholds for context gradients ...
 
-		// Initialization of default parameters as per A.1 reference to C.2.4.1.1.1
-
-		// Thresholds for context gradients ...
-
-		const Uint32 BASIC_T1 = 3;
-		const Uint32 BASIC_T2 = 7;
-		const Uint32 BASIC_T3 = 21;
+	const Uint32 BASIC_T1 = 3;
+	const Uint32 BASIC_T2 = 7;
+	const Uint32 BASIC_T3 = 21;
 
 #define CLAMP_1(i)	((i > MAXVAL || i < NEAR+1) ? NEAR+1 : i)
 #define CLAMP_2(i)	((i > MAXVAL || i < T1) ? T1 : i)
 #define CLAMP_3(i)	((i > MAXVAL || i < T2) ? T2 : i)
 
-		// Only replace T1, T2, T3 if not set on command line ...
+	// Only replace T1, T2, T3 if not set on command line ...
 
-		if (MAXVAL >= 128) {
-			Uint32 FACTOR=FloorDivision(Minimum(MAXVAL,4095)+128,256);
-			if (verbose) cerr << "MAXVAL >= 128" << endl;
-			if (verbose) cerr << "FACTOR = " << dec << FACTOR << endl;
-			if (!T1) T1=CLAMP_1(FACTOR*(BASIC_T1-2)+2+3*NEAR);
-			if (!T2) T2=CLAMP_2(FACTOR*(BASIC_T2-3)+3+5*NEAR);
-			if (!T3) T3=CLAMP_3(FACTOR*(BASIC_T3-4)+4+7*NEAR);
-		}
-		else {
-			Uint32 FACTOR=FloorDivision(256,MAXVAL+1);
-			if (verbose) cerr << "MAXVAL < 128" << endl;
-			if (verbose) cerr << "FACTOR = " << dec << FACTOR << endl;
-			if (!T1) T1=CLAMP_1(Maximum(2,BASIC_T1/FACTOR+3*NEAR));	// ? should these calculations be float since we are dividing ? :(
-			if (!T2) T2=CLAMP_2(Maximum(3,BASIC_T2/FACTOR+5*NEAR));
-			if (!T3) T3=CLAMP_3(Maximum(4,BASIC_T3/FACTOR+7*NEAR));
-		}
-
+	if (MAXVAL >= 128) {
+		Uint32 FACTOR=FloorDivision(Minimum(MAXVAL,4095)+128,256);
+		if (verbose) cerr << "MAXVAL >= 128" << endl;
+		if (verbose) cerr << "FACTOR = " << dec << FACTOR << endl;
+		if (!T1) T1=CLAMP_1(FACTOR*(BASIC_T1-2)+2+3*NEAR);
+		if (!T2) T2=CLAMP_2(FACTOR*(BASIC_T2-3)+3+5*NEAR);
+		if (!T3) T3=CLAMP_3(FACTOR*(BASIC_T3-4)+4+7*NEAR);
+	}
+	else {
+		Uint32 FACTOR=FloorDivision(256,MAXVAL+1);
+		if (verbose) cerr << "MAXVAL < 128" << endl;
+		if (verbose) cerr << "FACTOR = " << dec << FACTOR << endl;
+		if (!T1) T1=CLAMP_1(Maximum(2,BASIC_T1/FACTOR+3*NEAR));	// ? should these calculations be float since we are dividing ? :(
+		if (!T2) T2=CLAMP_2(Maximum(3,BASIC_T2/FACTOR+5*NEAR));
+		if (!T3) T3=CLAMP_3(Maximum(4,BASIC_T3/FACTOR+7*NEAR));
 	}
 
 	if (verbose) cerr << "NEAR = " << NEAR << endl;
@@ -839,13 +743,6 @@ main(int argc,char **argv)
 
 	Assert(bpp >= 2);
 	Assert(LIMIT > qbpp);			// Else LIMIT-qbpp-1 will fail (see A.5.3)
-
-	if (!decompressing && useJPEGmarkers)  {
-		writeSOI(out);
-		writeSOF55(out,P,ROWS,COLUMNS);
-		writeLSE1(out,MAXVAL,T1,T2,T3,RESET);
-		writeSOS(out,NEAR);
-	}
 
 	// Fixed constants
 
@@ -902,39 +799,20 @@ main(int argc,char **argv)
 	Uint16 *thisRow=rowA;
 	Uint16 *prevRow=rowB;
 
-	// Skip header of .pgm file when compressing
-	if (!decompressing)
+	// Add header of .pgm file when decompressing
+	string header = "P5\n";
+	header += to_string(COLUMNS) + ' ';
+	header += to_string(ROWS) + '\n';
+	header += to_string(MAXVAL) + '\n';
+
+	for (Uint8 idx=0; idx<header.length(); idx++)
 	{
-		// Open debugging dump file
-		size_t filename_ext_idx = string(input_options.filename).find_last_of(".");
-		string dump_filename = string(input_options.filename).substr(0, filename_ext_idx);	// Input file name without extension
-		dump_filename = dump_filename + "jpeg_ls_dump.txt";
-		dbg_file.open(dump_filename);	// Debugging
-
-		readRow(in, thisRow, 3, 8);								// Magic number 'P5\n'
-		readRow(in, thisRow, ceil(log10(ROWS))+1, 8);			// Number of rows
-		readRow(in, thisRow, ceil(log10(COLUMNS))+1, 8);		// Number of columns
-		readRow(in, thisRow, ceil(log10(pow(2, bits)-1))+1, 8);	// Color resolution
-	} else	// Add header of .pgm file when decompressing
-	{
-		string header = "P5\n";
-		header += to_string(COLUMNS) + ' ';
-		header += to_string(ROWS) + '\n';
-		header += to_string(MAXVAL) + '\n';
-
-		for (Uint8 idx=0; idx<header.length(); idx++)
-		{
-			thisRow[idx] = (Uint16)header[idx];
-		}
-
-		writeRow(out, thisRow, header.length(), 8);
+		thisRow[idx] = (Uint16)header[idx];
 	}
 
+	writeRow(out, thisRow, header.length(), 8);
+
 	for (row=0; row<ROWS; ++row) {
-		if (!decompressing)  {
-			Uint32 n=readRow(in,thisRow,COLUMNS,bpp);
-			Assert (n==COLUMNS);
-		}
 
 		Uint32 col=0;
 		Uint16 prevRa0;
@@ -979,97 +857,40 @@ main(int argc,char **argv)
 			if (Abs(D1) <= NEAR && Abs(D2) <= NEAR && Abs(D3) <= NEAR && useRunMode) {
 				// Run mode
 
-				if (decompressing) {
-					// Why is RUNIndex not reset to 0 here ?
-					Uint32 R;
-					while (readBit(in,R)) {
-						if (R == 1) {
-							// Fill image with 2^J[RUNIndex] samples of Ra or till EOL
-							Int32 rm=J_rm[RUNIndex];
-							while (rm-- && col < COLUMNS) {
-								thisRow[col]=Ra;
-								++col;
-							}
-							// This will match when exact count coincides with end of row ...
-							if (rm == -1 && RUNIndex < 31) {
-								++RUNIndex;
-							}
-							if (col >= COLUMNS) {
-								break;
-							}
+				// Why is RUNIndex not reset to 0 here ?
+				Uint32 R;
+				while (readBit(in,R)) {
+					if (R == 1) {
+						// Fill image with 2^J[RUNIndex] samples of Ra or till EOL
+						Int32 rm=J_rm[RUNIndex];
+						while (rm-- && col < COLUMNS) {
+							thisRow[col]=Ra;
+							++col;
 						}
-						else {
-							// Read J[RUNIndex] bits and fill image with that number of samples of Ra
-							Uint16 bits=J[RUNIndex];
-							Uint32 nfill=0;
-							Uint32 bit;
-							// msb bit is read first
-							while (bits-- && readBit(in,bit)) {
-								nfill=(nfill<<1) | bit;
-							}
-							// Fill with nfill values of Ra
-							while (nfill--) {
-								Assert(col<(COLUMNS-1));
-								thisRow[col]=Ra;
-								++col;
-							}
-							// Decode the run interruption sample ...
-
-							// First update local context for interrupting sample, since weren't kept updated during run
-
-							if (row > 0) {
-								Rb=prevRow[col];
-								Ra=(col > 0) ? thisRow[col-1] : Rb;
-							}
-							else {
-								Rb=0;
-								Ra=(col > 0) ? thisRow[col-1] : 0;
-							}
-							codecRunEndSample(thisRow[col],Ra,Rb,RANGE,NEAR,MAXVAL,RESET,LIMIT,qbpp,J[RUNIndex],A,N,Nn,in,out,decompressing, dbg_file);
-
-							if (RUNIndex > 0) {
-								--RUNIndex;	// NB. Do this AFTER J[RUNIndex] used in the limited length Golomb coding
-							}
-
+						// This will match when exact count coincides with end of row ...
+						if (rm == -1 && RUNIndex < 31) {
+							++RUNIndex;
+						}
+						if (col >= COLUMNS) {
 							break;
 						}
 					}
-				}
-				else {
-					// Scan to determine length of run (A.7.1.1) ...
-					Int32 RUNval=Ra;
-					Int32 RUNcnt=0;
-					while (col < COLUMNS && (thisRow[col] == RUNval || (NEAR > 0 && Abs(Int32(thisRow[col])-RUNval) <= NEAR) ) ) {
-						++RUNcnt;
-						if (NEAR > 0) thisRow[col]=RUNval;	// Replace with "reconstructed value"
-						++col;
-					}
-					// Encode length of run (A.7.1.2) ...
-
-					Uint16 rm;
-					while (RUNcnt >= (rm=J_rm[RUNIndex])) {
-						writeBit(out,1);
-						RUNcnt-=rm;
-						Assert(RUNcnt >= 0);	// is why int not unsigned
-						if (RUNIndex < 31) {	// ie. value ranges from 0..31
-							++RUNIndex;
-						}
-					}
-
-					if (col < COLUMNS) {	// Must have been terminated by different value
-						writeBit(out,0);
-						// Append least significant J[RUNIndex] bits
+					else {
+						// Read J[RUNIndex] bits and fill image with that number of samples of Ra
 						Uint16 bits=J[RUNIndex];
-						Uint32 value=RUNcnt;
-						Assert(value < J_rm[RUNIndex]);	// Does it really fit in this ? It should else would have been coded by J_rm[RUNIndex]
-						// msb bit is written first
-						while (bits--) {
-							Uint32 bit=(value>>bits)&1;
-							writeBit(out,bit);  // use the decremented bits as shift
+						Uint32 nfill=0;
+						Uint32 bit;
+						// msb bit is read first
+						while (bits-- && readBit(in,bit)) {
+							nfill=(nfill<<1) | bit;
 						}
-
-						// Encode run interruption sample (A.7.2) ...
-						Assert(col<COLUMNS);
+						// Fill with nfill values of Ra
+						while (nfill--) {
+							Assert(col<(COLUMNS-1));
+							thisRow[col]=Ra;
+							++col;
+						}
+						// Decode the run interruption sample ...
 
 						// First update local context for interrupting sample, since weren't kept updated during run
 
@@ -1081,19 +902,13 @@ main(int argc,char **argv)
 							Rb=0;
 							Ra=(col > 0) ? thisRow[col-1] : 0;
 						}
-
-						codecRunEndSample(thisRow[col],Ra,Rb,RANGE,NEAR,MAXVAL,RESET,LIMIT,qbpp,J[RUNIndex],A,N,Nn,in,out,decompressing, dbg_file);
+						codecRunEndSample(thisRow[col],Ra,Rb,RANGE,NEAR,MAXVAL,RESET,LIMIT,qbpp,J[RUNIndex],A,N,Nn,in,out,true, dbg_file);
 
 						if (RUNIndex > 0) {
 							--RUNIndex;	// NB. Do this AFTER J[RUNIndex] used in the limited length Golomb coding
 						}
-					}
-					else {						// Aborted at end of row
-						if (RUNcnt > 0) {
-							writeBit(out,1);		// Append an extra 1
-											// decoder knows to stop at end of row
-											// though remainder can't be > 1<<J[RUNIndex]
-						}
+
+						break;
 					}
 				}
 
@@ -1204,97 +1019,46 @@ main(int argc,char **argv)
 				Int32 Errval;
 				Int32 updateErrval;
 
-				if (decompressing) {
-					// Decode Golomb mapped error from input...
-					decodeMappedErrvalWithGolomb(k,LIMIT,qbpp,MErrval,in);
+				// Decode Golomb mapped error from input...
+				decodeMappedErrvalWithGolomb(k,LIMIT,qbpp,MErrval,in);
 
-					// Unmap error from non-negative (inverse of A.5.2 Figure A.11) ...
+				// Unmap error from non-negative (inverse of A.5.2 Figure A.11) ...
 
-					if (NEAR == 0 && k == 0 && 2*B[Q] <= -N[Q]) {
-						if (MErrval%2 != 0)
-							Errval=((Int32)MErrval-1)/2;	//  1 becomes  0,  3 becomes  1,  5 becomes  2
-						else
-							Errval=-(Int32)MErrval/2 - 1;	//  0 becomes -1,  2 becomes -2,  4 becomes -3
-					}
-					else {
-						if (MErrval%2 == 0)
-							Errval=(Int32)MErrval/2;	//  0 becomes  0, 2 becomes  1,  4 becomes  2
-						else
-							Errval=-((Int32)MErrval + 1)/2;	//  1 becomes -1, 3 becomes -2
-					}
-
-					updateErrval=Errval;			// NB. Before dequantization and sign correction
-
-					deQuantizeErrval(NEAR,Errval);
-
-					if (SIGN < 0) Errval=-Errval;		// if "context type" was negative
-
-					Rx=Px+Errval;
-
-					// modulo(RANGE*(2*NEAR+1)) as per F.1 Item 14
-
-					// (NB. Is this really the reverse of the encoding procedure ???)
-
-					if (Rx < -NEAR)
-						Rx+=RANGE*(2*NEAR+1);
-					else if (Rx > MAXVAL+NEAR)
-						Rx-=RANGE*(2*NEAR+1);
-
-					clampPredictedValue(Rx,MAXVAL);
-
-					// Apply inverse point transform and mapping table when implemented
-
-					thisRow[col]=(Uint16)Rx;
+				if (NEAR == 0 && k == 0 && 2*B[Q] <= -N[Q]) {
+					if (MErrval%2 != 0)
+						Errval=((Int32)MErrval-1)/2;	//  1 becomes  0,  3 becomes  1,  5 becomes  2
+					else
+						Errval=-(Int32)MErrval/2 - 1;	//  0 becomes -1,  2 becomes -2,  4 becomes -3
 				}
-				else {	// compressing ...
-
-					Int32 Ix = thisRow[col];	// Input value - not Uint16 to allow overrange before clamping
-
-					Errval = Ix - Px;		// watch this for bad unsigned->signed conversion :(
-
-					if (SIGN < 0) Errval=-Errval;	// if "context type" was negative
-
-					if (NEAR > 0) {	// For near-lossless, quantize Errval and derive reconstructed value (A.4.4)
-
-						quantizeErrval(NEAR,Errval);
-
-						// Replace with the reconstructed value the decoder will have
-						// (obviously if in lossless mode there will be no difference)
-
-						Rx=Px+SIGN*Errval*(2*NEAR+1);
-						clampPredictedValue(Rx,MAXVAL);
-					
-						thisRow[col]=(Uint16)Rx;
-					}
-
-					// Modulo reduction of the prediction error (A.4.5)
-
-					if (Errval < 0)			Errval=Errval+RANGE;
-					if (Errval >= (RANGE+1)/2)	Errval=Errval-RANGE;
-
-					updateErrval=Errval;			// NB. After sign correction but before mapping
-
-					// Prediction error encoding (A.5)
-
-					// Golomb k parameter determined already outside decompress/compress test
-
-					// Map Errval to non-negative (A.5.2) ...
-
-					if (NEAR == 0 && k == 0 && 2*B[Q] <= -N[Q]) {
-						if (Errval >= 0)
-							MErrval =  2*Errval + 1;	//  0 becomes 1,  1 becomes 3,  2 becomes 5
-						else
-							MErrval = -2*(Errval+1);	// -1 becomes 0, -2 becomes 2, -3 becomes 4
-					}
-					else {
-						if (Errval >= 0)
-							MErrval =  2*Errval;		//  0 becomes 0,  1 becomes 2,  2 becomes 4
-						else
-							MErrval = -2*Errval - 1;	// -1 becomes 1, -2 becomes 3
-					}
-
-					encodeMappedErrvalWithGolomb(k,LIMIT,qbpp,MErrval,out, dbg_file);
+				else {
+					if (MErrval%2 == 0)
+						Errval=(Int32)MErrval/2;	//  0 becomes  0, 2 becomes  1,  4 becomes  2
+					else
+						Errval=-((Int32)MErrval + 1)/2;	//  1 becomes -1, 3 becomes -2
 				}
+
+				updateErrval=Errval;			// NB. Before dequantization and sign correction
+
+				deQuantizeErrval(NEAR,Errval);
+
+				if (SIGN < 0) Errval=-Errval;		// if "context type" was negative
+
+				Rx=Px+Errval;
+
+				// modulo(RANGE*(2*NEAR+1)) as per F.1 Item 14
+
+				// (NB. Is this really the reverse of the encoding procedure ???)
+
+				if (Rx < -NEAR)
+					Rx+=RANGE*(2*NEAR+1);
+				else if (Rx > MAXVAL+NEAR)
+					Rx-=RANGE*(2*NEAR+1);
+
+				clampPredictedValue(Rx,MAXVAL);
+
+				// Apply inverse point transform and mapping table when implemented
+
+				thisRow[col]=(Uint16)Rx;
 
 				// Update variables (A.6) ...
 
@@ -1324,18 +1088,10 @@ main(int argc,char **argv)
 
 			}
 		}
-		if (decompressing) {
-			if (!writeRow(out,thisRow,COLUMNS,bpp)) Assert(0);
-		}
+		if (!writeRow(out,thisRow,COLUMNS,bpp)) Assert(0);
 		Uint16 *tmpRow=thisRow;
 		thisRow=prevRow;
 		prevRow=tmpRow;
-	}
-
-	if (!decompressing) writeBitFlush(out);
-
-	if (!decompressing && useJPEGmarkers)  {
-		writeEOI(out);
 	}
 
 	if (rowA) delete[] rowA;
@@ -1344,12 +1100,6 @@ main(int argc,char **argv)
 	if (B) delete[] B;
 	if (C) delete[] C;
 	if (N) delete[] N;
-
-	// Close debugging file
-	if (!decompressing)
-	{
-		dbg_file.close();
-	}
 
 	return success ? 0 : 1;
 }
