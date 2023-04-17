@@ -18,8 +18,16 @@
 proc checkRequiredFiles { origin_dir} {
   set status true
   set files [list \
- "[file normalize "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"]"\
- "[file normalize "$origin_dir/src/output_buffer.vhd"]"\
+ "[file normalize "$origin_dir/vivado_project/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_buffer.dcp"]"\
+  ]
+  foreach ifile $files {
+    if { ![file isfile $ifile] } {
+      puts " Could not find local file $ifile "
+      set status false
+    }
+  }
+
+  set files [list \
  "[file normalize "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"]"\
  "[file normalize "$origin_dir/hw_tests/HWT_cam_sim.vhd"]"\
  "[file normalize "$origin_dir/ip/context_memory_block/context_memory_block.xci"]"\
@@ -38,6 +46,8 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/src/uart_module.vhd"]"\
  "[file normalize "$origin_dir/src/output_uart_sender.vhd"]"\
  "[file normalize "$origin_dir/src/debounce.vhd"]"\
+ "[file normalize "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"]"\
+ "[file normalize "$origin_dir/src/output_buffer.vhd"]"\
  "[file normalize "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"]"\
  "[file normalize "$origin_dir/hw_tests/HWT_collector.vhd"]"\
  "[file normalize "$origin_dir/ip/HWT_collector_bram/HWT_collector_bram.xci"]"\
@@ -68,6 +78,8 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_pl_test_func_impl.wcfg"]"\
+ "[file normalize "$origin_dir/sim/TB_output_buffer_synth.vhd"]"\
+ "[file normalize "$origin_dir/sim_cfg/TB_output_buffer_synth_func_synth.wcfg"]"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -201,7 +213,7 @@ set_property -name "webtalk.questa_export_sim" -value "46" -objects $obj
 set_property -name "webtalk.riviera_export_sim" -value "46" -objects $obj
 set_property -name "webtalk.vcs_export_sim" -value "46" -objects $obj
 set_property -name "webtalk.xsim_export_sim" -value "46" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "413" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "436" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_CDC XPM_FIFO XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -212,8 +224,6 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
 set files [list \
- [file normalize "${origin_dir}/ip/output_buffer_bram/output_buffer_bram.xci"] \
- [file normalize "${origin_dir}/src/output_buffer.vhd"] \
  [file normalize "${origin_dir}/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"] \
  [file normalize "${origin_dir}/hw_tests/HWT_cam_sim.vhd"] \
  [file normalize "${origin_dir}/ip/context_memory_block/context_memory_block.xci"] \
@@ -232,6 +242,8 @@ set files [list \
  [file normalize "${origin_dir}/src/uart_module.vhd"] \
  [file normalize "${origin_dir}/src/output_uart_sender.vhd"] \
  [file normalize "${origin_dir}/src/debounce.vhd"] \
+ [file normalize "${origin_dir}/ip/output_buffer_bram/output_buffer_bram.xci"] \
+ [file normalize "${origin_dir}/src/output_buffer.vhd"] \
  [file normalize "${origin_dir}/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"] \
  [file normalize "${origin_dir}/hw_tests/HWT_collector.vhd"] \
  [file normalize "${origin_dir}/ip/HWT_collector_bram/HWT_collector_bram.xci"] \
@@ -242,20 +254,6 @@ set files [list \
 add_files -norecurse -fileset $obj $files
 
 # Set 'sources_1' fileset file properties for remote files
-set file "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "generate_synth_checkpoint" -value "0" -objects $file_obj
-}
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-
-set file "$origin_dir/src/output_buffer.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
 set file "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
@@ -358,6 +356,20 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
+set file "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "generate_synth_checkpoint" -value "0" -objects $file_obj
+}
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+
+set file "$origin_dir/src/output_buffer.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 set file "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
@@ -401,11 +413,8 @@ set_property -name "registered_with_manager" -value "1" -objects $file_obj
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
 set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
-set_property -name "top" -value "output_buffer" -objects $obj
-set_property -name "top_arch" -value "Behavioral" -objects $obj
+set_property -name "top" -value "BD_pl_test_wrapper" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
-set_property -name "top_file" -value "src/output_buffer.vhd" -objects $obj
-set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -576,14 +585,58 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 # Set 'full_simulation' fileset properties
 set obj [get_filesets full_simulation]
 set_property -name "nl.mode" -value "funcsim" -objects $obj
-set_property -name "sim_mode" -value "post-implementation" -objects $obj
+set_property -name "sim_mode" -value "post-synthesis" -objects $obj
 set_property -name "top" -value "TB_pl_test" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
+set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
+
+# Create 'block_synth_tests' fileset (if not found)
+if {[string equal [get_filesets -quiet block_synth_tests] ""]} {
+  create_fileset -simset block_synth_tests
+}
+
+# Set 'block_synth_tests' fileset object
+set obj [get_filesets block_synth_tests]
+set files [list \
+ [file normalize "${origin_dir}/sim/TB_output_buffer_synth.vhd"] \
+ [file normalize "${origin_dir}/sim_cfg/TB_output_buffer_synth_func_synth.wcfg"] \
+]
+add_files -norecurse -fileset $obj $files
+
+# Set 'block_synth_tests' fileset file properties for remote files
+set file "$origin_dir/sim/TB_output_buffer_synth.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_synth_tests] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+
+# Set 'block_synth_tests' fileset file properties for local files
+# None
+
+# Set 'block_synth_tests' fileset properties
+set obj [get_filesets block_synth_tests]
+set_property -name "nl.mode" -value "funcsim" -objects $obj
+set_property -name "sim_mode" -value "post-synthesis" -objects $obj
+set_property -name "top" -value "TB_output_buffer_synth" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
 # Set 'utils_1' fileset object
 set obj [get_filesets utils_1]
-# Empty (no sources present)
+# Add local files from the original project (-no_copy_sources specified)
+set files [list \
+ [file normalize "${origin_dir}/vivado_project/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_buffer.dcp" ]\
+]
+set added_files [add_files -fileset utils_1 $files]
+
+# Set 'utils_1' fileset file properties for remote files
+# None
+
+# Set 'utils_1' fileset file properties for local files
+set file "synth_1/output_buffer.dcp"
+set file_obj [get_files -of_objects [get_filesets utils_1] [list "*$file"]]
+set_property -name "netlist_only" -value "0" -objects $file_obj
+
 
 # Set 'utils_1' fileset properties
 set obj [get_filesets utils_1]
@@ -632,12 +685,6 @@ if { [get_files JPEG_LS_module.vhd] == "" } {
 if { [get_files btn_pulse.vhd] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/src/btn_pulse.vhd"
 }
-if { [get_files output_buffer_bram.xci] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
-}
-if { [get_files output_buffer.vhd] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/src/output_buffer.vhd"
-}
 if { [get_files clk_divider.vhd] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/src/clk_divider.vhd"
 }
@@ -649,6 +696,12 @@ if { [get_files output_uart_sender.vhd] == "" } {
 }
 if { [get_files debounce.vhd] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/src/debounce.vhd"
+}
+if { [get_files output_buffer_bram.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
+}
+if { [get_files output_buffer.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/output_buffer.vhd"
 }
 
 
@@ -905,8 +958,9 @@ proc cr_bd_BD_pl_test { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
-  validate_bd_design
   save_bd_design
+common::send_gid_msg -ssname BD::TCL -id 2050 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
+
   close_bd_design $design_name 
 }
 # End of cr_bd_BD_pl_test()
@@ -944,6 +998,8 @@ if { $obj != "" } {
 
 }
 set obj [get_runs synth_1]
+set_property -name "needs_refresh" -value "1" -objects $obj
+set_property -name "incremental_checkpoint" -value "$proj_dir/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_buffer.dcp" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
 
