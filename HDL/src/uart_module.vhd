@@ -141,6 +141,8 @@ architecture Behavioral of uart_tx_module is
     signal tx_register : STD_LOGIC_VECTOR(data_size + 1 downto 0);
     signal tx_idx : unsigned(integer(ceil(log2(real(data_size + 2)))) downto 0) := (others => '0');
     
+    signal timeout_flag : STD_LOGIC := '0';
+    
     type tx_enum is (WAITING, SEND);
     signal tx_states : tx_enum := WAITING;
 
@@ -163,6 +165,7 @@ begin
             total_bits_sent := (others => '0');
             tx_register <= (others => '0');
             data_send <= '0';
+            timeout_flag <= '0';
             
         elsif rising_edge(clk) then
             
@@ -172,6 +175,7 @@ begin
                 when WAITING =>  -- Wait for start pulse
                 
                     sig <= '1';
+                    timeout_flag <= '0';
                 
                     if old_data_flag = '0' and new_data_pulse = '1' then
                         tx_states <= SEND;
@@ -184,12 +188,20 @@ begin
                 
                 when SEND => -- Send
                     if tx_cnt = to_unsigned(1, 4) then
-                        sig <= tx_register(to_integer(tx_idx));
+                    
+                        if timeout_flag = '0' then
+                    
+                            sig <= tx_register(to_integer(tx_idx));
+    
+                            tx_idx <= tx_idx + 1;
+                            if tx_idx = to_unsigned(data_size + 1, tx_idx'length) then
+                                timeout_flag <= '1';
+                            end if;
                         
-                        tx_idx <= tx_idx + 1;
-                        if tx_idx = to_unsigned(data_size + 1, tx_idx'length) then
-                            tx_states <= WAITING;
+                        else
+                            timeout_flag <= '0';
                             data_send <= '1';
+                            tx_states <= WAITING;
                         end if;
                         
                     end if;

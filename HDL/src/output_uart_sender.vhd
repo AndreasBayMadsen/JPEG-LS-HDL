@@ -89,8 +89,8 @@ begin
 
     uart_clk : clk_divider
     Generic map (   base_freq => 125000000,
-                    out_freq  => 921600     -- 57600 baud        
-                    )  
+                    out_freq  => 1843200     -- 115200 baud        
+                    )
     Port map (  rst => '0',
                 clk => clk,
                 clk_div => clk_uart_temp

@@ -207,13 +207,14 @@ set_property -name "simulator.xsim_version" -value "2022.2" -objects $obj
 set_property -name "simulator_language" -value "Mixed" -objects $obj
 set_property -name "sim_compile_state" -value "1" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
-set_property -name "webtalk.activehdl_export_sim" -value "46" -objects $obj
-set_property -name "webtalk.modelsim_export_sim" -value "46" -objects $obj
-set_property -name "webtalk.questa_export_sim" -value "46" -objects $obj
-set_property -name "webtalk.riviera_export_sim" -value "46" -objects $obj
-set_property -name "webtalk.vcs_export_sim" -value "46" -objects $obj
-set_property -name "webtalk.xsim_export_sim" -value "46" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "436" -objects $obj
+set_property -name "webtalk.activehdl_export_sim" -value "49" -objects $obj
+set_property -name "webtalk.modelsim_export_sim" -value "49" -objects $obj
+set_property -name "webtalk.questa_export_sim" -value "49" -objects $obj
+set_property -name "webtalk.riviera_export_sim" -value "49" -objects $obj
+set_property -name "webtalk.vcs_export_sim" -value "49" -objects $obj
+set_property -name "webtalk.xcelium_export_sim" -value "2" -objects $obj
+set_property -name "webtalk.xsim_export_sim" -value "49" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "451" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_CDC XPM_FIFO XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -585,7 +586,6 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 # Set 'full_simulation' fileset properties
 set obj [get_filesets full_simulation]
 set_property -name "nl.mode" -value "funcsim" -objects $obj
-set_property -name "sim_mode" -value "post-synthesis" -objects $obj
 set_property -name "top" -value "TB_pl_test" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
@@ -958,9 +958,8 @@ proc cr_bd_BD_pl_test { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
+  validate_bd_design
   save_bd_design
-common::send_gid_msg -ssname BD::TCL -id 2050 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
-
   close_bd_design $design_name 
 }
 # End of cr_bd_BD_pl_test()
@@ -998,7 +997,6 @@ if { $obj != "" } {
 
 }
 set obj [get_runs synth_1]
-set_property -name "needs_refresh" -value "1" -objects $obj
 set_property -name "incremental_checkpoint" -value "$proj_dir/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_buffer.dcp" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj

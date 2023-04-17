@@ -53,9 +53,9 @@ entity output_buffer is
             
             request_next    : in    STD_LOGIC;  -- Set high for getting next value, when it is ready.
             read_allowed    : out   STD_LOGIC;  -- Flag for when clock is connected to logic and BRAM
-            dout            : out   STD_LOGIC_VECTOR (63 downto 0); -- Data from BRAM.
-            new_data_ready  : out   STD_LOGIC;  -- Flag goes high for one clock, when new data is ready on 'dout'.
-            end_of_data     : out   STD_LOGIC   -- Flag goes high when all data for image has been read. Flag goes low when new image/data is available.
+            dout            : out   STD_LOGIC_VECTOR (63 downto 0) := (others => '0'); -- Data from BRAM.
+            new_data_ready  : out   STD_LOGIC := '0';  -- Flag goes high for one clock, when new data is ready on 'dout'.
+            end_of_data     : out   STD_LOGIC := '1'  -- Flag goes high when all data for image has been read. Flag goes low when new image/data is available.
            );
 end output_buffer;
 
