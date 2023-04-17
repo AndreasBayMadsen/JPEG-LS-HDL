@@ -1,0 +1,42 @@
+Last updated Mon Feb  6 08:05:52 EST 2012
+
+This is a preliminary implementation of the proposed JPEG-LS standard,
+DIS 14495. See "http://www.jpeg.org/public/jpegnew.htm" for the text of
+the committee draft of this standard (which has since been updated, but
+electronic versions are not allowed to be distributed due to ISO rules).
+
+Limitations.
+
+The fully lossless mode has been more extensively tested than the
+near lossless mode, though the latter appears to work.
+
+The compressed datastream is now interchangable with the HP LOCO 0.90
+implementation from their web page. See "http://www.hpl.hp.com/loco/".
+
+It only handles one component (ie. grayscale images) for now.
+
+Usage.
+
+See the man page (in "man/man1/rawnjl2.1", e.g., "man -M ./man rawnjl2").
+
+Installation
+
+1. Edit the Makefile if necessary
+
+2. make World (cleans, compiles and tests)
+
+Miscellaneous.
+
+This experiment is actual part of a larger package, the dicom3tools package
+for medical images, which is why all sorts of wierd template generate source
+files are needed for the compilation.
+
+The tool reads and writes only raw binary files; if you need to use pixel
+data from ordinary image formats, use the netpbm tools to create raw files
+(noting the rows, columns and bit depoths to supply to the tool; if you
+need to use DICOM files, you can use my dicom3tools package.
+
+David Clunie
+
+mailto:dclunie@dclunie.com
+http://www.dclunie.com

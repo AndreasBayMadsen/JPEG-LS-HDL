@@ -1,0 +1,10 @@
+981012	rawnjl2.cc: fix transposition of Ra,Rb in codecRunEndSample() arg
+	list; fix == rather than = for 0 case of Errval while decompressing
+	in codecRunEndSample() - bitstream is now interoperable with HP
+	code
+
+981011	rawnjl2.cc: add support for reading/writing JPEG marker segments as
+	well as zero bit stuffing after 0xff; also added more command line
+	options to control defaults, near lossless mode, and ability to turn
+	off runs for experimentation.
+
