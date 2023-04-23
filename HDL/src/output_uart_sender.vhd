@@ -76,13 +76,10 @@ architecture Behavioral of output_uart_sender is
     signal old_data_is_send_uart    : STD_LOGIC := '1';
     signal old_clk_uart             : STD_LOGIC := '1';
     
-    signal rising_clk_uart          : STD_LOGIC := '0';
-    signal rising_data_send_uart    : STD_LOGIC := '0';
-    
     signal buffer_data              : STD_LOGIC_VECTOR (63 downto 0) := (others => '0');
-    signal data_byte_idx            : UNSIGNED(2 downto 0) := (others => '1');
+    signal data_byte_idx            : UNSIGNED(2 downto 0) := (others => '0');
     
-    type   tx_enum is (WAITING, FETCH, SEND, WAIT_SEND);
+    type   tx_enum is (WAITING, FETCH, SEND, WAIT_FLAG, WAIT_SEND);
     signal tx_states : tx_enum := WAITING;
     
 begin
@@ -111,9 +108,6 @@ begin
                 data_send       => data_is_send_uart
                 );
                 
-    rising_clk_uart         <= '1' when old_clk_uart = '0' and clk_uart = '1' else '0';
-    rising_data_send_uart   <= '1' when old_data_is_send_uart = '0' and data_is_send_uart = '1' else '0';
-    
     process(pclk, resetn)
     begin
     
@@ -124,7 +118,7 @@ begin
             old_clk_uart           <= '0';
             
             buffer_data            <= (others => '0');
-            data_byte_idx          <= (others => '1');
+            data_byte_idx          <= (others => '0');
             
             tx_states <= WAITING;
         
@@ -144,28 +138,38 @@ begin
                     if new_data_ready = '1' then
                         buffer_data <= dout;
                         tx_states <= SEND;
+                        data_byte_idx <= (others => '0');
                     end if;
                 
                 when SEND =>
-                    if rising_clk_uart = '1' then
-                        data_uart <= buffer_data(7 + 8 * to_integer(data_byte_idx) downto 8 * to_integer(data_byte_idx));
+                    if old_clk_uart = '0' and clk_uart = '1' then
+                        --data_uart <= buffer_data(7 + 8 * to_integer(data_byte_idx) downto 8 * to_integer(data_byte_idx));
+                        
+                        data_uart <= buffer_data(buffer_data'high downto buffer_data'high - 7);
+                        buffer_data <= buffer_data(buffer_data'high - 8 downto 0) & x"00";
+                        
+                        tx_states <= WAIT_FLAG;
+                    end if;
+                
+                when WAIT_FLAG =>
+                    if old_clk_uart = '0' and clk_uart = '1' then
                         new_data_uart <= '1';
                         tx_states <= WAIT_SEND;
                     end if;
                     
                 when WAIT_SEND =>
-                    if rising_clk_uart = '1' then
+                    if old_clk_uart = '0' and clk_uart = '1' then
                         new_data_uart <= '0';
                     end if;
-                    if rising_data_send_uart = '1' then
+                    if old_data_is_send_uart = '0' and data_is_send_uart = '1' then
                     
-                        if data_byte_idx /= 0 then
+                        if data_byte_idx /= 7 then
                             tx_states <= SEND;
                         else 
                             tx_states <= WAITING;
                         end if;
                         
-                        data_byte_idx <= data_byte_idx - 1;
+                        data_byte_idx <= data_byte_idx + 1;
                     end if;
                     
                 when others =>
