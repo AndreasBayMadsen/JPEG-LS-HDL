@@ -34,8 +34,9 @@ use IEEE.MATH_REAL.ALL;
 
 entity collector is
     Generic (
-        image_height    : INTEGER   := 500;
-        image_width     : INTEGER   := 500
+        image_height    : INTEGER                   := 500;
+        image_width     : INTEGER                   := 500;
+        fps_downscale   : INTEGER range 1 to 255    := 1
     );
     Port (
         resetn  : in    STD_LOGIC               := '1';
@@ -82,6 +83,7 @@ architecture Behavioral of collector is
     signal pixel_received       : STD_LOGIC := '0';
     signal X_buffer             : UNSIGNED(15 downto 0) := (others=>'0');
     signal border_fill_count    : INTEGER range 0 to 3  := 0;
+    signal frame_counter        : INTEGER range 0 to fps_downscale  := 0;
     
         -- FIFO
     signal write_enable         : STD_LOGIC                     := '0';
@@ -136,6 +138,7 @@ begin
         if rising_edge(pclk) then
             if resetn_int = '0' OR resetn = '0' then
                 -- Synchronous reset
+                frame_counter       <= 0;
                 pixel_received      <= '0';
                 deserializer_state  <= IDLE;
                 valid_data          <= '0';
@@ -159,8 +162,13 @@ begin
                     when IDLE =>
                         valid_data <= '0';
                         if vsync_shift = "10" then
-                            valid_data <= '1';
-                            deserializer_state <= RUNNING;
+                            if frame_counter >= fps_downscale-1 then
+                                frame_counter       <= 0;
+                                valid_data          <= '1';
+                                deserializer_state <= RUNNING;
+                            else
+                                frame_counter <= frame_counter + 1;
+                            end if;
                         end if;
                         
                     -- vsync has been received, frame is starting

@@ -56,8 +56,9 @@ architecture Behavioral of TB_collector is
     
     component collector
         Generic (
-            image_height    : INTEGER   := 500;
-            image_width     : INTEGER   := 500
+            image_height    : INTEGER                   := 500;
+            image_width     : INTEGER                   := 500;
+            fps_downscale   : INTEGER range 1 to 255    := 1
         );
         Port (
             -- Camera interface
@@ -113,7 +114,8 @@ begin
     DUT: collector
     generic map(
         image_height    => 512,
-        image_width     => 768
+        image_width     => 768,
+        fps_downscale   => 3
     )
     port map(
         pclk    => pclk,
