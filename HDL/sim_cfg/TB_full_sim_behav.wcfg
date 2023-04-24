@@ -3,87 +3,35 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="TB_full_sim_behav.wdb" id="1">
+      <db_ref path="TB_pl_test_func_synth.wdb" id="1">
          <top_modules>
-            <top_module name="TB_full_sim" />
+            <top_module name="TB_pl_test" />
             <top_module name="glbl" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="27.492150396 ms"></ZoomStartTime>
-      <ZoomEndTime time="101.975000319 ms"></ZoomEndTime>
-      <Cursor1Time time="89.561191998 ms"></Cursor1Time>
+      <ZoomStartTime time="0.000000000 ms"></ZoomStartTime>
+      <ZoomEndTime time="101.390993099 ms"></ZoomEndTime>
+      <Cursor1Time time="6.277716272 ms"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="132"></NameColumnWidth>
+      <NameColumnWidth column_width="128"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="25" />
+   <WVObjectSize size="11" />
    <wvobject type="group" fp_name="group250">
       <obj_property name="label">Camera</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject type="logic" fp_name="/TB_full_sim/DUT/pclk">
-         <obj_property name="ElementShortName">pclk</obj_property>
-         <obj_property name="ObjectShortName">pclk</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/pixel">
-         <obj_property name="ElementShortName">pixel[7:0]</obj_property>
-         <obj_property name="ObjectShortName">pixel[7:0]</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_full_sim/DUT/href">
-         <obj_property name="ElementShortName">href</obj_property>
-         <obj_property name="ObjectShortName">href</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_full_sim/DUT/vsync">
-         <obj_property name="ElementShortName">vsync</obj_property>
-         <obj_property name="ObjectShortName">vsync</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject fp_name="divider246" type="divider">
       <obj_property name="label">Entry</obj_property>
       <obj_property name="DisplayName">label</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_1">
-      <obj_property name="ElementShortName">new_pixel_1</obj_property>
-      <obj_property name="ObjectShortName">new_pixel_1</obj_property>
-   </wvobject>
    <wvobject type="group" fp_name="group251">
       <obj_property name="label">Collector</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/A">
-         <obj_property name="ElementShortName">A[15:0]</obj_property>
-         <obj_property name="ObjectShortName">A[15:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/B">
-         <obj_property name="ElementShortName">B[15:0]</obj_property>
-         <obj_property name="ObjectShortName">B[15:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/C">
-         <obj_property name="ElementShortName">C[15:0]</obj_property>
-         <obj_property name="ObjectShortName">C[15:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/D">
-         <obj_property name="ElementShortName">D[15:0]</obj_property>
-         <obj_property name="ObjectShortName">D[15:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/X">
-         <obj_property name="ElementShortName">X[15:0]</obj_property>
-         <obj_property name="ObjectShortName">X[15:0]</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_full_sim/DUT/valid_data_1">
-         <obj_property name="ElementShortName">valid_data_1</obj_property>
-         <obj_property name="ObjectShortName">valid_data_1</obj_property>
-      </wvobject>
-      <wvobject type="other" fp_name="/TB_full_sim/DUT/pixel_collector/row_counter">
-         <obj_property name="ElementShortName">row_counter</obj_property>
-         <obj_property name="ObjectShortName">row_counter</obj_property>
-      </wvobject>
-      <wvobject type="other" fp_name="/TB_full_sim/DUT/pixel_collector/col_counter">
-         <obj_property name="ElementShortName">col_counter</obj_property>
-         <obj_property name="ObjectShortName">col_counter</obj_property>
-      </wvobject>
       <wvobject type="group" fp_name="group103">
          <obj_property name="label">Red</obj_property>
          <obj_property name="DisplayName">label</obj_property>
@@ -92,126 +40,26 @@
             <obj_property name="label">A</obj_property>
             <obj_property name="DisplayName">label</obj_property>
             <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/A[15]">
-               <obj_property name="ElementShortName">[15]</obj_property>
-               <obj_property name="ObjectShortName">[15]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/A[14]">
-               <obj_property name="ElementShortName">[14]</obj_property>
-               <obj_property name="ObjectShortName">[14]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/A[13]">
-               <obj_property name="ElementShortName">[13]</obj_property>
-               <obj_property name="ObjectShortName">[13]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/A[12]">
-               <obj_property name="ElementShortName">[12]</obj_property>
-               <obj_property name="ObjectShortName">[12]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/A[11]">
-               <obj_property name="ElementShortName">[11]</obj_property>
-               <obj_property name="ObjectShortName">[11]</obj_property>
-            </wvobject>
          </wvobject>
          <wvobject type="vbus" fp_name="vbus126">
             <obj_property name="label">B</obj_property>
             <obj_property name="DisplayName">label</obj_property>
             <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/B[15]">
-               <obj_property name="ElementShortName">[15]</obj_property>
-               <obj_property name="ObjectShortName">[15]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/B[14]">
-               <obj_property name="ElementShortName">[14]</obj_property>
-               <obj_property name="ObjectShortName">[14]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/B[13]">
-               <obj_property name="ElementShortName">[13]</obj_property>
-               <obj_property name="ObjectShortName">[13]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/B[12]">
-               <obj_property name="ElementShortName">[12]</obj_property>
-               <obj_property name="ObjectShortName">[12]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/B[11]">
-               <obj_property name="ElementShortName">[11]</obj_property>
-               <obj_property name="ObjectShortName">[11]</obj_property>
-            </wvobject>
          </wvobject>
          <wvobject type="vbus" fp_name="vbus127">
             <obj_property name="label">C</obj_property>
             <obj_property name="DisplayName">label</obj_property>
             <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/C[15]">
-               <obj_property name="ElementShortName">[15]</obj_property>
-               <obj_property name="ObjectShortName">[15]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/C[14]">
-               <obj_property name="ElementShortName">[14]</obj_property>
-               <obj_property name="ObjectShortName">[14]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/C[13]">
-               <obj_property name="ElementShortName">[13]</obj_property>
-               <obj_property name="ObjectShortName">[13]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/C[12]">
-               <obj_property name="ElementShortName">[12]</obj_property>
-               <obj_property name="ObjectShortName">[12]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/C[11]">
-               <obj_property name="ElementShortName">[11]</obj_property>
-               <obj_property name="ObjectShortName">[11]</obj_property>
-            </wvobject>
          </wvobject>
          <wvobject type="vbus" fp_name="vbus128">
             <obj_property name="label">D</obj_property>
             <obj_property name="DisplayName">label</obj_property>
             <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/D[15]">
-               <obj_property name="ElementShortName">[15]</obj_property>
-               <obj_property name="ObjectShortName">[15]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/D[14]">
-               <obj_property name="ElementShortName">[14]</obj_property>
-               <obj_property name="ObjectShortName">[14]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/D[13]">
-               <obj_property name="ElementShortName">[13]</obj_property>
-               <obj_property name="ObjectShortName">[13]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/D[12]">
-               <obj_property name="ElementShortName">[12]</obj_property>
-               <obj_property name="ObjectShortName">[12]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/D[11]">
-               <obj_property name="ElementShortName">[11]</obj_property>
-               <obj_property name="ObjectShortName">[11]</obj_property>
-            </wvobject>
          </wvobject>
          <wvobject type="vbus" fp_name="vbus129">
             <obj_property name="label">X</obj_property>
             <obj_property name="DisplayName">label</obj_property>
             <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/X[15]">
-               <obj_property name="ElementShortName">[15]</obj_property>
-               <obj_property name="ObjectShortName">[15]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/X[14]">
-               <obj_property name="ElementShortName">[14]</obj_property>
-               <obj_property name="ObjectShortName">[14]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/X[13]">
-               <obj_property name="ElementShortName">[13]</obj_property>
-               <obj_property name="ObjectShortName">[13]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/X[12]">
-               <obj_property name="ElementShortName">[12]</obj_property>
-               <obj_property name="ObjectShortName">[12]</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_full_sim/DUT/X[11]">
-               <obj_property name="ElementShortName">[11]</obj_property>
-               <obj_property name="ObjectShortName">[11]</obj_property>
-            </wvobject>
          </wvobject>
       </wvobject>
    </wvobject>
@@ -219,319 +67,37 @@
       <obj_property name="label">Gradient</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/A">
-         <obj_property name="ElementShortName">A[4:0]</obj_property>
-         <obj_property name="ObjectShortName">A[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/B">
-         <obj_property name="ElementShortName">B[4:0]</obj_property>
-         <obj_property name="ObjectShortName">B[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/C">
-         <obj_property name="ElementShortName">C[4:0]</obj_property>
-         <obj_property name="ObjectShortName">C[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/D">
-         <obj_property name="ElementShortName">D[4:0]</obj_property>
-         <obj_property name="ObjectShortName">D[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/grad/G">
-         <obj_property name="ElementShortName">G[0:2]</obj_property>
-         <obj_property name="ObjectShortName">G[0:2]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/grad/Q">
-         <obj_property name="ElementShortName">Q[0:2]</obj_property>
-         <obj_property name="ObjectShortName">Q[0:2]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/grad/Q_corr">
-         <obj_property name="ElementShortName">Q_corr[0:2]</obj_property>
-         <obj_property name="ObjectShortName">Q_corr[0:2]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/ctxt_idx">
-         <obj_property name="ElementShortName">ctxt_idx[8:0]</obj_property>
-         <obj_property name="ObjectShortName">ctxt_idx[8:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_full_sim/DUT/mod_1_r/sign">
-         <obj_property name="ElementShortName">sign</obj_property>
-         <obj_property name="ObjectShortName">sign</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group49">
       <obj_property name="label">Predictor</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/A">
-         <obj_property name="ElementShortName">A[4:0]</obj_property>
-         <obj_property name="ObjectShortName">A[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/B">
-         <obj_property name="ElementShortName">B[4:0]</obj_property>
-         <obj_property name="ObjectShortName">B[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/C">
-         <obj_property name="ElementShortName">C[4:0]</obj_property>
-         <obj_property name="ObjectShortName">C[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/X_pred">
-         <obj_property name="ElementShortName">X_pred[4:0]</obj_property>
-         <obj_property name="ObjectShortName">X_pred[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject fp_name="divider12" type="divider">
       <obj_property name="label">Pipeline 1</obj_property>
       <obj_property name="DisplayName">label</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_2">
-      <obj_property name="ElementShortName">new_pixel_2</obj_property>
-      <obj_property name="ObjectShortName">new_pixel_2</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/DUT/valid_data_2">
-      <obj_property name="ElementShortName">valid_data_2</obj_property>
-      <obj_property name="ObjectShortName">valid_data_2</obj_property>
-   </wvobject>
    <wvobject type="group" fp_name="group98">
       <obj_property name="label">Context modeller</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/idx">
-         <obj_property name="ElementShortName">idx[8:0]</obj_property>
-         <obj_property name="ObjectShortName">idx[8:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/addr_latch">
-         <obj_property name="ElementShortName">addr_latch[8:0]</obj_property>
-         <obj_property name="ObjectShortName">addr_latch[8:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/pred_error">
-         <obj_property name="ElementShortName">pred_error[4:0]</obj_property>
-         <obj_property name="ObjectShortName">pred_error[4:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/A_read">
-         <obj_property name="ElementShortName">A_read[14:0]</obj_property>
-         <obj_property name="ObjectShortName">A_read[14:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/B_read">
-         <obj_property name="ElementShortName">B_read[8:0]</obj_property>
-         <obj_property name="ObjectShortName">B_read[8:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/C_read">
-         <obj_property name="ElementShortName">C_read[4:0]</obj_property>
-         <obj_property name="ObjectShortName">C_read[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/N_read">
-         <obj_property name="ElementShortName">N_read[6:0]</obj_property>
-         <obj_property name="ObjectShortName">N_read[6:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/k_golomb">
-         <obj_property name="ElementShortName">k_golomb[4:0]</obj_property>
-         <obj_property name="ObjectShortName">k_golomb[4:0]</obj_property>
-      </wvobject>
-      <wvobject type="other" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/context_state">
-         <obj_property name="ElementShortName">context_state</obj_property>
-         <obj_property name="ObjectShortName">context_state</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/addrin">
-         <obj_property name="ElementShortName">addrin[8:0]</obj_property>
-         <obj_property name="ObjectShortName">addrin[8:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/addrout">
-         <obj_property name="ElementShortName">addrout[8:0]</obj_property>
-         <obj_property name="ObjectShortName">addrout[8:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/din">
-         <obj_property name="ElementShortName">din[39:0]</obj_property>
-         <obj_property name="ObjectShortName">din[39:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/dout">
-         <obj_property name="ElementShortName">dout[39:0]</obj_property>
-         <obj_property name="ObjectShortName">dout[39:0]</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/wea">
-         <obj_property name="ElementShortName">wea</obj_property>
-         <obj_property name="ObjectShortName">wea</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/ctxt_mdl/memory_block/inst/\native_mem_module.blk_mem_gen_v8_4_5_inst /memory">
-         <obj_property name="ElementShortName">memory[0:511][39:0]</obj_property>
-         <obj_property name="ObjectShortName">memory[0:511][39:0]</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group105">
       <obj_property name="label">Summation</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="logic" fp_name="/TB_full_sim/DUT/mod_2_r/adder/sign_flag_latch">
-         <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="ElementShortName">sign_flag_latch</obj_property>
-         <obj_property name="ObjectShortName">sign_flag_latch</obj_property>
-         <obj_property name="label">sign</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pixel_latch">
-         <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="ElementShortName">pixel_latch[4:0]</obj_property>
-         <obj_property name="ObjectShortName">pixel_latch[4:0]</obj_property>
-         <obj_property name="label">pixel</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/fixed_pred_latch">
-         <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="ElementShortName">fixed_pred_latch[4:0]</obj_property>
-         <obj_property name="ObjectShortName">fixed_pred_latch[4:0]</obj_property>
-         <obj_property name="label">prediction</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/B_ctxt">
-         <obj_property name="ElementShortName">B_ctxt[8:0]</obj_property>
-         <obj_property name="ObjectShortName">B_ctxt[8:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/C_ctxt">
-         <obj_property name="ElementShortName">C_ctxt[4:0]</obj_property>
-         <obj_property name="ObjectShortName">C_ctxt[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/N_ctxt">
-         <obj_property name="ElementShortName">N_ctxt[6:0]</obj_property>
-         <obj_property name="ObjectShortName">N_ctxt[6:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/k_golomb">
-         <obj_property name="ElementShortName">k_golomb[4:0]</obj_property>
-         <obj_property name="ObjectShortName">k_golomb[4:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/pred_error">
-         <obj_property name="ElementShortName">pred_error[4:0]</obj_property>
-         <obj_property name="ObjectShortName">pred_error[4:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/mapped_error">
-         <obj_property name="ElementShortName">mapped_error[4:0]</obj_property>
-         <obj_property name="ObjectShortName">mapped_error[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_1">
-         <obj_property name="ElementShortName">pred_1[6:0]</obj_property>
-         <obj_property name="ObjectShortName">pred_1[6:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_2">
-         <obj_property name="ElementShortName">pred_2[6:0]</obj_property>
-         <obj_property name="ObjectShortName">pred_2[6:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_3">
-         <obj_property name="ElementShortName">pred_3[6:0]</obj_property>
-         <obj_property name="ObjectShortName">pred_3[6:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_er_1">
-         <obj_property name="ElementShortName">pred_er_1[6:0]</obj_property>
-         <obj_property name="ObjectShortName">pred_er_1[6:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_er_2">
-         <obj_property name="ElementShortName">pred_er_2[6:0]</obj_property>
-         <obj_property name="ObjectShortName">pred_er_2[6:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_2_r/adder/pred_er_3">
-         <obj_property name="ElementShortName">pred_er_3[6:0]</obj_property>
-         <obj_property name="ObjectShortName">pred_er_3[6:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_2_5">
-      <obj_property name="ElementShortName">new_pixel_2_5</obj_property>
-      <obj_property name="ObjectShortName">new_pixel_2_5</obj_property>
    </wvobject>
    <wvobject fp_name="divider152" type="divider">
       <obj_property name="label">Pipeline 2</obj_property>
       <obj_property name="DisplayName">label</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_3">
-      <obj_property name="ElementShortName">new_pixel_3</obj_property>
-      <obj_property name="ObjectShortName">new_pixel_3</obj_property>
-   </wvobject>
    <wvobject type="group" fp_name="group156">
       <obj_property name="label">Golomb coder</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/golomb_r/k">
-         <obj_property name="ElementShortName">k[4:0]</obj_property>
-         <obj_property name="ObjectShortName">k[4:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/golomb_r/error">
-         <obj_property name="ElementShortName">error[4:0]</obj_property>
-         <obj_property name="ObjectShortName">error[4:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/golomb_r/encoded">
-         <obj_property name="ElementShortName">encoded[31:0]</obj_property>
-         <obj_property name="ObjectShortName">encoded[31:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_full_sim/DUT/golomb_r/size">
-         <obj_property name="ElementShortName">size[5:0]</obj_property>
-         <obj_property name="ObjectShortName">size[5:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject fp_name="divider98" type="divider">
       <obj_property name="label">Output</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/new_pixel">
-      <obj_property name="ElementShortName">new_pixel</obj_property>
-      <obj_property name="ObjectShortName">new_pixel</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/TB_full_sim/pixel_count">
-      <obj_property name="ElementShortName">pixel_count</obj_property>
-      <obj_property name="ObjectShortName">pixel_count</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_full_sim/DUT/encoded_r_3">
-      <obj_property name="ElementShortName">encoded_r_3[31:0]</obj_property>
-      <obj_property name="ObjectShortName">encoded_r_3[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_full_sim/encoded_r">
-      <obj_property name="ElementShortName">encoded_r[31:0]</obj_property>
-      <obj_property name="ObjectShortName">encoded_r[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_full_sim/DUT/encoded_size_r_3">
-      <obj_property name="ElementShortName">encoded_size_r_3[5:0]</obj_property>
-      <obj_property name="ObjectShortName">encoded_size_r_3[5:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_full_sim/encoded_size_r">
-      <obj_property name="ElementShortName">encoded_size_r[5:0]</obj_property>
-      <obj_property name="ObjectShortName">encoded_size_r[5:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_3">
-      <obj_property name="ElementShortName">new_pixel_3</obj_property>
-      <obj_property name="ObjectShortName">new_pixel_3</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/DUT/new_pixel_4">
-      <obj_property name="ElementShortName">new_pixel_4</obj_property>
-      <obj_property name="ObjectShortName">new_pixel_4</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_full_sim/new_pixel">
-      <obj_property name="ElementShortName">new_pixel</obj_property>
-      <obj_property name="ObjectShortName">new_pixel</obj_property>
    </wvobject>
 </wave_config>

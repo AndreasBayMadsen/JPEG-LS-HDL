@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="TB_context_modeller_impl_func_synth.wdb" id="1">
+         <top_modules>
+            <top_module name="TB_context_modeller_impl" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
+      <ZoomEndTime time="134.000001 us"></ZoomEndTime>
+      <Cursor1Time time="100.000000 us"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="180"></NameColumnWidth>
+      <ValueColumnWidth column_width="149"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="18" />
+   <wvobject type="logic" fp_name="/TB_context_modeller_impl/pclk">
+      <obj_property name="ElementShortName">pclk</obj_property>
+      <obj_property name="ObjectShortName">pclk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_context_modeller_impl/en">
+      <obj_property name="ElementShortName">en</obj_property>
+      <obj_property name="ObjectShortName">en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_context_modeller_impl/valid_data">
+      <obj_property name="ElementShortName">valid_data</obj_property>
+      <obj_property name="ObjectShortName">valid_data</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/idx">
+      <obj_property name="ElementShortName">idx[8:0]</obj_property>
+      <obj_property name="ObjectShortName">idx[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/error_val">
+      <obj_property name="ElementShortName">error_val[7:0]</obj_property>
+      <obj_property name="ObjectShortName">error_val[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_context_modeller_impl/disable_en">
+      <obj_property name="ElementShortName">disable_en</obj_property>
+      <obj_property name="ObjectShortName">disable_en</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/C_temp">
+      <obj_property name="ElementShortName">C_temp[7:0]</obj_property>
+      <obj_property name="ObjectShortName">C_temp[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/B_temp">
+      <obj_property name="ElementShortName">B_temp[8:0]</obj_property>
+      <obj_property name="ObjectShortName">B_temp[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/N_temp">
+      <obj_property name="ElementShortName">N_temp[6:0]</obj_property>
+      <obj_property name="ObjectShortName">N_temp[6:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/k_temp">
+      <obj_property name="ElementShortName">k_temp[4:0]</obj_property>
+      <obj_property name="ObjectShortName">k_temp[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/C">
+      <obj_property name="ElementShortName">C[7:0]</obj_property>
+      <obj_property name="ObjectShortName">C[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/B">
+      <obj_property name="ElementShortName">B[8:0]</obj_property>
+      <obj_property name="ObjectShortName">B[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/N">
+      <obj_property name="ElementShortName">N[6:0]</obj_property>
+      <obj_property name="ObjectShortName">N[6:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/k">
+      <obj_property name="ElementShortName">k[4:0]</obj_property>
+      <obj_property name="ObjectShortName">k[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/dut/A_read">
+      <obj_property name="ElementShortName">A_read[14:0]</obj_property>
+      <obj_property name="ObjectShortName">A_read[14:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/dut/addra">
+      <obj_property name="ElementShortName">addra[8:0]</obj_property>
+      <obj_property name="ObjectShortName">addra[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/dut/addrb">
+      <obj_property name="ElementShortName">addrb[8:0]</obj_property>
+      <obj_property name="ObjectShortName">addrb[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller_impl/dut/din">
+      <obj_property name="ElementShortName">din[38:0]</obj_property>
+      <obj_property name="ObjectShortName">din[38:0]</obj_property>
+   </wvobject>
+</wave_config>

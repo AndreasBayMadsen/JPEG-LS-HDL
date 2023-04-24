@@ -97,9 +97,9 @@ architecture Behavioral of output_buffer is
     
     -- LOGIC signals
     
-    signal reg_size_left        : UNSIGNED(integer(ceil(log2(real(bram_width + 1)))) - 1 downto 0) := (others => '0'); -- Number of valid bits in left part of reg_int
-    signal reg_size_right_com   : UNSIGNED(integer(ceil(log2(real(bram_width + 1)))) - 1 downto 0) := (others => '0'); -- Number of valid bits in right part of reg_int accoring to input
-    signal reg_size_right       : UNSIGNED(integer(ceil(log2(real(bram_width + 1)))) - 1 downto 0) := (others => '0'); -- Number of valid bits in right part of reg_int
+    signal reg_size_left        : INTEGER RANGE 0 to BRAM_WIDTH := 0;-- UNSIGNED(integer(ceil(log2(real(bram_width + 1)))) - 1 downto 0) := (others => '0'); -- Number of valid bits in left part of reg_int
+    signal reg_size_right_com   : INTEGER RANGE 0 to BRAM_WIDTH := 0; --UNSIGNED(integer(ceil(log2(real(bram_width + 1)))) - 1 downto 0) := (others => '0'); -- Number of valid bits in right part of reg_int accoring to input
+    signal reg_size_right       : INTEGER RANGE 0 to BRAM_WIDTH := 0; --UNSIGNED(integer(ceil(log2(real(bram_width + 1)))) - 1 downto 0) := (others => '0'); -- Number of valid bits in right part of reg_int
     signal reg_int              : STD_LOGIC_VECTOR(reg_width + bram_width - 1 downto 0) := (others => '0');
     
     signal reg_size_overflow    : STD_LOGIC; -- Goes high when reg_size_left + reg_size_right is higher than bram_width.
@@ -133,11 +133,11 @@ begin
                     
     bram_addr <= write_addr when read_allow = '0' else read_addr;
     
-    reg_empty <= '1' when resize(reg_size_right, reg_size_right'length + 1) + reg_size_left = 0 else '0';
+    reg_empty <= '1' when reg_size_right + reg_size_left = 0 else '0';
     
-    reg_size_right_com  <= resize(encoded_size_r_int, reg_size_right_com'length) + encoded_size_g_int + encoded_size_b_int;
+    reg_size_right_com  <= to_integer(encoded_size_r_int) + to_integer(encoded_size_g_int) + to_integer(encoded_size_b_int);
     
-    reg_size_overflow <= '1' when bram_width < resize(reg_size_right, reg_size_right'length + 1) + reg_size_left else '0';
+    reg_size_overflow <= '1' when bram_width < reg_size_right + reg_size_left else '0';
     
     writer : process(pclk)
     begin
@@ -168,29 +168,34 @@ begin
                                 reg_int <= (others => '0');
                                 if reg_size_overflow = '1' then
                                     
-                                    reg_int(reg_int'high downto bram_width) <= reg_int(2 * bram_width + to_integer(reg_size_left) - 1 downto to_integer(reg_size_left));
+                                    reg_int(reg_int'high downto bram_width) <= reg_int(2 * bram_width + reg_size_left - 1 downto reg_size_left);
                                     
-                                    reg_size_left <= to_unsigned(bram_width, reg_size_left'length);
-                                    reg_size_right <= reg_size_right - (to_unsigned(bram_width, reg_size_left'length) - reg_size_left);
+                                    reg_int(2 * bram_width - (reg_size_right - (bram_width - reg_size_left)) - 1 downto 0) <= (others => '0');
+                                    
+                                    reg_size_left <= bram_width;
+                                    reg_size_right <= reg_size_right - (bram_width - reg_size_left);
                                     
                                     if valid_data = '0' then
-                                        reg_size_right <= to_unsigned(bram_width, reg_size_left'length);
+                                        reg_size_right <= bram_width;
                                     end if;
                                 
                                 elsif valid_data = '1' then
                                     
+                                    reg_int(reg_int'high downto bram_width) <= reg_int(reg_int'high - reg_size_right downto bram_width - reg_size_right);
                                     
-                                    reg_int(reg_int'high downto bram_width) <= reg_int(reg_int'high - to_integer(reg_size_right) downto bram_width - to_integer(reg_size_right));
+                                    reg_int(reg_int'high downto reg_size_right + reg_size_left + 2 * bram_width) <= (others => '0');
+                                    reg_int(2 * bram_width - 1 downto 0) <= (others => '0');
                                     
                                     reg_size_left <= reg_size_right + reg_size_left;
-                                    reg_size_right <= (others => '0');
+                                    reg_size_right <= 0;
                                     
                                 else
                                 
-                                    reg_int(reg_int'high downto 2 * bram_width) <= reg_int(2 * bram_width + to_integer(reg_size_left) - 1 downto bram_width + to_integer(reg_size_left));
+                                    reg_int(reg_int'high downto 2 * bram_width) <= reg_int(2 * bram_width + reg_size_left - 1 downto bram_width + reg_size_left);
+                                    reg_int(2 * bram_width - 1 downto 0) <= (others => '0');
                                     
-                                    reg_size_left <= to_unsigned(bram_width, reg_size_left'length);
-                                    reg_size_right <= (others => '0');
+                                    reg_size_left <= bram_width;
+                                    reg_size_right <= 0;
 
                                 end if;
                             end if;
@@ -217,7 +222,8 @@ begin
                             reg_int <= (others => '0');
                             
                             
-                            reg_int(reg_int'high downto bram_width) <= reg_int(reg_int'high - to_integer(reg_size_right) downto bram_width - to_integer(reg_size_right));
+                            reg_int(reg_int'high downto bram_width) <= reg_int(reg_int'high - reg_size_right downto bram_width - reg_size_right);
+                            reg_int(reg_int'high downto reg_int'length - reg_size_right) <= (others => '0');
                             
                             reg_size_left <= reg_size_right;
                             
@@ -237,7 +243,7 @@ begin
                         
                             reg_size_right <= reg_size_right_com;
                         else
-                            reg_size_right <= (others => '0');
+                            reg_size_right <= 0;
                         end if;
                         
                         writer_state <= WAIT_NEW_INPUT;

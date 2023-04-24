@@ -7,33 +7,10 @@ use ieee.std_logic_1164.all;
 use IEEE.NUMERIC_STD.ALL;
 use IEEE.MATH_REAL.ALL;
 
-entity TB_context_modeller is
-end TB_context_modeller;
+entity TB_context_modeller_impl is
+end TB_context_modeller_impl;
 
-architecture tb of TB_context_modeller is
-
-    component context_modeller is
-        generic ( 
-            data_width  :   integer := 8;
-            k_width     :   integer := 5;
-            n_size      :   integer := 7;
-            a_size      :   integer := 15;
-            b_size      :   integer := 9;
-            n_reset     :   integer := 64;
-            no_contexts :   integer := 365
-            );
-        Port (
-            pclk :          in  STD_LOGIC; 
-            en :          in  STD_LOGIC; 
-            valid_data:     in  STD_LOGIC;
-            idx :           in  STD_LOGIC_VECTOR    (integer(ceil(log2(real(no_contexts)))) - 1 downto 0);
-            error :         in  signed              (data_width - 1 downto 0);
-             
-            C :             out signed              (data_width - 1 downto 0);
-            B :             out signed              (b_size - 1 downto 0);
-            N :             out unsigned            (n_size - 1 downto 0);
-            k :             out unsigned            (k_width - 1 downto 0));
-    end component;
+architecture tb of TB_context_modeller_impl is
     
     constant data_width  :   integer := 8;
     constant k_width     :   integer := 5;
@@ -46,8 +23,21 @@ architecture tb of TB_context_modeller is
     constant max_c       :   integer := 127; 
     constant no_contexts :   integer := 365; 
     constant alpha       :   integer := 256;
-    
 
+    component context_modeller is
+        Port (
+            pclk :          in  STD_LOGIC := '0'; 
+            en :            in  STD_LOGIC ; 
+            valid_data:     in  STD_LOGIC;
+            idx :           in  STD_LOGIC_VECTOR    (integer(ceil(log2(real(no_contexts)))) - 1 downto 0);
+            error :         in  STD_LOGIC_VECTOR              (data_width - 1 downto 0);
+             
+            C :             out std_logic_vector              (data_width - 1 downto 0);
+            B :             out std_logic_vector              (b_size - 1 downto 0);
+            N :             out std_logic_vector            (n_size - 1 downto 0);
+            k :             out std_logic_vector            (k_width - 1 downto 0));
+    end component;
+    
     signal pclk             : std_logic := '0';
     signal en               : std_logic := '1';
     signal valid_data       : STD_LOGIC;
@@ -55,6 +45,11 @@ architecture tb of TB_context_modeller is
     signal error_val        : signed            (data_width - 1 downto 0);
     
     signal disable_en : STD_LOGIC := '1';
+    
+    signal C_temp :             std_logic_vector              (data_width - 1 downto 0);
+    signal B_temp :             std_logic_vector              (b_size - 1 downto 0);
+    signal N_temp :             std_logic_vector            (n_size - 1 downto 0);
+    signal k_temp :             std_logic_vector            (k_width - 1 downto 0);
     
     signal C :             signed              (data_width - 1 downto 0);
     signal B :             signed              (b_size - 1 downto 0);
@@ -64,25 +59,22 @@ architecture tb of TB_context_modeller is
 begin
 
     dut : context_modeller
-    generic map ( 
-                data_width   => data_width ,
-                k_width      => k_width    ,
-                n_size       => n_size     ,
-                a_size       => a_size     ,
-                b_size       => b_size     ,
-                n_reset      => n_reset    ,
-                no_contexts  => no_contexts
-              )
     port map (pclk              => pclk,
               en                => en,
               valid_data        => valid_data,
               idx               => idx,
-              error             => error_val,
-              C => C,
-              B => B,
-              N => N,
-              k => k
+              error             => std_logic_vector(error_val),
+              C => C_temp,
+              B => B_temp,
+              N => N_temp,
+              k => k_temp
               );
+              
+    C <= signed(C_temp);
+    B <= signed(B_temp);
+    N <= unsigned(N_temp);
+    k <= unsigned(k_temp);         
+    
 
     stimuli : process
     begin

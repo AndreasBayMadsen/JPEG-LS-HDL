@@ -11,9 +11,9 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
-      <ZoomEndTime time="64.300001 us"></ZoomEndTime>
-      <Cursor1Time time="1.000000 us"></Cursor1Time>
+      <ZoomStartTime time="2,546,954.656 ns"></ZoomStartTime>
+      <ZoomEndTime time="2,553,384.657 ns"></ZoomEndTime>
+      <Cursor1Time time="2,550,359.656 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="227"></NameColumnWidth>
@@ -140,6 +140,7 @@
    <wvobject type="group" fp_name="group291">
       <obj_property name="label">Buffer internal</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/bram_din">
          <obj_property name="ElementShortName">bram_din[63:0]</obj_property>
          <obj_property name="ObjectShortName">bram_din[63:0]</obj_property>

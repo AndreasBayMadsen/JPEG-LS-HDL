@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="TB_pl_test_func_impl.wdb" id="1">
+      <db_ref path="TB_pl_test_func_synth.wdb" id="1">
          <top_modules>
             <top_module name="TB_pl_test" />
             <top_module name="glbl" />
@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="2,551,584.900 ns"></ZoomStartTime>
-      <ZoomEndTime time="2,551,867.301 ns"></ZoomEndTime>
-      <Cursor1Time time="2,551,758.100 ns"></Cursor1Time>
+      <ZoomStartTime time="2,550,313.566 ns"></ZoomStartTime>
+      <ZoomEndTime time="2,550,436.167 ns"></ZoomEndTime>
+      <Cursor1Time time="2,550,410.766 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="262"></NameColumnWidth>
-      <ValueColumnWidth column_width="128"></ValueColumnWidth>
+      <ValueColumnWidth column_width="124"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="7" />
    <wvobject type="group" fp_name="group125">
@@ -85,14 +85,17 @@
       <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/encoded_r">
          <obj_property name="ElementShortName">encoded_r[19:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_r[19:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/encoded_g">
          <obj_property name="ElementShortName">encoded_g[23:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_g[23:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/encoded_b">
          <obj_property name="ElementShortName">encoded_b[19:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_b[19:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/encoded_size_r">
          <obj_property name="ElementShortName">encoded_size_r[5:0]</obj_property>
