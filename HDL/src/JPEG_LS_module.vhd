@@ -129,7 +129,6 @@ architecture Behavioral of JPEG_LS_module is
             L_max       :   integer := 32
         );
         Port ( pclk : in STD_LOGIC;
-               en : in STD_LOGIC;
                valid_data : in STD_LOGIC;
                k : in unsigned (k_width - 1 downto 0);
                error : in unsigned (beta_max - 1 downto 0);
@@ -474,7 +473,6 @@ begin
     )
     port map(
         pclk        => pclk,
-        en          => new_pixel_3,
         valid_data  => valid_data_3,
         k           => k_r_3,
         error       => mapped_error_r_3,
@@ -490,7 +488,6 @@ begin
     )
     port map(
         pclk        => pclk,
-        en          => new_pixel_3,
         valid_data  => valid_data_3,
         k           => k_g_3,
         error       => mapped_error_g_3,
@@ -506,7 +503,6 @@ begin
     )
     port map(
         pclk        => pclk,
-        en          => new_pixel_3,
         valid_data  => valid_data_3,
         k           => k_b_3,
         error       => mapped_error_b_3,
