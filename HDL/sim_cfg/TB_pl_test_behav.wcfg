@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="2,546,954.656 ns"></ZoomStartTime>
-      <ZoomEndTime time="2,553,384.657 ns"></ZoomEndTime>
-      <Cursor1Time time="2,550,359.656 ns"></Cursor1Time>
+      <ZoomStartTime time="2,549,733.604 ns"></ZoomStartTime>
+      <ZoomEndTime time="2,552,313.605 ns"></ZoomEndTime>
+      <Cursor1Time time="2,551,337.998 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="227"></NameColumnWidth>
-      <ValueColumnWidth column_width="289"></ValueColumnWidth>
+      <ValueColumnWidth column_width="285"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="7" />
+   <WVObjectSize size="11" />
    <wvobject type="group" fp_name="group125">
       <obj_property name="label">PL IO</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -72,6 +72,7 @@
    <wvobject type="group" fp_name="group126">
       <obj_property name="label">Module Output</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/new_pixel">
          <obj_property name="ElementShortName">new_pixel</obj_property>
          <obj_property name="ObjectShortName">new_pixel</obj_property>
@@ -140,7 +141,6 @@
    <wvobject type="group" fp_name="group291">
       <obj_property name="label">Buffer internal</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/bram_din">
          <obj_property name="ElementShortName">bram_din[63:0]</obj_property>
          <obj_property name="ObjectShortName">bram_din[63:0]</obj_property>
@@ -217,7 +217,6 @@
    <wvobject type="group" fp_name="group200">
       <obj_property name="label">Sender internal</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_uart_sender_0/U0/request_next">
          <obj_property name="ElementShortName">request_next</obj_property>
          <obj_property name="ObjectShortName">request_next</obj_property>
@@ -265,14 +264,6 @@
       <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_uart_sender_0/U0/old_clk_uart">
          <obj_property name="ElementShortName">old_clk_uart</obj_property>
          <obj_property name="ObjectShortName">old_clk_uart</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_uart_sender_0/U0/rising_clk_uart">
-         <obj_property name="ElementShortName">rising_clk_uart</obj_property>
-         <obj_property name="ObjectShortName">rising_clk_uart</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_uart_sender_0/U0/rising_data_send_uart">
-         <obj_property name="ElementShortName">rising_data_send_uart</obj_property>
-         <obj_property name="ObjectShortName">rising_data_send_uart</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_uart_sender_0/U0/buffer_data">
          <obj_property name="ElementShortName">buffer_data[63:0]</obj_property>
@@ -323,6 +314,321 @@
             <obj_property name="ElementShortName">sig</obj_property>
             <obj_property name="ObjectShortName">sig</obj_property>
          </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group250">
+      <obj_property name="label">collector</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/resetn">
+         <obj_property name="ElementShortName">resetn</obj_property>
+         <obj_property name="ObjectShortName">resetn</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/pclk">
+         <obj_property name="ElementShortName">pclk</obj_property>
+         <obj_property name="ObjectShortName">pclk</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/pixel">
+         <obj_property name="ElementShortName">pixel[7:0]</obj_property>
+         <obj_property name="ObjectShortName">pixel[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/href">
+         <obj_property name="ElementShortName">href</obj_property>
+         <obj_property name="ObjectShortName">href</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/vsync">
+         <obj_property name="ElementShortName">vsync</obj_property>
+         <obj_property name="ObjectShortName">vsync</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/A">
+         <obj_property name="ElementShortName">A[15:0]</obj_property>
+         <obj_property name="ObjectShortName">A[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/B">
+         <obj_property name="ElementShortName">B[15:0]</obj_property>
+         <obj_property name="ObjectShortName">B[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/C">
+         <obj_property name="ElementShortName">C[15:0]</obj_property>
+         <obj_property name="ObjectShortName">C[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/D">
+         <obj_property name="ElementShortName">D[15:0]</obj_property>
+         <obj_property name="ObjectShortName">D[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/X">
+         <obj_property name="ElementShortName">X[15:0]</obj_property>
+         <obj_property name="ObjectShortName">X[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/valid_data">
+         <obj_property name="ElementShortName">valid_data</obj_property>
+         <obj_property name="ObjectShortName">valid_data</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/new_pixel">
+         <obj_property name="ElementShortName">new_pixel</obj_property>
+         <obj_property name="ObjectShortName">new_pixel</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/resetn_int">
+         <obj_property name="ElementShortName">resetn_int</obj_property>
+         <obj_property name="ObjectShortName">resetn_int</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/deserializer_state">
+         <obj_property name="ElementShortName">deserializer_state</obj_property>
+         <obj_property name="ObjectShortName">deserializer_state</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/first_byte">
+         <obj_property name="ElementShortName">first_byte</obj_property>
+         <obj_property name="ObjectShortName">first_byte</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/pixel_received">
+         <obj_property name="ElementShortName">pixel_received</obj_property>
+         <obj_property name="ObjectShortName">pixel_received</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/X_buffer">
+         <obj_property name="ElementShortName">X_buffer[15:0]</obj_property>
+         <obj_property name="ObjectShortName">X_buffer[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/border_fill_count">
+         <obj_property name="ElementShortName">border_fill_count</obj_property>
+         <obj_property name="ObjectShortName">border_fill_count</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/write_enable">
+         <obj_property name="ElementShortName">write_enable</obj_property>
+         <obj_property name="ObjectShortName">write_enable</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/write_addr_vector">
+         <obj_property name="ElementShortName">write_addr_vector[9:0]</obj_property>
+         <obj_property name="ObjectShortName">write_addr_vector[9:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/write_addr">
+         <obj_property name="ElementShortName">write_addr[9:0]</obj_property>
+         <obj_property name="ObjectShortName">write_addr[9:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/write_data_vector">
+         <obj_property name="ElementShortName">write_data_vector[15:0]</obj_property>
+         <obj_property name="ObjectShortName">write_data_vector[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/write_data">
+         <obj_property name="ElementShortName">write_data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">write_data[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/read_addr_vector">
+         <obj_property name="ElementShortName">read_addr_vector[9:0]</obj_property>
+         <obj_property name="ObjectShortName">read_addr_vector[9:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/read_addr">
+         <obj_property name="ElementShortName">read_addr[9:0]</obj_property>
+         <obj_property name="ObjectShortName">read_addr[9:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/read_data">
+         <obj_property name="ElementShortName">read_data[15:0]</obj_property>
+         <obj_property name="ObjectShortName">read_data[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/read_data_vector">
+         <obj_property name="ElementShortName">read_data_vector[15:0]</obj_property>
+         <obj_property name="ObjectShortName">read_data_vector[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/fifo_state">
+         <obj_property name="ElementShortName">fifo_state</obj_property>
+         <obj_property name="ObjectShortName">fifo_state</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/last_pulse">
+         <obj_property name="ElementShortName">last_pulse</obj_property>
+         <obj_property name="ObjectShortName">last_pulse</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/tail_pointer">
+         <obj_property name="ElementShortName">tail_pointer[9:0]</obj_property>
+         <obj_property name="ObjectShortName">tail_pointer[9:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/head_pointer">
+         <obj_property name="ElementShortName">head_pointer[9:0]</obj_property>
+         <obj_property name="ObjectShortName">head_pointer[9:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/A_buffer">
+         <obj_property name="ElementShortName">A_buffer[15:0]</obj_property>
+         <obj_property name="ObjectShortName">A_buffer[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/B_buffer">
+         <obj_property name="ElementShortName">B_buffer[15:0]</obj_property>
+         <obj_property name="ObjectShortName">B_buffer[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/C_buffer">
+         <obj_property name="ElementShortName">C_buffer[15:0]</obj_property>
+         <obj_property name="ObjectShortName">C_buffer[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/D_buffer">
+         <obj_property name="ElementShortName">D_buffer[15:0]</obj_property>
+         <obj_property name="ObjectShortName">D_buffer[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/row_counter">
+         <obj_property name="ElementShortName">row_counter</obj_property>
+         <obj_property name="ObjectShortName">row_counter</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/col_counter">
+         <obj_property name="ElementShortName">col_counter</obj_property>
+         <obj_property name="ObjectShortName">col_counter</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/image_height">
+         <obj_property name="ElementShortName">image_height</obj_property>
+         <obj_property name="ObjectShortName">image_height</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/image_width">
+         <obj_property name="ElementShortName">image_width</obj_property>
+         <obj_property name="ObjectShortName">image_width</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/pixel_collector/NUM_ADDR">
+         <obj_property name="ElementShortName">NUM_ADDR</obj_property>
+         <obj_property name="ObjectShortName">NUM_ADDR</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group201">
+      <obj_property name="label">mod1r</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_1_r/clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_1_r/resetn">
+         <obj_property name="ElementShortName">resetn</obj_property>
+         <obj_property name="ObjectShortName">resetn</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_1_r/A">
+         <obj_property name="ElementShortName">A[4:0]</obj_property>
+         <obj_property name="ObjectShortName">A[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_1_r/B">
+         <obj_property name="ElementShortName">B[4:0]</obj_property>
+         <obj_property name="ObjectShortName">B[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_1_r/C">
+         <obj_property name="ElementShortName">C[4:0]</obj_property>
+         <obj_property name="ObjectShortName">C[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_1_r/D">
+         <obj_property name="ElementShortName">D[4:0]</obj_property>
+         <obj_property name="ObjectShortName">D[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_1_r/ctxt_idx">
+         <obj_property name="ElementShortName">ctxt_idx[8:0]</obj_property>
+         <obj_property name="ObjectShortName">ctxt_idx[8:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_1_r/sign">
+         <obj_property name="ElementShortName">sign</obj_property>
+         <obj_property name="ObjectShortName">sign</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_1_r/X_pred">
+         <obj_property name="ElementShortName">X_pred[4:0]</obj_property>
+         <obj_property name="ObjectShortName">X_pred[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_1_r/color_res">
+         <obj_property name="ElementShortName">color_res</obj_property>
+         <obj_property name="ObjectShortName">color_res</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group212">
+      <obj_property name="label">mod2r</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/clk">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/resetn">
+         <obj_property name="ElementShortName">resetn</obj_property>
+         <obj_property name="ObjectShortName">resetn</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/enable">
+         <obj_property name="ElementShortName">enable</obj_property>
+         <obj_property name="ObjectShortName">enable</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/valid_data">
+         <obj_property name="ElementShortName">valid_data</obj_property>
+         <obj_property name="ObjectShortName">valid_data</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/pixel">
+         <obj_property name="ElementShortName">pixel[4:0]</obj_property>
+         <obj_property name="ObjectShortName">pixel[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/prediction">
+         <obj_property name="ElementShortName">prediction[4:0]</obj_property>
+         <obj_property name="ObjectShortName">prediction[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/ctxt_idx">
+         <obj_property name="ElementShortName">ctxt_idx[8:0]</obj_property>
+         <obj_property name="ObjectShortName">ctxt_idx[8:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/sign">
+         <obj_property name="ElementShortName">sign</obj_property>
+         <obj_property name="ObjectShortName">sign</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/k">
+         <obj_property name="ElementShortName">k[4:0]</obj_property>
+         <obj_property name="ObjectShortName">k[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/mapped_error">
+         <obj_property name="ElementShortName">mapped_error[4:0]</obj_property>
+         <obj_property name="ObjectShortName">mapped_error[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/ctxt_idx_vec">
+         <obj_property name="ElementShortName">ctxt_idx_vec[8:0]</obj_property>
+         <obj_property name="ObjectShortName">ctxt_idx_vec[8:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/B_ctxt">
+         <obj_property name="ElementShortName">B_ctxt[8:0]</obj_property>
+         <obj_property name="ObjectShortName">B_ctxt[8:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/C_ctxt">
+         <obj_property name="ElementShortName">C_ctxt[4:0]</obj_property>
+         <obj_property name="ObjectShortName">C_ctxt[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/N_ctxt">
+         <obj_property name="ElementShortName">N_ctxt[6:0]</obj_property>
+         <obj_property name="ObjectShortName">N_ctxt[6:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/k_golomb">
+         <obj_property name="ElementShortName">k_golomb[4:0]</obj_property>
+         <obj_property name="ObjectShortName">k_golomb[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/mod_2_r/pred_error">
+         <obj_property name="ElementShortName">pred_error[4:0]</obj_property>
+         <obj_property name="ObjectShortName">pred_error[4:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group237">
+      <obj_property name="label">golombr</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/golomb_r/pclk">
+         <obj_property name="ElementShortName">pclk</obj_property>
+         <obj_property name="ObjectShortName">pclk</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/golomb_r/en">
+         <obj_property name="ElementShortName">en</obj_property>
+         <obj_property name="ObjectShortName">en</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/golomb_r/valid_data">
+         <obj_property name="ElementShortName">valid_data</obj_property>
+         <obj_property name="ObjectShortName">valid_data</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/golomb_r/k">
+         <obj_property name="ElementShortName">k[4:0]</obj_property>
+         <obj_property name="ObjectShortName">k[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/golomb_r/error">
+         <obj_property name="ElementShortName">error[4:0]</obj_property>
+         <obj_property name="ObjectShortName">error[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/golomb_r/encoded">
+         <obj_property name="ElementShortName">encoded[19:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded[19:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/golomb_r/size">
+         <obj_property name="ElementShortName">size[5:0]</obj_property>
+         <obj_property name="ObjectShortName">size[5:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/U0/golomb_r/unary_val">
+         <obj_property name="ElementShortName">unary_val[4:0]</obj_property>
+         <obj_property name="ObjectShortName">unary_val[4:0]</obj_property>
       </wvobject>
    </wvobject>
 </wave_config>

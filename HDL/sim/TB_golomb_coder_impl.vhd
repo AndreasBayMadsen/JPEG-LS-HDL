@@ -41,7 +41,7 @@ architecture tb of TB_golomb_coder_impl is
     constant beta_max : integer := 8;
     constant L_max : integer := 32;
 
-    component golomb_coder is
+    component golomb_top is
         Port ( pclk : in STD_LOGIC;
                en : in STD_LOGIC;
                valid_data : in STD_LOGIC;
@@ -63,7 +63,7 @@ architecture tb of TB_golomb_coder_impl is
 
 begin
 
-    dut : golomb_coder
+    dut : golomb_top
         Port map ( pclk         =>   pclk      ,
                    en           =>   en        ,
                    valid_data   =>   valid_data,
