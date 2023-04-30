@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="98,623.770 ns"></ZoomStartTime>
-      <ZoomEndTime time="98,963.355 ns"></ZoomEndTime>
-      <Cursor1Time time="98,760.000 ns"></Cursor1Time>
+      <ZoomStartTime time="248,327.333 ns"></ZoomStartTime>
+      <ZoomEndTime time="249,613.334 ns"></ZoomEndTime>
+      <Cursor1Time time="249,399.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="166"></NameColumnWidth>
-      <ValueColumnWidth column_width="128"></ValueColumnWidth>
+      <ValueColumnWidth column_width="116"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="19" />
+   <WVObjectSize size="26" />
    <wvobject type="logic" fp_name="/TB_context_modeller/pclk">
       <obj_property name="ElementShortName">pclk</obj_property>
       <obj_property name="ObjectShortName">pclk</obj_property>
@@ -60,7 +60,7 @@
    <wvobject type="array" fp_name="/TB_context_modeller/dut/A_read">
       <obj_property name="ElementShortName">A_read[14:0]</obj_property>
       <obj_property name="ObjectShortName">A_read[14:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/TB_context_modeller/C">
       <obj_property name="ElementShortName">C[7:0]</obj_property>
@@ -100,5 +100,33 @@
    <wvobject type="logic" fp_name="/TB_context_modeller/dut/en">
       <obj_property name="ElementShortName">en</obj_property>
       <obj_property name="ObjectShortName">en</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller/dut/A_latch">
+      <obj_property name="ElementShortName">A_latch[14:0]</obj_property>
+      <obj_property name="ObjectShortName">A_latch[14:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller/dut/addr_latch">
+      <obj_property name="ElementShortName">addr_latch[8:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_latch[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller/dut/old_addr">
+      <obj_property name="ElementShortName">old_addr[8:0]</obj_property>
+      <obj_property name="ObjectShortName">old_addr[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller/dut/A_t3">
+      <obj_property name="ElementShortName">A_t3[14:0]</obj_property>
+      <obj_property name="ObjectShortName">A_t3[14:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller/dut/B_t3">
+      <obj_property name="ElementShortName">B_t3[8:0]</obj_property>
+      <obj_property name="ObjectShortName">B_t3[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller/dut/C_t3">
+      <obj_property name="ElementShortName">C_t3[7:0]</obj_property>
+      <obj_property name="ObjectShortName">C_t3[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_context_modeller/dut/N_t3">
+      <obj_property name="ElementShortName">N_t3[6:0]</obj_property>
+      <obj_property name="ObjectShortName">N_t3[6:0]</obj_property>
    </wvobject>
 </wave_config>
