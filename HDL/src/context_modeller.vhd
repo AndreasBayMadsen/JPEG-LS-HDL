@@ -43,16 +43,16 @@ entity context_modeller is
         no_contexts :   integer := 365
         );
     Port (
-        pclk :          in  STD_LOGIC;
-        en   :          in  STD_LOGIC; 
-        valid_data:     in  STD_LOGIC;
-        idx :           in  STD_LOGIC_VECTOR    (integer(ceil(log2(real(no_contexts)))) - 1 downto 0);
-        error :         in  signed              (data_width - 1 downto 0);
+        pclk :          in  STD_LOGIC := '0';
+        en   :          in  STD_LOGIC := '0'; 
+        valid_data:     in  STD_LOGIC := '0';
+        idx :           in  STD_LOGIC_VECTOR    (integer(ceil(log2(real(no_contexts)))) - 1 downto 0) := (others => '0');
+        error :         in  signed              (data_width - 1 downto 0) := (others => '0');
          
-        C :             out signed              (data_width - 1 downto 0);
-        B :             out signed              (b_size - 1 downto 0);
-        N :             out unsigned            (n_size - 1 downto 0);
-        k :             out unsigned            (k_width - 1 downto 0));
+        C :             out signed              (data_width - 1 downto 0) := (others => '0');
+        B :             out signed              (b_size - 1 downto 0) := (others => '0');
+        N :             out unsigned            (n_size - 1 downto 0) := (others => '0');
+        k :             out unsigned            (k_width - 1 downto 0) := (others => '0'));
 end context_modeller;
 
 architecture Behavioral of context_modeller is
@@ -87,17 +87,16 @@ architecture Behavioral of context_modeller is
     constant C_def    : signed      (c_size - 1 downto 0) := to_signed(0, c_size);
     constant N_def    : unsigned    (n_size - 1 downto 0) := to_unsigned(1, n_size);
     
-    
     signal addrin   :   STD_LOGIC_VECTOR(8 DOWNTO 0) := (others => '0');
     signal din      :   STD_LOGIC_VECTOR(39 DOWNTO 0);
     
     signal addrout  :   STD_LOGIC_VECTOR(8 DOWNTO 0);
     signal dout     :   STD_LOGIC_VECTOR(39 DOWNTO 0);
     
-    signal addr_latch  :   STD_LOGIC_VECTOR(8 DOWNTO 0);
+    signal addr_latch  :   STD_LOGIC_VECTOR(8 DOWNTO 0) := (others=>'0');
     signal old_addr  :   STD_LOGIC_VECTOR(8 DOWNTO 0) := (others=>'0');
     
-    signal wea      :   STD_LOGIC;
+    signal wea      :   STD_LOGIC := '0';
     
     signal A_read   : unsigned    (a_size - 1 downto 0);
     signal B_read   : signed      (b_size - 1 downto 0);
@@ -127,9 +126,6 @@ architecture Behavioral of context_modeller is
     signal N_shift  : unsigned    (a_size downto 0);
     signal k_temp   : unsigned    (k_width - 1 downto 0);
     
-    
-    constant N_reset_val : unsigned(N_read'high downto N_read'low) := to_unsigned(n_reset, N_read'length);
-    
     type context_enum is (WAITING, TASK, RESET);
     signal context_state : context_enum := WAITING;
     
@@ -149,7 +145,6 @@ begin
               
               
     -- READ context from RAM.
-    
     process(din, old_addr, addr_latch, A_latch, B_latch, C_latch, N_latch)
     begin
     
@@ -165,9 +160,7 @@ begin
             N_read <= N_latch;
         end if;
     end process;
-    
-    
-              
+
     -- Find k value
     N_shift(N_shift'high downto N_read'high + 1) <= (others => '0');
     N_shift(N_read'high downto N_read'low) <= N_read;
@@ -186,27 +179,71 @@ begin
         end loop;
     end process;
     
-              
-    A_t1 <= resize(A_read + unsigned(abs(error)), A_t1'length);
-    B_t1 <= resize(B_read + error, B_t1'length);
+--    process(A_read, B_read, C_read, N_read, error)
+    
+--        variable A_temp : INTEGER RANGE 0 to 2**a_size - 1 := 0;
+--        variable B_temp : INTEGER RANGE - 2**(b_size - 1) to 2**(b_size - 1) - 1 := 0;
+--        variable C_temp : INTEGER RANGE - 2**(c_size - 1) to 2**(c_size - 1) - 1 := 0;
+--        variable N_temp : INTEGER RANGE 0 to 2**n_size - 1 := 0;
+--    begin
+--        A_temp := to_integer(A_read) + to_integer(abs(error));
+--        B_temp := to_integer(to_integer(B_read) + error);
+--        C_temp := to_integer(C_read);
+--        N_temp := to_integer(N_read);
+        
+--        if N_read = n_reset then
+--            A_temp := to_integer(shift_right(to_unsigned(A_temp, A_t3'length), 1));
+--            B_temp := to_integer(shift_right(to_signed(B_temp, B_t3'length), 1));
+--            N_temp := to_integer(shift_right(to_unsigned(N_temp, N_t3'length), 1));
+--        end if;
+        
+--        N_temp := N_temp + 1;
+        
+--        if B_temp <= - N_temp then
+--            B_temp := B_temp + N_temp;
+--            if C_temp > min_c then
+--                C_temp := C_temp - 1;
+--            end if;
+--            if B_temp <= - N_temp then
+--                B_temp := - N_temp + 1;
+--            end if;
+        
+--        elsif B_temp > 0 then 
+--            B_temp := B_temp - N_temp;
+--            if C_temp < max_c then
+--                C_temp := C_temp + 1;
+--            end if;
+--            if B_temp > 0 then
+--                B_temp := 0;
+--            end if;
+--        end if;
+        
+--        A_t3 <= to_unsigned(A_temp, A_t3'length);
+--        B_t3 <= to_signed(B_temp, B_t3'length);
+--        C_t3 <= to_signed(C_temp, C_t3'length);
+--        N_t3 <= to_unsigned(N_temp, N_t3'length);
+--    end process;
+    
+    A_t1 <= A_read + unsigned(abs(error));
+    B_t1 <= B_read + error;
     C_t1 <= C_read;
     N_t1 <= N_read;
     
     -- Divide when N == N_max
-    A_t2 <= shift_right(A_t1, 1) when N_read = N_reset_val else A_t1;
-    B_t2 <= shift_right(B_t1, 1) when N_read = N_reset_val else B_t1;
+    A_t2 <= shift_right(A_t1, 1) when N_read = n_reset else A_t1;
+    B_t2 <= shift_right(B_t1, 1) when N_read = n_reset else B_t1;
     C_t2 <= C_t1;
-    N_t2 <= shift_right(N_t1, 1) + 1 when N_read = N_reset_val else N_t1 + 1;
+    N_t2 <= shift_right(N_t1, 1) + 1 when N_read = n_reset else N_t1 + 1;
     
     A_t3 <= A_t2; 
-    B_t3 <= resize(- signed('0' & N_t2) + 1, B_t3'length) when (B_t2 + signed('0' & N_t2) <= - signed('0' & N_t2)) and (B_t2 <= - signed('0' & N_t2)) else
-            resize(B_t2 + signed('0' & N_t2), B_t3'length) when B_t2 <= - signed('0' & N_t2) else
-            to_signed(0, B_t3'length) when (B_t2 - signed('0' & N_t2) > to_signed(0, B_t3'length)) and (B_t2 > to_signed(0, B_t3'length)) else
-            resize(B_t2 - signed('0' & N_t2), B_t3'length) when (B_t2 > to_signed(0, B_t3'length)) else
+    B_t3 <= resize(1 - signed('0' & N_t2), B_t3'length) when (B_t2 + signed('0' & N_t2) <= - signed('0' & N_t2)) and (B_t2 <= - signed('0' & N_t2)) else
+            B_t2 + signed('0' & N_t2) when B_t2 <= - signed('0' & N_t2) else
+            to_signed(0, B_t3'length) when (B_t2 - signed('0' & N_t2) > 0) and (B_t2 > 0) else
+            B_t2 - signed('0' & N_t2) when (B_t2 > 0) else
             B_t2; 
     
-    C_t3 <= resize(C_t2 - 1, C_t3'length) when (C_t2 > to_signed(min_c, C_t2'length)) and (B_t2 <= - signed('0' & N_t2)) else
-            resize(C_t2 + 1, C_t3'length) when (C_t2 < to_signed(max_c, C_t2'length)) and (B_t2 > to_signed(0, B_t2'length)) else
+    C_t3 <= C_t2 - 1 when C_t2 > min_c and B_t2 <= - signed('0' & N_t2) else
+            C_t2 + 1 when C_t2 < max_c and B_t2 > 0 else
             C_t2;
             
     N_t3 <= N_t2;
@@ -289,7 +326,7 @@ begin
                     reset_idx <= reset_idx + 1;
                     
                     -- When last address has been reset
-                    if reset_idx = to_unsigned(no_contexts - 1, reset_idx'length) then
+                    if reset_idx = no_contexts - 1 then
                         context_state <= WAITING;
                         reset_done_flag <= '1';
                     end if;
@@ -298,6 +335,7 @@ begin
                     B_latch <=  B_def;
                     C_latch <=  C_def;
                     N_latch <=  N_def;
+                    old_addr <= (others => '1');
             end case;
         end if;
     end process;
