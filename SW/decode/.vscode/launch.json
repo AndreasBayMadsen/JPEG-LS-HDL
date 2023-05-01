@@ -7,7 +7,7 @@
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             // "args": ["-nomarkers", "-noruns", "-rows", "512", "-columns", "768", "-bits", "5", "-T1", "3", "-T2", "7", "-T3", "21", "-input-file", "${fileDirname}/../test_image.pgm", "-input-endian", "big", "-output-file", "${fileDirname}/../test_image_unmarked.jls"],                            // To compress local test image
             // "args": ["-d", "-nomarkers", "-noruns", "-rows", "768", "-columns", "512", "-bits", "5", "-T1", "3", "-T2", "7", "-T3", "21", "-input-file", "${fileDirname}/../test_image_unmarked.jls", "-output-file", "${fileDirname}/../test_image_unmarked_outp.pgm", "-output-endian", "big"],    // To decompress local test image
-            // "args": ["-d", "-nomarkers", "-noruns", "-rows", "512", "-columns", "768", "-bits", "5", "-T1", "3", "-T2", "7", "-T3", "21", "-input-file", "/home/andreas/Desktop/ProfileProject/JPEG-LS-HDL/kodak_dataset/sim_output_red.jls", "-output-file", "/home/andreas/Desktop/ProfileProject/JPEG-LS-HDL/kodak_dataset/sim_output_red.pgm", "-output-endian", "big"],
+            "args": ["-noruns", "-rows", "512", "-columns", "768", "-rbits", "8", "-gbits", "8", "-bbits", "8", "-rT1", "3", "-rT2", "7", "-rT3", "21","-gT1", "3", "-gT2", "7", "-gT3", "21","-bT1", "3", "-bT2", "7", "-bT3", "21", "-rlimit", "32", "-glimit", "32", "-blimit", "32", "-input-file", "/home/faurskov/Documents/PP/JPEG-LS-HDL/SW/decode_testers/data_tmp/kodim23.jls", "-output-file", "/home/faurskov/Documents/PP/JPEG-LS-HDL/SW/decode_testers/data_tmp/kodim23_decode.ppm", "-output-endian", "big"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
