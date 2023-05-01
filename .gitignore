@@ -2,3 +2,5 @@ vivado*
 vitis_project*
 *.tmp
 .Xil
+
+**/data_tmp/*
