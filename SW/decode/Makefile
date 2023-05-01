@@ -14,13 +14,13 @@ CPLUSPLUS_ALLDEFINES = -DUSEOWNLOG2=1 -DHASGETHOSTID=1 -DHASGETHOSTIDPROTOTYPE=1
 
 CPLUSPLUS_SRCS = rawnjl2.cc getoptns.cc bnopti.cc bnopto.cc mesgtext.cc
 
-all:	rawnjl2
+all:	rawnjl2_decode
 
-rawnjl2: $(CPLUSPLUS_SRCS)
-	$(CCC) $(CPLUSPLUS_ALLDEFINES) -o rawnjl2 $(CPLUSPLUS_SRCS)
+rawnjl2_decode: $(CPLUSPLUS_SRCS)
+	$(CCC) $(CPLUSPLUS_ALLDEFINES) -o rawnjl2_decode $(CPLUSPLUS_SRCS)
 
 clean:
-	rm -f rawnjl2 core *% data/*.cmp data/*.jls *.bak
+	rm -f rawnjl2_decode core *% data/*.cmp data/*.jls *.bak
 
 test:
 	@echo Testing lossless on tiny image from standard
