@@ -3,3 +3,4 @@
 /image_split/*.pgm
 *.txt
 *.jls
+*.csv

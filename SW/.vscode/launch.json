@@ -5,13 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: waveform_to_image",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+              "./camera_measurements.csv"  
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Python: transmit_image",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
                 "../kodak_dataset/no_border_low_res.ppm",
-                "-ptx", "/dev/ttyUSB1"
+                "-ptx",
+                "/dev/ttyUSB1"
             ],
             "console": "integratedTerminal",
             "justMyCode": false
