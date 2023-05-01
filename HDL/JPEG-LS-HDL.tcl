@@ -18,16 +18,6 @@
 proc checkRequiredFiles { origin_dir} {
   set status true
   set files [list \
- "[file normalize "$origin_dir/vivado_project/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_buffer.dcp"]"\
-  ]
-  foreach ifile $files {
-    if { ![file isfile $ifile] } {
-      puts " Could not find local file $ifile "
-      set status false
-    }
-  }
-
-  set files [list \
  "[file normalize "$origin_dir/src/golomb_coder.vhd"]"\
  "[file normalize "$origin_dir/src/golomb_top.vhd"]"\
  "[file normalize "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"]"\
@@ -712,27 +702,6 @@ set_property -name "top" -value "TB_golomb_coder_impl" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
-# Set 'utils_1' fileset object
-set obj [get_filesets utils_1]
-# Add local files from the original project (-no_copy_sources specified)
-set files [list \
- [file normalize "${origin_dir}/vivado_project/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_buffer.dcp" ]\
-]
-set added_files [add_files -fileset utils_1 $files]
-
-# Set 'utils_1' fileset file properties for remote files
-# None
-
-# Set 'utils_1' fileset file properties for local files
-set file "synth_1/output_buffer.dcp"
-set file_obj [get_files -of_objects [get_filesets utils_1] [list "*$file"]]
-set_property -name "netlist_only" -value "0" -objects $file_obj
-
-
-# Set 'utils_1' fileset properties
-set obj [get_filesets utils_1]
-
-
 # Adding sources referenced in BDs, if not already added
 if { [get_files HWT_cam_sim_clk.xci] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
@@ -949,7 +918,7 @@ proc cr_bd_BD_pl_test { parentCell } {
   set PL_test_cam_rom [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 PL_test_cam_rom ]
   set_property -dict [list \
     CONFIG.Byte_Size {8} \
-    CONFIG.Coe_File {/home/faurskov/Documents/PP/JPEG-LS-HDL/HDL/hw_tests/no_border_low_res.coe} \
+    CONFIG.Coe_File {/home/andreas/Desktop/ProfileProject/JPEG-LS-HDL/HDL/hw_tests/no_border_low_res.coe} \
     CONFIG.EN_SAFETY_CKT {true} \
     CONFIG.Fill_Remaining_Memory_Locations {true} \
     CONFIG.Load_Init_File {true} \
@@ -1090,7 +1059,6 @@ if { $obj != "" } {
 set obj [get_runs synth_1]
 set_property -name "constrset" -value "block_constr" -objects $obj
 set_property -name "needs_refresh" -value "1" -objects $obj
-set_property -name "incremental_checkpoint" -value "$proj_dir/JPEG-LS-HDL.srcs/utils_1/imports/synth_1/output_buffer.dcp" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
 
