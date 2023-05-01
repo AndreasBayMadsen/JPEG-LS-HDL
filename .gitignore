@@ -4,3 +4,5 @@ vitis_project*
 .Xil
 
 **/data_tmp/*
+
+**/__pycache__/*
