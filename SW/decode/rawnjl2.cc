@@ -679,7 +679,7 @@ struct ColorContext {
 
 		// Initialization as per Annex A.2.1
 
-		Int32 RANGE = FloorDivision(MAXVAL+2*NEAR,2*NEAR+1)+1;	// int not unsigned to avoid need for cast when used
+		RANGE = FloorDivision(MAXVAL+2*NEAR,2*NEAR+1)+1;	// int not unsigned to avoid need for cast when used
 
 		bpp = Maximum(2,Ceiling(Log(MAXVAL+1)));	// Number of bits needed to represent MAXVAL with a minumum of 2
 		qbpp = Ceiling(Log(RANGE));		// Number of bits needed to represent a mapped error value
@@ -726,8 +726,6 @@ struct ColorContext {
 		Nn[365-365]=Nn[366-365]=0;
 
 		// The run variables seem to need to live beyond a single run or row !!!
-
-		unsigned RUNIndex = 0;
 
 		thisRow = new Uint16[COLUMNS];
 		prevRow = new Uint16[COLUMNS];
@@ -1097,7 +1095,7 @@ void decomp_single_pixel(BinaryInputStream& in, Uint16 row, Uint16 col, ColorCon
 		// Figure A.10 Prediction error Golomb encoding and decoding...
 
 		Uint16 k = determineGolombParameter(ctx.N[Q],ctx.A[Q]);
-		
+
 		Uint32 MErrval;
 		Int32 Errval;
 		Int32 updateErrval;
