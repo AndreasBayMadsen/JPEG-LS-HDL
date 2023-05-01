@@ -645,6 +645,8 @@ main(int argc,char **argv)
 	bool useJPEGmarkers=!options.get("nomarkers");
 	bool useRunMode=!options.get("noruns");
 
+	useRunMode = false;
+
 	unsigned rows=0;
 	if ((!decompressing || !useJPEGmarkers) && !options.get("rows",rows) && !options.get("height",rows) && !options.get("h",rows)) {
 		cerr << EMsgDC(NeedOption) << " - rows" << endl;

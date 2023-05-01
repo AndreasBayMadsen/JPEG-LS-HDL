@@ -575,10 +575,6 @@ codecRunEndSample(Uint16 &Ix,Int32 Ra,Int32 Rb,Int32 RANGE,Uint16 NEAR,Uint32 MA
 	++N[Q];
 }
 
-static const char* concat_chars(char text1, string text2) {
-	return (string(1, text1) + text2).c_str();
-}
-
 struct ColorContext {
 
 	const Uint16 nContexts = 365;	// plus two more run mode interruption contexts
@@ -625,7 +621,9 @@ struct ColorContext {
 
 	unsigned RUNIndex{0};
 
-	ColorContext(GetNamedOptions& options, char opt_prefix) {
+	ColorContext(GetNamedOptions& options, string opt_prefix) {
+
+		// cout << "Constructing: " << opt_prefix << endl;
 
 		Assert(COLUMNS > 0);
 		Assert(ROWS > 0);
@@ -637,36 +635,36 @@ struct ColorContext {
 		if (!RESET) RESET=64;		// May have been set on command line
 
 		unsigned t1;
-		if ( !options.get(concat_chars(opt_prefix, "T1"),t1) && !options.get(concat_chars(opt_prefix, "Ta"),t1)) {
+		if ( !options.get((opt_prefix + "T1").c_str(),t1) && !options.get((opt_prefix + "Ta").c_str(),t1)) {
 			cerr << EMsgDC(NeedOption) << " - [rgb]T1" << endl;
 			bad=true;
 		}
 		T1=t1;
 
 		unsigned t2;
-		if ( !options.get(concat_chars(opt_prefix, "T2"),t2) && !options.get(concat_chars(opt_prefix, "Tb"),t2)) {
+		if ( !options.get((opt_prefix + "T2").c_str(),t2) && !options.get((opt_prefix + "Tb").c_str(),t2)) {
 			cerr << EMsgDC(NeedOption) << " - [rgb]T2" << endl;
 			bad=true;
 		}
 		T2=t2;
 		unsigned t3;
-		if ( !options.get(concat_chars(opt_prefix, "T3"),t3) && !options.get(concat_chars(opt_prefix, "Tc"),t3)) {
+		if ( !options.get((opt_prefix + "T3").c_str(),t3) && !options.get((opt_prefix + "Tc").c_str(),t3)) {
 			cerr << EMsgDC(NeedOption) << " - [rgb]T3" << endl;
 			bad=true;
 		}
 		T3=t3;
 
 		unsigned bits=0;
-		if ( !options.get(concat_chars(opt_prefix, "bits"),bits) && !options.get(concat_chars(opt_prefix, "depth"),bits)) {
-			cerr << EMsgDC(NeedOption) << " - bits" << endl;
+		if ( !options.get((opt_prefix + "bits").c_str() ,bits) && !options.get((opt_prefix + "depth").c_str(),bits)) {
+			cerr << EMsgDC(NeedOption) << " - [rgb]bits" << endl;
 			bad=true;
 		}
 		Assert(bits <= 16);
 		P = bits;
 
 		unsigned limit=0;
-		if ( !options.get(concat_chars(opt_prefix, "limit"),limit) && !options.get(concat_chars(opt_prefix, "lim"),limit)) {
-			cerr << EMsgDC(NeedOption) << " - limit" << endl;
+		if ( !options.get((opt_prefix + "limit").c_str(),limit) && !options.get((opt_prefix + "lim").c_str(),limit)) {
+			cerr << EMsgDC(NeedOption) << " - [rgb]limit" << endl;
 			bad=true;
 		}
 		LIMIT = limit;
@@ -695,15 +693,15 @@ struct ColorContext {
 
 		// Initialization of variables ...
 
-		Int32	*N = new Int32[nContexts+2];	// counters for context type occurence [0..nContexts+2-1]
+		N = new Int32[nContexts+2];	// counters for context type occurence [0..nContexts+2-1]
 							// [nContexts],[nContexts+1] for run mode interruption
-		Uint32	*A = new Uint32[nContexts+2];	// accumulated prediction error magnitude [0..nContexts-1]
+		A = new Uint32[nContexts+2];	// accumulated prediction error magnitude [0..nContexts-1]
 							// [nContexts],[nContexts+1] for run mode interruption
-		Int32	*B = new Int32[nContexts];	// auxilliary counters for bias cancellation [0..nContexts-1]
-		Int32	*C = new Int32[nContexts];	// counters indicating bias correction value [0..nContexts-1]
+		B = new Int32[nContexts];	// auxilliary counters for bias cancellation [0..nContexts-1]
+		C = new Int32[nContexts];	// counters indicating bias correction value [0..nContexts-1]
 							// (never -ve but often used as -N[Q] so int not unsigned saves cast)
 
-		Int32	*Nn = new Int32[2];		// negative prediction error for run interruption [365..366]
+		Nn = new Int32[2];		// negative prediction error for run interruption [365..366]
 
 		Assert(N);
 		Assert(A);
@@ -731,8 +729,8 @@ struct ColorContext {
 
 		unsigned RUNIndex = 0;
 
-		Uint16 *thisRow = new Uint16[COLUMNS];
-		Uint16 *prevRow = new Uint16[COLUMNS];
+		thisRow = new Uint16[COLUMNS];
+		prevRow = new Uint16[COLUMNS];
 		Assert(thisRow);
 		Assert(prevRow);
 
@@ -760,6 +758,8 @@ void decomp_single_pixel(BinaryInputStream& in, Uint16 row, Uint16 col, ColorCon
 int
 main(int argc,char **argv)
 {
+
+	// cout << "Starting program" << endl;
 	// Create file for debugging
 	ofstream dbg_file;
 
@@ -786,9 +786,9 @@ main(int argc,char **argv)
 
 	ColorContext::set_col_row_dims(cols, rows);
 
-	struct ColorContext red(options, 'r');
-	struct ColorContext green(options, 'g');
-	struct ColorContext blue(options, 'b');
+	struct ColorContext red(options, "r");
+	struct ColorContext green(options, "g");
+	struct ColorContext blue(options, "b");
 
 	input_options.done();
 	output_options.done();
@@ -840,8 +840,6 @@ main(int argc,char **argv)
 
 	bool success=true;
 
-	
-
 	Uint16 max_bpp = red.bpp;
 	max_bpp = (max_bpp > green.bpp) ? max_bpp : green.bpp;
 	max_bpp = (max_bpp > blue.bpp) ? max_bpp : blue.bpp;
@@ -872,8 +870,13 @@ main(int argc,char **argv)
 	for (Uint16 row = 0; row < red.ROWS; ++row) {
 		for (Uint16 col=0; col<red.COLUMNS; ++col) {
 
+			// cout << "red" << endl;
 			decomp_single_pixel(in, row, col, red, 0);
+			
+			// cout << "green"  << endl;
 			decomp_single_pixel(in, row, col, green, 0);
+			
+			// cout << "blue" << endl;
 			decomp_single_pixel(in, row, col, blue, 0);
 		}
 
@@ -1084,6 +1087,8 @@ void decomp_single_pixel(BinaryInputStream& in, Uint16 row, Uint16 col, ColorCon
 		else				Px = (Int32)Ra+Rb-Rc;
 
 		// Figure A.6 Prediction correction and clamping ...
+
+		// cout << "Q: "<< Q << endl;
 
 		Px = Px + ((SIGN > 0) ? ctx.C[Q] : -ctx.C[Q]);
 
