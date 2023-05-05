@@ -54,7 +54,7 @@
 // (in parentheses) to your own signal names.
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
-context_memory_block your_instance_name (
+context_modeller_bram your_instance_name (
   .clka(clka),    // input wire clka
   .wea(wea),      // input wire [0 : 0] wea
   .addra(addra),  // input wire [8 : 0] addra
@@ -65,7 +65,7 @@ context_memory_block your_instance_name (
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 
-// You must compile the wrapper file context_memory_block.v when simulating
-// the core, context_memory_block. When compiling the wrapper file, be sure to
+// You must compile the wrapper file context_modeller_bram.v when simulating
+// the core, context_modeller_bram. When compiling the wrapper file, be sure to
 // reference the Verilog simulation library.
 

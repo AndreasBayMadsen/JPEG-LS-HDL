@@ -59,8 +59,12 @@ architecture Behavioral of TB_full_sim is
     component JPEG_LS_module
         Generic (   image_height    : INTEGER   := 500;     -- Image dimensions in number of pixels
                     image_width     : INTEGER   := 500;
-                    L_max           : INTEGER   := 32;      -- Maximum code size per pixel
-                    k_width         : INTEGER   := 5
+                    L_max_r         : INTEGER   := 20;      -- Maximum code size per pixel
+                    L_max_g         : INTEGER   := 24;
+                    L_max_b         : INTEGER   := 20;
+                    k_width_r       : INTEGER := 5;
+                    k_width_g       : INTEGER := 5;
+                    k_width_b       : INTEGER := 5     
                     );
         Port (  resetn  : in    STD_LOGIC                       := '1';             -- Active LOW reset signal
                 -- Camera interface
@@ -70,12 +74,13 @@ architecture Behavioral of TB_full_sim is
                 vsync   : in    STD_LOGIC                       := '0';             -- Frame synchronization signal
                 -- Output
                 new_pixel       : out   STD_LOGIC                           := '0';
-                encoded_r       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-                encoded_g       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-                encoded_b       : out STD_LOGIC_VECTOR(L_max-1 downto 0)    := (others=>'0');
-                encoded_size_r  : out UNSIGNED(k_width downto 0)            := (others=>'0');
-                encoded_size_g  : out UNSIGNED(k_width downto 0)            := (others=>'0');
-                encoded_size_b  : out UNSIGNED(k_width downto 0)            := (others=>'0')
+                valid_data      : out   STD_LOGIC                           := '0';
+                encoded_r       : out STD_LOGIC_VECTOR(L_max_r-1 downto 0)    := (others=>'0');
+                encoded_g       : out STD_LOGIC_VECTOR(L_max_g-1 downto 0)    := (others=>'0');
+                encoded_b       : out STD_LOGIC_VECTOR(L_max_b-1 downto 0)    := (others=>'0');
+                encoded_size_r  : out STD_LOGIC_VECTOR(k_width_r downto 0)    := (others=>'0');
+                encoded_size_g  : out STD_LOGIC_VECTOR(k_width_g downto 0)    := (others=>'0');
+                encoded_size_b  : out STD_LOGIC_VECTOR(k_width_b downto 0)    := (others=>'0')
                 );
     end component;
     
@@ -86,6 +91,11 @@ architecture Behavioral of TB_full_sim is
     constant IMAGE_FILE_2   : STRING    := "../../../../../../kodak_dataset/kodim01.ppm";
     constant IMAGE_HEIGHT   : INTEGER   := 512;
     constant IMAGE_WIDTH    : INTEGER   := 768;
+    
+        -- Module settings
+    constant L_max_r    : INTEGER   := 20;
+    constant L_max_g    : INTEGER   := 24;
+    constant L_max_b    : INTEGER   := 20;
     
     -- Signal declarations
         -- Global signals
@@ -100,12 +110,12 @@ architecture Behavioral of TB_full_sim is
     
         -- Output
     signal new_pixel        : STD_LOGIC := '0';
-    signal encoded_r        : STD_LOGIC_VECTOR(31 downto 0)    := (others=>'0');
-    signal encoded_g        : STD_LOGIC_VECTOR(31 downto 0)    := (others=>'0');
-    signal encoded_b        : STD_LOGIC_VECTOR(31 downto 0)    := (others=>'0');
-    signal encoded_size_r   : UNSIGNED(5 downto 0)            := (others=>'0');
-    signal encoded_size_g   : UNSIGNED(5 downto 0)            := (others=>'0');
-    signal encoded_size_b   : UNSIGNED(5 downto 0)            := (others=>'0');
+    signal encoded_r        : STD_LOGIC_VECTOR(L_max_r-1 downto 0)  := (others=>'0');
+    signal encoded_g        : STD_LOGIC_VECTOR(L_max_g-1 downto 0)  := (others=>'0');
+    signal encoded_b        : STD_LOGIC_VECTOR(L_max_b-1 downto 0)  := (others=>'0');
+    signal encoded_size_r   : STD_LOGIC_VECTOR(5 downto 0)     := (others=>'0');
+    signal encoded_size_g   : STD_LOGIC_VECTOR(5 downto 0)     := (others=>'0');
+    signal encoded_size_b   : STD_LOGIC_VECTOR(5 downto 0)     := (others=>'0');
     
     signal size_r_int       : INTEGER   := 0;
     signal size_g_int       : INTEGER   := 0;
@@ -139,7 +149,13 @@ begin
     DUT: JPEG_LS_module
     generic map(
         image_height    => IMAGE_HEIGHT,
-        image_width     => IMAGE_WIDTH
+        image_width     => IMAGE_WIDTH,
+        L_max_r         => L_max_r,
+        L_max_g         => L_max_g,
+        L_max_b         => L_max_b,
+        k_width_r       => 5,
+        k_width_g       => 5,
+        k_width_b       => 5
     )
     port map(
         resetn      => resetn,
@@ -236,8 +252,8 @@ begin
     -- Signal assignments
     resetn      <= '1';
     pixel_vec   <= std_logic_vector(pixel_uns);
-    size_r_int  <= to_integer(encoded_size_r);
-    size_g_int  <= to_integer(encoded_size_g);
-    size_b_int  <= to_integer(encoded_size_b);
+    size_r_int  <= to_integer(unsigned(encoded_size_r));
+    size_g_int  <= to_integer(unsigned(encoded_size_g));
+    size_b_int  <= to_integer(unsigned(encoded_size_b));
 
 end Behavioral;

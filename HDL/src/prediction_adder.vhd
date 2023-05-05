@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 03/06/2023 03:02:41 PM
+-- Create Date: 05/01/2023 02:27:55 PM
 -- Design Name: 
 -- Module Name: prediction_adder - Behavioral
 -- Project Name: 
@@ -21,11 +21,11 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
-use IEEE.NUMERIC_STD.ALL;
-use IEEE.MATH_REAL.ALL;
+--use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -33,86 +33,81 @@ use IEEE.MATH_REAL.ALL;
 --use UNISIM.VComponents.all;
 
 entity prediction_adder is
-    Generic(
-        color_res       :   INTEGER := 8;
-        n_size          :   integer := 7;
-        a_size          :   integer := 15;
-        b_size          :   integer := 9;
-        c_size          :   integer := 8;
-        k_size          :   integer := 5
-    );
-    Port ( 
-        pclk            : in    STD_LOGIC;
-        en              : in    STD_LOGIC;
-        valid_data      : in    STD_LOGIC;
-        sign_flag       : in    STD_LOGIC;
-        pixel           : in    unsigned (color_res - 1 downto 0);
-        fixed_pred      : in    unsigned (color_res - 1 downto 0);
-        C               : in    signed (c_size - 1 downto 0);
-        B               : in    signed (b_size - 1 downto 0);
-        N               : in    unsigned (n_size - 1 downto 0);
-        k               : in    unsigned (k_size -1 downto 0);
-        error           : out   signed (color_res - 1 downto 0);
-        mapped_error    : out   unsigned (color_res - 1 downto 0));
+    Generic (   color_res   : INTEGER   := 5;   -- Number of bits for the given color
+                C_size      : INTEGER   := 5    -- Should be the same as 'color_res'
+                );
+    Port (  -- Inputs
+                -- Pixel data
+            pixel       : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
+            fixed_pred  : in    UNSIGNED(color_res-1 downto 0)  := (others=>'0');
+                -- Context data
+            sign        : in    STD_LOGIC                       := '0';
+            C           : in    SIGNED(C_size-1 downto 0)       := (others=>'0');
+                -- Output
+            error       : out   SIGNED(color_res-1 downto 0)    := (others=>'0')
+            );
 end prediction_adder;
 
 architecture Behavioral of prediction_adder is
-
-    -- System constants
+    -- Constant declarations
     constant alpha  : INTEGER   := 2**color_res;
 
-    constant mod_lim : signed(color_res + 1 downto 0) := to_signed(integer(ceil(real(alpha) / 2.0)), color_res + 2);
-
-    signal pixel_latch           :    unsigned (color_res - 1 downto 0) := (others=>'0');
-    signal fixed_pred_latch      :    unsigned (color_res - 1 downto 0) := (others=>'0');
-    signal sign_flag_latch       :    STD_LOGIC := '0';
-
-    signal pred_1 : signed(color_res + 1 downto 0);
-    signal pred_2 : signed(color_res + 1 downto 0);
-    signal pred_3 : signed(color_res + 1 downto 0);
+    -- Signal declarations
+    signal pixel_int        : INTEGER   := 0;
+    signal fixed_pred_int   : INTEGER   := 0;
+    signal C_int            : INTEGER   := 0;
     
-    signal pred_er_1 : signed(color_res + 1 downto 0);
-    signal pred_er_2 : signed(color_res + 1 downto 0);
-    signal pred_er_3 : signed(color_res + 1 downto 0);
+    signal corr_pred        : INTEGER   := 0;   -- Bias corrected prediction
     
-    signal mapped_0_flag : STD_LOGIC;
-    signal error_positive_flag : STD_LOGIC;
-    
-    signal mapped_er_1 : unsigned(color_res + 1 downto 0);
-
 begin
 
-    process (pclk, en) 
+    -- Correct bias of fixed prediction
+    bias_correct: process(fixed_pred_int, C_int, sign)
+        variable corr_pred_var  : INTEGER   := 0;
     begin
-        if rising_edge(pclk) and en = '1' then
-            pixel_latch <= pixel;
-            fixed_pred_latch <= fixed_pred;
-            sign_flag_latch <= sign_flag;
+        -- Fix bias
+        if sign = '0' then
+            corr_pred_var := fixed_pred_int + C_int;
+        else
+            corr_pred_var := fixed_pred_int - C_int;
         end if;
+        
+        -- Clamp to range [0, alpha-1]  NOTE: I am not sure if these expressions are inverting (wrong) in RTL
+        if corr_pred_var < 0 then
+            corr_pred_var := 0;
+        elsif corr_pred_var >= alpha then
+            corr_pred_var := alpha-1;
+        end if;
+        
+        corr_pred <= corr_pred_var;
+        
+    end process;
+    
+    -- Compute prediction error
+    error_calc: process(pixel_int, corr_pred, sign)
+        variable err_var    : INTEGER   := 0;
+    begin
+        err_var := pixel_int - corr_pred;   -- Prediction error
+        
+        -- Adjust sign to context
+        if sign = '1' then  -- NOTE: Not sure if this inverts in RTL (wrong)
+            err_var := -err_var;
+        end if;
+        
+        -- Reduce with modulo
+        if err_var < 0 then
+            err_var := err_var + alpha;
+        end if;
+        if err_var >= (alpha+1)/2 then  -- NOTE: I don't see this in the RTL view
+            err_var := err_var - alpha;
+        end if;
+        
+        error <= to_signed(err_var, error'length);
     end process;
 
-    pred_1 <= signed("00" & fixed_pred_latch);
-    pred_2 <= pred_1 + C when sign_flag_latch = '0' else pred_1 - C;
-    pred_3 <= to_signed(alpha - 1, pred_3'length) when pred_2 > to_signed(alpha - 1, pred_2'length) else
-              to_signed(0, pred_3'length) when pred_2 < to_signed(0, pred_2'length) else
-              pred_2;
-              
-    pred_er_1 <= signed("00" & pixel_latch) - pred_3 when sign_flag_latch = '0' else
-                 - signed("00" & pixel_latch) + pred_3;
-                 
-    pred_er_2 <= pred_er_1 mod alpha;
-    
-    pred_er_3 <= pred_er_2 when pred_er_2 < mod_lim else pred_er_2 - alpha;
-    
-    mapped_0_flag <= '1' when (k = to_unsigned(0, k'length) and shift_left(resize(B, B'length + 1), 1) <= -signed('0' & N)) else '0';    -- BURDE DETTE IKKE VÆRE '<='?
-    error_positive_flag <= '1' when pred_er_3 >= to_signed(0, pred_er_3'length) else '0';
-    
-    mapped_er_1 <= unsigned(shift_left(pred_er_3, 1) + 1) when mapped_0_flag = '1' and error_positive_flag = '1' else
-                   unsigned(- shift_left(pred_er_3 + 1, 1)) when mapped_0_flag = '1' and error_positive_flag = '0' else
-                   unsigned(shift_left(pred_er_3, 1)) when error_positive_flag = '1' else
-                   unsigned(- shift_left(pred_er_3, 1) - 1);
-       
-    error <= resize(pred_er_3, error'length);
-    mapped_error <= resize(mapped_er_1, mapped_error'length);
-    
+    -- Signal assignments
+    pixel_int       <= to_integer(pixel);
+    fixed_pred_int  <= to_integer(fixed_pred);
+    C_int           <= to_integer(C);
+
 end Behavioral;
