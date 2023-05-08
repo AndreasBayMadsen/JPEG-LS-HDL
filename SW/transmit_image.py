@@ -81,14 +81,16 @@ def transmit_image(image_path: str, width: int, height: int, port: str, baud: in
             ser_tx.write(values)
 
 def main(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_path):
-     
-    transmit_image(image_path, width, height, port_tx, baud_tx)
+    
+    
+    if port_tx:
+        transmit_image(image_path, width, height, port_tx, baud_tx)
 
     # Determine output path
-    if output_path==None:
+    if output_path is None:
         output_path = os.path.splitext(image_path)[0] + '.jls'
 
-    if port_rx==None:
+    if port_rx is None:
         port_rx = port_tx
         baud_rx = baud_tx
         
@@ -97,10 +99,10 @@ def main(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_p
 if __name__ == "__main__":
     # Run argument parser
     parser = argparse.ArgumentParser(description="Program used to transmit a .ppm image over UART")
-    parser.add_argument('image_path', help="Path to the .ppm image")
+    parser.add_argument('-i','--image_path', required=False, help="Path to the .ppm image")
     parser.add_argument('-wi', '--width', required=False, help="Width to resize image")
     parser.add_argument('-hi', '--height', required=False, help="Height to resize image")
-    parser.add_argument('-ptx', '--port_tx', required=True, help="Serial port to use for transmission")
+    parser.add_argument('-ptx', '--port_tx', required=False, help="Serial port to use for transmission")
     parser.add_argument('-prx', '--port_rx', required=False, help="Serial port to use for receiving")
     parser.add_argument('-btx', '--baud_tx', required=False, default=115200, help="Baud rate of transmit port - defaults to 115200")
     parser.add_argument('-brx', '--baud_rx', required=False, default=115200, help="Baud rate of receive port- defaults to 115200")
