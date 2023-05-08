@@ -34,11 +34,11 @@ use STD.TEXTIO.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity TB_full_sim is
+entity TB_full_sim_synth is
 --  Port ( );
-end TB_full_sim;
+end TB_full_sim_synth;
 
-architecture Behavioral of TB_full_sim is
+architecture Behavioral of TB_full_sim_synth is
     -- Component declarations
     component camera_simulator
         Generic (
@@ -56,40 +56,28 @@ architecture Behavioral of TB_full_sim is
             );
     end component;
     
-    component JPEG_LS_module
-        Generic (   image_height    : INTEGER   := 512;     -- Image dimensions in number of pixels
-                    image_width     : INTEGER   := 768;
-                    L_max_r         : INTEGER   := 20;      -- Maximum code size per pixel
-                    L_max_g         : INTEGER   := 24;
-                    L_max_b         : INTEGER   := 20;
-                    k_width_r       : INTEGER   := 5;
-                    k_width_g       : INTEGER   := 5;
-                    k_width_b       : INTEGER   := 5;
-                    fps_downscale   : INTEGER   := 1
-                    );
-        Port (  resetn  : in    STD_LOGIC                       := '1';             -- Active LOW reset signal
-                -- Camera interface
-                pclk    : in    STD_LOGIC                       := '1';             -- Pixel clock
-                pixel   : in    STD_LOGIC_VECTOR(7 downto 0)    := (others=>'0');   -- Parallel bus for pixel data
-                href    : in    STD_LOGIC                       := '0';             -- Row synchronization signal
-                vsync   : in    STD_LOGIC                       := '0';             -- Frame synchronization signal
-                -- Output
-                new_pixel       : out   STD_LOGIC                           := '0';
-                valid_data      : out   STD_LOGIC                           := '0';
-                encoded_r       : out STD_LOGIC_VECTOR(L_max_r-1 downto 0)    := (others=>'0');
-                encoded_g       : out STD_LOGIC_VECTOR(L_max_g-1 downto 0)    := (others=>'0');
-                encoded_b       : out STD_LOGIC_VECTOR(L_max_b-1 downto 0)    := (others=>'0');
-                encoded_size_r  : out STD_LOGIC_VECTOR(k_width_r downto 0)    := (others=>'0');
-                encoded_size_g  : out STD_LOGIC_VECTOR(k_width_g downto 0)    := (others=>'0');
-                encoded_size_b  : out STD_LOGIC_VECTOR(k_width_b downto 0)    := (others=>'0')
+    component JPEG_LS_module_top
+        Port (  resetn          : in    STD_LOGIC                       := '1';
+                pclk            : in    STD_LOGIC                       := '1';
+                pixel           : in    STD_LOGIC_VECTOR(7 downto 0)    := (others=>'0');
+                href            : in    STD_LOGIC                       := '0';
+                vsync           : in    STD_LOGIC                       := '0';
+                new_pixel       : out   STD_LOGIC                       := '0';
+                valid_data      : out   STD_LOGIC                       := '0';
+                encoded_r       : out   STD_LOGIC_VECTOR(19 downto 0)   := (others=>'0');
+                encoded_g       : out   STD_LOGIC_VECTOR(23 downto 0)   := (others=>'0');
+                encoded_b       : out   STD_LOGIC_VECTOR(19 downto 0)   := (others=>'0');
+                encoded_size_r  : out   STD_LOGIC_VECTOR(5 downto 0)    := (others=>'0');
+                encoded_size_g  : out   STD_LOGIC_VECTOR(5 downto 0)    := (others=>'0');
+                encoded_size_b  : out   STD_LOGIC_VECTOR(5 downto 0)    := (others=>'0')
                 );
     end component;
     
     -- Constant declarations
         -- Base
     constant PCLK_FREQ_MHZ  : REAL      := 12.0;
-    constant IMAGE_FILE_1   : STRING    := "../../../../../../kodak_dataset/no_border.ppm";
-    constant IMAGE_FILE_2   : STRING    := "../../../../../../kodak_dataset/kodim01.ppm";
+    constant IMAGE_FILE_1   : STRING    := "../../../../../../../kodak_dataset/no_border.ppm";
+    constant IMAGE_FILE_2   : STRING    := "../../../../../../../kodak_dataset/kodim01.ppm";
     constant IMAGE_HEIGHT   : INTEGER   := 512;
     constant IMAGE_WIDTH    : INTEGER   := 768;
     
@@ -147,18 +135,7 @@ begin
         vsync   => vsync
     );
     
-    DUT: JPEG_LS_module
-    generic map(
-        image_height    => IMAGE_HEIGHT,
-        image_width     => IMAGE_WIDTH,
-        L_max_r         => L_max_r,
-        L_max_g         => L_max_g,
-        L_max_b         => L_max_b,
-        k_width_r       => 5,
-        k_width_g       => 5,
-        k_width_b       => 5,
-        fps_downscale   => 1
-    )
+    DUT: JPEG_LS_module_top
     port map(
         resetn      => resetn,
         pclk        => pclk,
@@ -183,9 +160,9 @@ begin
     begin
         -- IMAGE NUMBER 1
         -- Open files
-        file_open(fstatus, red_compressed_ascii, "../../../../../../kodak_dataset/sim_output_1_red.txt", write_mode);
-        file_open(fstatus, green_compressed_ascii, "../../../../../../kodak_dataset/sim_output_1_green.txt", write_mode);
-        file_open(fstatus, blue_compressed_ascii, "../../../../../../kodak_dataset/sim_output_1_blue.txt", write_mode);
+        file_open(fstatus, red_compressed_ascii, "../../../../../../../kodak_dataset/impl_sim_output_1_red.txt", write_mode);
+        file_open(fstatus, green_compressed_ascii, "../../../../../../../kodak_dataset/impl_sim_output_1_green.txt", write_mode);
+        file_open(fstatus, blue_compressed_ascii, "../../../../../../../kodak_dataset/impl_sim_output_1_blue.txt", write_mode);
         
         while pixel_count < IMAGE_HEIGHT*IMAGE_WIDTH-1 loop
             wait until rising_edge(new_pixel);
@@ -215,9 +192,9 @@ begin
         
         -- IMAGE NUMBER 2
         -- Open files
-        file_open(fstatus, red_compressed_ascii, "../../../../../../kodak_dataset/sim_output_2_red.txt", write_mode);
-        file_open(fstatus, green_compressed_ascii, "../../../../../../kodak_dataset/sim_output_2_green.txt", write_mode);
-        file_open(fstatus, blue_compressed_ascii, "../../../../../../kodak_dataset/sim_output_2_blue.txt", write_mode);
+        file_open(fstatus, red_compressed_ascii, "../../../../../../../kodak_dataset/impl_sim_output_2_red.txt", write_mode);
+        file_open(fstatus, green_compressed_ascii, "../../../../../../../kodak_dataset/impl_sim_output_2_green.txt", write_mode);
+        file_open(fstatus, blue_compressed_ascii, "../../../../../../../kodak_dataset/impl_sim_output_2_blue.txt", write_mode);
         
         while pixel_count < IMAGE_HEIGHT*IMAGE_WIDTH-1 loop
             wait until rising_edge(new_pixel);

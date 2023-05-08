@@ -70,6 +70,12 @@ architecture Behavioral of collector is
       );
     end component;
     
+    -- DEBUGGING
+    -- Attribute declarations
+    attribute DONT_TOUCH    : STRING;
+    
+    -- DEBUGGING
+    
     -- Type declarations
     type DESERIALIZER_FSM_TYPE is (IDLE, RUNNING, END_OF_LINE);
     type FIFO_FSM_TYPE is (RUNNING, RESET);
@@ -106,6 +112,8 @@ architecture Behavioral of collector is
     signal D_buffer     : UNSIGNED(15 downto 0) := (others=>'0');
     signal row_counter  : INTEGER   := 0;
     signal col_counter  : INTEGER   := 0;
+    attribute DONT_TOUCH of row_counter : signal is "TRUE";
+    attribute DONT_TOUCH of col_counter : signal is "TRUE";
         
     -- Constant declarations
     constant NUM_ADDR   : INTEGER   := 2**write_addr'length;  -- Number of addresses in the FIFO

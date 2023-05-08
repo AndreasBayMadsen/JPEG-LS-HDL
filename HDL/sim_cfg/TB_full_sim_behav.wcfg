@@ -11,20 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="16,022,861.032 ns"></ZoomStartTime>
-      <ZoomEndTime time="16,023,576.033 ns"></ZoomEndTime>
-      <Cursor1Time time="16,023,368.622 ns"></Cursor1Time>
+      <ZoomStartTime time="60.167666666 ms"></ZoomStartTime>
+      <ZoomEndTime time="203.967666667 ms"></ZoomEndTime>
+      <Cursor1Time time="180.001000000 ms"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="192"></NameColumnWidth>
-      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+      <ValueColumnWidth column_width="88"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="26" />
-   <wave_markers>
-      <marker label="" time="16022868630" />
-      <marker label="" time="16023035294" />
-      <marker label="" time="16023201958" />
-   </wave_markers>
    <wvobject type="group" fp_name="group250">
       <obj_property name="label">Camera</obj_property>
       <obj_property name="DisplayName">label</obj_property>

@@ -34,14 +34,15 @@ use IEEE.MATH_REAL.ALL;
 --use UNISIM.VComponents.all;
 
 entity JPEG_LS_module is
-    Generic (   image_height    : INTEGER   := 500;     -- Image dimensions in number of pixels
-                image_width     : INTEGER   := 500;
+    Generic (   image_height    : INTEGER   := 512;     -- Image dimensions in number of pixels
+                image_width     : INTEGER   := 768;
                 L_max_r         : INTEGER   := 20;      -- Maximum code size per pixel
                 L_max_g         : INTEGER   := 24;
                 L_max_b         : INTEGER   := 20;
-                k_width_r       : INTEGER := 5;
-                k_width_g       : INTEGER := 5;
-                k_width_b       : INTEGER := 5     
+                k_width_r       : INTEGER   := 5;
+                k_width_g       : INTEGER   := 5;
+                k_width_b       : INTEGER   := 5;
+                fps_downscale   : INTEGER   := 1
                 );
     Port (  resetn  : in    STD_LOGIC                       := '1';             -- Active LOW reset signal
             -- Camera interface
@@ -65,8 +66,9 @@ architecture Behavioral of JPEG_LS_module is
     -- Component declarations
     component collector
         Generic (
-            image_height    : INTEGER   := 500;
-            image_width     : INTEGER   := 500
+            image_height    : INTEGER                   := 500;
+            image_width     : INTEGER                   := 500;
+            fps_downscale   : INTEGER range 1 to 255    := 1
         );
         Port (
             resetn  : in    STD_LOGIC               := '1';
@@ -363,7 +365,9 @@ begin
     pixel_collector: collector  -- Collector for incoming pixels
     generic map(
         image_height    => image_height,
-        image_width     => image_width
+        image_width     => image_width,
+        fps_downscale   => fps_downscale
+        
     )
     port map(
         resetn      => resetn,
