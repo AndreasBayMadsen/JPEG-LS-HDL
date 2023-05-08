@@ -3,8 +3,9 @@ import argparse
 import os
 from pathlib import Path
 import subprocess
+from typing import Tuple
     
-def jls_to_ppm(input_file, output_file=None, *, size, decoder_path, rT=None, gT=None, bT=None, bits=None, limit=None):
+def jls_to_ppm(input_file: str | Path, output_file: str | Path =None, *, size: Tuple[int, int], decoder_path: str | Path, rT:Tuple[int, int, int]=None, gT:Tuple[int, int, int]=None, bT:Tuple[int, int, int]=None, bits:Tuple[int, int, int]=None, limit:Tuple[int, int, int]=None):
     
     if output_file is None:
         path = os.path.dirname(input_file)

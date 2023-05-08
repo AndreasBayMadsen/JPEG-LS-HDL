@@ -3,8 +3,9 @@ import argparse
 import os
 import numpy as np
 from pathlib import Path
+from typing import Tuple
     
-def png_to_ppm(input_file, output_files=None, *, size=None, scale=None):
+def png_to_ppm(input_file:str|Path, output_files:str|Path=None, *, size:Tuple[int, int]=None, scale:Tuple[float, float, float]=None):
     
     if output_files is None:
         path = os.path.dirname(input_file)
