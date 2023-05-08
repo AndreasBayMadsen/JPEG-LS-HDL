@@ -39,9 +39,9 @@ def jls_to_ppm(input_file: str | Path, output_file: str | Path =None, *, size: T
     exec = [decoder_path]
     exec.append("-noruns")
     exec.append("-rows")
-    exec.append(str(size[0]))
-    exec.append("-columns")
     exec.append(str(size[1]))
+    exec.append("-columns")
+    exec.append(str(size[0]))
     exec.append("-rbits")
     exec.append(str(bits[0]))
     exec.append("-gbits")
@@ -93,10 +93,11 @@ def jls_to_ppm(input_file: str | Path, output_file: str | Path =None, *, size: T
         
 def main():
     
-    path = Path("./data_tmp/kodim23.jls")
+    path = Path("../../data_tmp/cutecom.log")
+    decoder_path = "../decode/rawnjl2_decode"
     
     #output_path = Path(".")
-    jls_to_ppm(path, size=(512, 768))#, output_path)
+    jls_to_ppm(path, size=(320, 240), decoder_path=decoder_path, bits=(5,6,5), limit=(20,24,20))#, output_path)
 
         
 if __name__ == "__main__":
