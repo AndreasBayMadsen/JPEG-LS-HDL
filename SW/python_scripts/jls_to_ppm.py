@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import subprocess
     
-def jls_to_ppm(input_file, output_file=None, *, size, rT=None, gT=None, bT=None, bits=None, limit=None):
+def jls_to_ppm(input_file, output_file=None, *, size, decoder_path, rT=None, gT=None, bT=None, bits=None, limit=None):
     
     if output_file is None:
         path = os.path.dirname(input_file)
@@ -35,7 +35,7 @@ def jls_to_ppm(input_file, output_file=None, *, size, rT=None, gT=None, bT=None,
     if limit is None:
         limit = (32, 32, 32)
         
-    exec = ["../decode/rawnjl2_decode"]
+    exec = [decoder_path]
     exec.append("-noruns")
     exec.append("-rows")
     exec.append(str(size[0]))
