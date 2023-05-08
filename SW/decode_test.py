@@ -2,10 +2,10 @@ from pathlib import Path
 import os
 import cv2
 
-from png_to_pgm import png_to_pgm
-from pgm_to_jlsdump import pgm_to_jlsdump
-from jlsdump_to_jls import jlsdump_to_jls
-from jls_to_ppm import jls_to_ppm
+from python_scripts.png_to_pgm import png_to_pgm
+from python_scripts.pgm_to_jlsdump import pgm_to_jlsdump
+from python_scripts.jlsdump_to_jls import jlsdump_to_jls
+from python_scripts.jls_to_ppm import jls_to_ppm
 
 
 def main(input_file, output_folder):
