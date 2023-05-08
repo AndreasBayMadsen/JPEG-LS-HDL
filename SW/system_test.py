@@ -11,6 +11,12 @@ from python_scripts.png_to_ppm import png_to_ppm
 from python_scripts.jls_to_ppm import jls_to_ppm
 from transmit_image import transmit_image
 
+def half_round(num, prec):
+    mult = num*(10**prec)
+    if (mult - np.floor(mult)) >= 0.5:
+        return np.ceil(mult)/(10**prec)
+    else:
+        return np.floor(mult)/(10**prec)
 
 def main(args):
 
@@ -68,7 +74,14 @@ def main(args):
 
         # Print the result
         if result:
-            print("The images are identical.")
+            # Find compression ratio
+            compressed_size = os.path.getsize(jls_file)
+            raw_size        = os.path.getsize(ppm_file)*16/24    # Take RGB565 into account
+            comp_ratio = half_round(raw_size/compressed_size, 4)
+            
+            print("Compression success for {png_file = }")
+            print(f"Compression ratio: {comp_ratio*100}%")
+            
         else:
             raise ValueError(f"The images are not identical for {png_file = }")
 
