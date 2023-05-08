@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import subprocess
     
-def jls_to_ppm(input_file, output_file=None, /, *, size, T=None, bits=None, limit=None):
+def jls_to_ppm(input_file, output_file=None, *, size, rT=None, gT=None, bT=None, bits=None, limit=None):
     
     if output_file is None:
         path = os.path.dirname(input_file)
@@ -20,8 +20,14 @@ def jls_to_ppm(input_file, output_file=None, /, *, size, T=None, bits=None, limi
         name_wo_ext = os.path.splitext(name)[0]
         output_file = os.path.join(path, name_wo_ext + "_decode.ppm")
         
-    if T is None:
-        T = (3, 7, 21)
+    if rT is None:
+        rT = (3, 7, 21)
+    
+    if gT is None:
+        gT = (3, 7, 21)
+    
+    if bT is None:
+        bT = (3, 7, 21)
         
     if bits is None:
         bits = (8, 8, 8)
@@ -48,23 +54,23 @@ def jls_to_ppm(input_file, output_file=None, /, *, size, T=None, bits=None, limi
     exec.append("-blimit")
     exec.append(str(limit[2]))
     exec.append("-rT1")
-    exec.append(str(T[0]))
+    exec.append(str(rT[0]))
     exec.append("-rT2")
-    exec.append(str(T[1]))
+    exec.append(str(rT[1]))
     exec.append("-rT3")
-    exec.append(str(T[2]))
+    exec.append(str(rT[2]))
     exec.append("-gT1")
-    exec.append(str(T[0]))
+    exec.append(str(gT[0]))
     exec.append("-gT2")
-    exec.append(str(T[1]))
+    exec.append(str(gT[1]))
     exec.append("-gT3")
-    exec.append(str(T[2]))
+    exec.append(str(gT[2]))
     exec.append("-bT1")
-    exec.append(str(T[0]))
+    exec.append(str(bT[0]))
     exec.append("-bT2")
-    exec.append(str(T[1]))
+    exec.append(str(bT[1]))
     exec.append("-bT3")
-    exec.append(str(T[2]))
+    exec.append(str(bT[2]))
     exec.append("-input-file")
     exec.append(str(input_file))
     exec.append("-output-file")
