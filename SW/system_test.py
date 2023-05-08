@@ -9,7 +9,7 @@ from pathlib import Path
 
 from python_scripts.png_to_ppm import png_to_ppm
 from python_scripts.jls_to_ppm import jls_to_ppm
-from transmit_image import transmit_image
+from transmit_image import transmit_image, receive_image
 
 def half_round(num, prec):
     mult = num*(10**prec)
@@ -28,62 +28,83 @@ def main(args):
         image_paths = list(path.glob("*.png"))
     else:
         image_paths = [Path(args.image_path)]
-        
+    
     print(f"All images: {image_paths}")
     
-    for image_path in image_paths:
+    # Path to save results in.
+    if args.output_path is None:
+        output_path = os.path.dirname(png_file)
+    else:
+        output_path = Path(args.output_path)
+        
+    compression_path = os.path.join(output_path, "compression.txt")
     
-        png_file = Path(image_path)
+    with open(compression_path, 'w') as compress_file:
+    
+        for image_path in image_paths:
         
-        name = os.path.basename(png_file)
-        name_wo_ext = os.path.splitext(name)[0]
-        
-        # Path to save results in.
-        if args.output_path is None:
-            output_path = os.path.dirname(png_file)
-        else:
-            output_path = Path(args.output_path)
-        
-        ppm_file = os.path.join(output_path, name_wo_ext + ".ppm")
-        
-        scale=(args.red_bits/8.0, args.green_bits/8.0, args.blue_bits/8.0)
-        
-        png_to_ppm(png_file, ppm_file, size=size, scale=scale)
-        
-        jls_file = os.path.join(output_path, name_wo_ext + ".jls")
-        
-        transmit_image(str(ppm_file), size[0], size[1], args.port_tx, args.port_rx, args.baud_tx, args.baud_rx, str(jls_file))
-        
-        decoded_ppm_file = os.path.join(output_path, name_wo_ext + "_decode.ppm")
-        
-        rT = (args.redT1, args.redT2, args.redT3)
-        gT = (args.greenT1, args.greenT2, args.greenT3)
-        bT = (args.blueT1, args.blueT2, args.blueT3)
-        bits = (args.red_bits, args.green_bits, args.blue_bits)
-        limits = (args.red_limit, args.green_limit, args.blue_limit)
-        
-        jls_to_ppm(jls_file, decoded_ppm_file, decoder_path="decode/rawnjl2_decode", size=size, rT=rT, gT=gT, bT=bT, bits=bits, limit=limits)
-        
-        # Compare two ppm files.
-        img1 = cv2.imread(str(ppm_file))
-        img2 = cv2.imread(str(decoded_ppm_file))
-
-        # Compare the images
-        difference = cv2.subtract(img1, img2)
-        result = not cv2.countNonZero(difference)
-
-        # Print the result
-        if result:
-            # Find compression ratio
-            compressed_size = os.path.getsize(jls_file)
-            raw_size        = os.path.getsize(ppm_file)*16/24    # Take RGB565 into account
-            comp_ratio = half_round(raw_size/compressed_size, 4)
+            png_file = Path(image_path)
             
-            print("Compression success for {png_file = }")
-            print(f"Compression ratio: {comp_ratio*100}%")
+            name = os.path.basename(png_file)
+            name_wo_ext = os.path.splitext(name)[0]
             
-        else:
-            raise ValueError(f"The images are not identical for {png_file = }")
+            ppm_file = os.path.join(output_path, name_wo_ext + ".ppm")
+            
+            scale=(args.red_bits/8.0, args.green_bits/8.0, args.blue_bits/8.0)
+            
+            png_to_ppm(png_file, ppm_file, size=size, scale=scale)
+            
+            jls_file = os.path.join(output_path, name_wo_ext + ".jls")
+            
+            transmit_image(str(ppm_file), size[0], size[1], args.port_tx, args.baud_tx)
+            
+            if args.port_rx is None:
+                port_rx = args.port_tx
+                baud_rx = args.baud_tx
+            else:
+                port_rx = args.port_rx
+                baud_rx = args.baud_rx
+                
+            receive_image(port_rx, baud_rx, jls_file)
+            
+            decoded_ppm_file = os.path.join(output_path, name_wo_ext + "_decode.ppm")
+            
+            rT = (args.redT1, args.redT2, args.redT3)
+            gT = (args.greenT1, args.greenT2, args.greenT3)
+            bT = (args.blueT1, args.blueT2, args.blueT3)
+            bits = (args.red_bits, args.green_bits, args.blue_bits)
+            limits = (args.red_limit, args.green_limit, args.blue_limit)
+            
+            jls_to_ppm(jls_file, decoded_ppm_file, decoder_path="decode/rawnjl2_decode", size=size, rT=rT, gT=gT, bT=bT, bits=bits, limit=limits)
+            
+            # Compare two ppm files.
+            img1 = cv2.imread(str(ppm_file))
+            img2 = cv2.imread(str(decoded_ppm_file))
+
+            try:
+                # Compare the images
+                difference = cv2.subtract(img1, img2)
+                result = not cv2.countNonZero(difference)
+
+            except cv2.error as e:
+                print(f"Comparison of ppm's for {png_file=} failed")
+                print(f"OpenCV error: {str(e)}")
+                result = False
+                
+            # Print the result
+            if result:
+                # Find compression ratio
+                compressed_size = os.path.getsize(jls_file)
+                raw_size        = os.path.getsize(ppm_file)*16/24    # Take RGB565 into account
+                comp_ratio = half_round(raw_size/compressed_size, 4)
+                
+                print("Compression success for {png_file = }")
+                print(f"Compression ratio: {comp_ratio*100}%")
+                
+                compress_file.write(f"{png_file}, {comp_ratio}\n")
+                
+            else:
+                raise ValueError(f"The images are not identical for {png_file = }")
 
 if __name__ == "__main__":
     

@@ -9,19 +9,41 @@ import struct
 import argparse
 import numpy as np
 from bitarray import bitarray
+from pathlib import Path
 
-
-def transmit_image(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_path):
-    # Determine output path
-    if output_path==None:
-        output_path = os.path.splitext(image_path)[0] + '.jls'
-    
+def receive_image(port: str, baud: int, output_path: str | Path):
+   
     print(f"Output path: {output_path}")
 
     # Delete output file if it already exists
     if os.path.exists(output_path):
         os.remove(output_path)
 
+    ser_rx = serial.Serial(port, baud,
+                        serial.EIGHTBITS,
+                        serial.PARITY_NONE,
+                        serial.STOPBITS_ONE,
+                        timeout=5)
+
+    print(f"Starting receiving from port {port}")
+    # Receive compressed bitstream
+    bits = bitarray()
+    while True:
+        read_data = ser_rx.read()
+
+        if len(read_data) < 1:
+            break
+        else:
+            bits.frombytes(read_data)
+
+    ser_rx.close()
+
+    # Write binary data to file
+    with open(output_path, 'wb') as ofile:
+        bits.tofile(ofile)
+
+def transmit_image(image_path: str, width: int, height: int, port: str, baud: int ):
+    
     # Read image file
     img = cv2.imread(image_path)
     
@@ -38,23 +60,13 @@ def transmit_image(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx
     rgb565_img  = np.asarray(rgb565_img).astype('uint16')
 
     # Set up ports
-    ser_tx = serial.Serial(port_tx, baud_tx,
+    ser_tx = serial.Serial(port, baud,
                         serial.EIGHTBITS,
                         serial.PARITY_NONE,
                         serial.STOPBITS_ONE,
                         timeout=5)
 
-    if port_rx==None:
-        ser_rx = ser_tx
-        port_rx = port_tx
-    else:
-        ser_rx = serial.Serial(port_rx, baud_rx,
-                            serial.EIGHTBITS,
-                            serial.PARITY_NONE,
-                            serial.STOPBITS_ONE,
-                            timeout=5)
-
-    print(f"Starting transmission to port {port_tx}...")
+    print(f"Starting transmission to {port = }...")
 
     # Transmit image
     orig_array = []
@@ -68,27 +80,19 @@ def transmit_image(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx
             values = temp
             ser_tx.write(values)
 
-    print(f"Starting receiving from port {port_rx}")
-    # Receive compressed bitstream
-    bits = bitarray()
-    while True:
-        read_data = ser_rx.read()
-
-        if len(read_data) < 1:
-            break
-        else:
-            bits.frombytes(read_data)
-
-    ser_tx.close()
-    ser_rx.close()
-
-    # Write binary data to file
-    with open(output_path, 'wb') as ofile:
-        bits.tofile(ofile)
-        
 def main(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_path):
-    transmit_image(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_path)
+     
+    transmit_image(image_path, width, height, port_tx, baud_tx)
 
+    # Determine output path
+    if output_path==None:
+        output_path = os.path.splitext(image_path)[0] + '.jls'
+
+    if port_rx==None:
+        port_rx = port_tx
+        baud_rx = baud_tx
+        
+    receive_image(port_rx, baud_rx, output_path)
 
 if __name__ == "__main__":
     # Run argument parser
