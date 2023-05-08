@@ -43,7 +43,7 @@ entity output_uart_sender is
             read_allowed    : in  STD_LOGIC;  -- Flag for when clock is connected to logic and BRAM
             dout            : in  STD_LOGIC_VECTOR (63 downto 0); -- Data from BRAM.
             new_data_ready  : in  STD_LOGIC;  -- Flag goes high for one clock, when new data is ready on 'dout'.
-            end_of_data     : in  STD_LOGIC   -- Flag goes high when all data for image has been read. Flag goes low when new image/data is available.
+            end_of_data     : in  STD_LOGIC  -- Flag goes high when all data for image has been read. Flag goes low when new image/data is available.
             );
 end output_uart_sender;
 
@@ -73,8 +73,8 @@ architecture Behavioral of output_uart_sender is
     signal clk_uart                 : STD_LOGIC;
     signal data_is_send_uart        : STD_LOGIC;
     signal new_data_uart            : STD_LOGIC := '0';
-    signal old_data_is_send_uart    : STD_LOGIC := '1';
-    signal old_clk_uart             : STD_LOGIC := '1';
+    signal data_is_send_uart_shift  : STD_LOGIC_VECTOR(1 downto 0) := "11";
+    signal clk_uart_shift           : STD_LOGIC_VECTOR(1 downto 0) := "11";
     
     signal buffer_data              : STD_LOGIC_VECTOR (63 downto 0) := (others => '0');
     signal data_byte_idx            : UNSIGNED(2 downto 0) := (others => '0');
@@ -107,15 +107,15 @@ begin
                 new_data_pulse  => new_data_uart,
                 data_send       => data_is_send_uart
                 );
-                
+    
     process(pclk, resetn)
     begin
     
         if resetn = '0' then
             data_uart              <= (others => '0');
             new_data_uart          <= '0';
-            old_data_is_send_uart  <= '0';
-            old_clk_uart           <= '0';
+            data_is_send_uart_shift  <= (others => '1');
+            clk_uart_shift         <= (others => '1');
             
             buffer_data            <= (others => '0');
             data_byte_idx          <= (others => '0');
@@ -123,8 +123,8 @@ begin
             tx_states <= WAITING;
         
         elsif rising_edge(pclk) then
-            old_data_is_send_uart <= data_is_send_uart;
-            old_clk_uart <= clk_uart;
+            data_is_send_uart_shift <= data_is_send_uart_shift(0) & data_is_send_uart;
+            clk_uart_shift <= clk_uart_shift(0) & clk_uart;
             request_next <= '0';
         
             case tx_states is
@@ -142,26 +142,26 @@ begin
                     end if;
                 
                 when SEND =>
-                    if old_clk_uart = '0' and clk_uart = '1' then
-                        --data_uart <= buffer_data(7 + 8 * to_integer(data_byte_idx) downto 8 * to_integer(data_byte_idx));
-                        
-                        data_uart <= buffer_data(buffer_data'high downto buffer_data'high - 7);
+                
+                    data_uart <= buffer_data(buffer_data'high downto buffer_data'high - 7);
+                    
+                    if clk_uart_shift = "01" then
                         buffer_data <= buffer_data(buffer_data'high - 8 downto 0) & x"00";
-                        
                         tx_states <= WAIT_FLAG;
                     end if;
                 
                 when WAIT_FLAG =>
-                    if old_clk_uart = '0' and clk_uart = '1' then
-                        new_data_uart <= '1';
+                    new_data_uart <= '1';
+                
+                    if clk_uart_shift = "01" then
                         tx_states <= WAIT_SEND;
                     end if;
                     
                 when WAIT_SEND =>
-                    if old_clk_uart = '0' and clk_uart = '1' then
+                    if clk_uart_shift = "01" then
                         new_data_uart <= '0';
                     end if;
-                    if old_data_is_send_uart = '0' and data_is_send_uart = '1' then
+                    if data_is_send_uart_shift = "01" then
                     
                         if data_byte_idx /= 7 then
                             tx_states <= SEND;

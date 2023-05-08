@@ -137,13 +137,15 @@ end uart_tx_module;
 architecture Behavioral of uart_tx_module is
 
     constant data_size : integer := 8;
+    constant overhead : integer := 5;
+    
     
     signal tx_register : STD_LOGIC_VECTOR(data_size + 1 downto 0);
-    signal tx_idx : unsigned(integer(ceil(log2(real(data_size + 2)))) downto 0) := (others => '0');
+    signal tx_idx : integer range 0 to data_size + overhead := 0;
     
     signal tx_cnt : unsigned(3 downto 0) := (others => '0');
     
-    signal new_data_pulse_old   : STD_LOGIC := '1';
+    signal new_data_pulse_shift   : STD_LOGIC_VECTOR(1 downto 0) := "11";
     
     
     type tx_enum is (WAITING, SEND);
@@ -159,13 +161,14 @@ begin
             tx_states <= WAITING;
             sig <= '1';
             tx_cnt <= (others => '0');
-            tx_idx <= (others => '0');
+            tx_idx <= 0;
             tx_register <= (others => '0');
+            new_data_pulse_shift <= "11";
             data_send <= '0';
             
         elsif rising_edge(clk) then
         
-            new_data_pulse_old <= new_data_pulse;
+            new_data_pulse_shift <= new_data_pulse_shift(0) & new_data_pulse;
             data_send <= '0';
         
             case tx_states is
@@ -173,10 +176,10 @@ begin
                 
                     sig <= '1';
                 
-                    if new_data_pulse_old = '0' and new_data_pulse = '1' then
+                    if new_data_pulse_shift = "01" then
                         tx_states <= SEND;
                         tx_cnt <= (others => '0');
-                        tx_idx <= (others => '0');
+                        tx_idx <= 0;
                         
                         tx_register <= "1" & data & "0";
                         
@@ -188,14 +191,13 @@ begin
                             sig <= tx_register(0);
                             tx_register <= '1' & tx_register(tx_register'high downto 1);
                             
-                            -- One extra wait for safety.
-                            if tx_idx = data_size + 4 then
+                            -- Two extra wait for safety.
+                            if tx_idx = data_size + overhead then
                                 data_send <= '1';
                                 tx_states <= WAITING;
                             end if;
                             
                             tx_idx <= tx_idx + 1;
-                        
                     end if;
                     
                     tx_cnt <= tx_cnt + 1; -- Use overflow to go back to 0
