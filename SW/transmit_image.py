@@ -10,7 +10,8 @@ import argparse
 import numpy as np
 from bitarray import bitarray
 
-def main(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_path):
+
+def transmit_image(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_path):
     # Determine output path
     if output_path==None:
         output_path = os.path.splitext(image_path)[0] + '.jls'
@@ -30,9 +31,9 @@ def main(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_p
 
     # Convert to RGB565
     blue_img, green_img, red_img = cv2.split(img)
-    red_img     = np.asarray(red_img).astype('uint16')//(2**3)
-    green_img   = np.asarray(green_img).astype('uint16')//(2**2)
-    blue_img    = np.asarray(blue_img).astype('uint16')//(2**3)
+    red_img     = np.asarray(red_img).astype('uint16')
+    green_img   = np.asarray(green_img).astype('uint16')
+    blue_img    = np.asarray(blue_img).astype('uint16')
     rgb565_img  = red_img*(2**11) + green_img*(2**5) + blue_img*(2**0)
     rgb565_img  = np.asarray(rgb565_img).astype('uint16')
 
@@ -84,6 +85,9 @@ def main(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_p
     # Write binary data to file
     with open(output_path, 'wb') as ofile:
         bits.tofile(ofile)
+        
+def main(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_path):
+    transmit_image(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_path)
 
 
 if __name__ == "__main__":
