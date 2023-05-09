@@ -51,7 +51,7 @@
 -- The following code must appear in the VHDL architecture header.
 
 ------------- Begin Cut here for COMPONENT Declaration ------ COMP_TAG
-COMPONENT context_memory_block
+COMPONENT context_modeller_bram
   PORT (
     clka : IN STD_LOGIC;
     wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
@@ -68,7 +68,7 @@ END COMPONENT;
 -- body. Substitute your own instance name and net names.
 
 ------------- Begin Cut here for INSTANTIATION Template ----- INST_TAG
-your_instance_name : context_memory_block
+your_instance_name : context_modeller_bram
   PORT MAP (
     clka => clka,
     wea => wea,
@@ -80,8 +80,8 @@ your_instance_name : context_memory_block
   );
 -- INST_TAG_END ------ End INSTANTIATION Template ---------
 
--- You must compile the wrapper file context_memory_block.vhd when simulating
--- the core, context_memory_block. When compiling the wrapper file, be sure to
+-- You must compile the wrapper file context_modeller_bram.vhd when simulating
+-- the core, context_modeller_bram. When compiling the wrapper file, be sure to
 -- reference the VHDL simulation library.
 
 

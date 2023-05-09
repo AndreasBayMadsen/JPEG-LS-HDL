@@ -53,7 +53,7 @@
 `timescale 1ns/1ps
 
 (* DowngradeIPIdentifiedWarnings = "yes" *)
-module context_memory_block (
+module context_modeller_bram (
   clka,
   wea,
   addra,
@@ -98,8 +98,8 @@ output wire [39 : 0] doutb;
     .C_PRIM_TYPE(1),
     .C_LOAD_INIT_FILE(0),
     .C_INIT_FILE_NAME("no_coe_file_loaded"),
-    .C_INIT_FILE("context_memory_block.mem"),
-    .C_USE_DEFAULT_DATA(0),
+    .C_INIT_FILE("context_modeller_bram.mem"),
+    .C_USE_DEFAULT_DATA(1),
     .C_DEFAULT_DATA("0"),
     .C_HAS_RSTA(0),
     .C_RST_PRIORITY_A("CE"),
@@ -109,11 +109,11 @@ output wire [39 : 0] doutb;
     .C_HAS_REGCEA(0),
     .C_USE_BYTE_WEA(0),
     .C_WEA_WIDTH(1),
-    .C_WRITE_MODE_A("READ_FIRST"),
+    .C_WRITE_MODE_A("NO_CHANGE"),
     .C_WRITE_WIDTH_A(40),
     .C_READ_WIDTH_A(40),
-    .C_WRITE_DEPTH_A(512),
-    .C_READ_DEPTH_A(512),
+    .C_WRITE_DEPTH_A(400),
+    .C_READ_DEPTH_A(400),
     .C_ADDRA_WIDTH(9),
     .C_HAS_RSTB(0),
     .C_RST_PRIORITY_B("CE"),
@@ -123,11 +123,11 @@ output wire [39 : 0] doutb;
     .C_HAS_REGCEB(0),
     .C_USE_BYTE_WEB(0),
     .C_WEB_WIDTH(1),
-    .C_WRITE_MODE_B("WRITE_FIRST"),
+    .C_WRITE_MODE_B("READ_FIRST"),
     .C_WRITE_WIDTH_B(40),
     .C_READ_WIDTH_B(40),
-    .C_WRITE_DEPTH_B(512),
-    .C_READ_DEPTH_B(512),
+    .C_WRITE_DEPTH_B(400),
+    .C_READ_DEPTH_B(400),
     .C_ADDRB_WIDTH(9),
     .C_HAS_MEM_OUTPUT_REGS_A(0),
     .C_HAS_MEM_OUTPUT_REGS_B(0),
@@ -142,9 +142,9 @@ output wire [39 : 0] doutb;
     .C_READ_LATENCY_A(1),
     .C_READ_LATENCY_B(1),
     .C_HAS_INJECTERR(0),
-    .C_SIM_COLLISION_CHECK("NONE"),
-    .C_COMMON_CLK(0),
-    .C_DISABLE_WARN_BHV_COLL(1),
+    .C_SIM_COLLISION_CHECK("ALL"),
+    .C_COMMON_CLK(1),
+    .C_DISABLE_WARN_BHV_COLL(0),
     .C_EN_SLEEP_PIN(0),
     .C_USE_URAM(0),
     .C_EN_RDADDRA_CHG(0),
@@ -155,7 +155,7 @@ output wire [39 : 0] doutb;
     .C_DISABLE_WARN_BHV_RANGE(0),
     .C_COUNT_36K_BRAM("1"),
     .C_COUNT_18K_BRAM("0"),
-    .C_EST_POWER_SUMMARY("Estimated Power for IP     :     6.511625 mW")
+    .C_EST_POWER_SUMMARY("Estimated Power for IP     :     6.1213 mW")
   ) inst (
     .clka(clka),
     .rsta(1'D0),

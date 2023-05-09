@@ -833,7 +833,7 @@ main(int argc,char **argv)
 
 	Uint16 bpp = Maximum(2,Ceiling(Log(MAXVAL+1)));	// Number of bits needed to represent MAXVAL with a minumum of 2
 	Uint16 qbpp = Ceiling(Log(RANGE));		// Number of bits needed to represent a mapped error value
-	Uint16 LIMIT = 32;
+	Uint16 LIMIT = 20;	// NOTE: I have changed this from 32
 
 	if (verbose) cerr << "bpp = " << bpp << endl;
 	if (verbose) cerr << "qbpp = " << qbpp << endl;

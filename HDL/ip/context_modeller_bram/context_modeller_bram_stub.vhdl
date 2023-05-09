@@ -1,18 +1,18 @@
 -- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2022.2 (lin64) Build 3671981 Fri Oct 14 04:59:54 MDT 2022
--- Date        : Mon Mar 20 12:30:03 2023
+-- Date        : Mon May  1 12:37:47 2023
 -- Host        : andreas-Huawei running 64-bit Ubuntu 22.04.2 LTS
 -- Command     : write_vhdl -force -mode synth_stub
---               /home/andreas/Desktop/ProfileProject/JPEG-LS-HDL/ip/context_memory_block/context_memory_block_stub.vhdl
--- Design      : context_memory_block
+--               /home/andreas/Desktop/ProfileProject/JPEG-LS-HDL/HDL/ip/context_modeller_bram/context_modeller_bram_stub.vhdl
+-- Design      : context_modeller_bram
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xc7z020clg400-1
 -- --------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-entity context_memory_block is
+entity context_modeller_bram is
   Port ( 
     clka : in STD_LOGIC;
     wea : in STD_LOGIC_VECTOR ( 0 to 0 );
@@ -23,9 +23,9 @@ entity context_memory_block is
     doutb : out STD_LOGIC_VECTOR ( 39 downto 0 )
   );
 
-end context_memory_block;
+end context_modeller_bram;
 
-architecture stub of context_memory_block is
+architecture stub of context_modeller_bram is
 attribute syn_black_box : boolean;
 attribute black_box_pad_pin : string;
 attribute syn_black_box of stub : architecture is true;
