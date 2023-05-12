@@ -33,14 +33,16 @@
             "justMyCode": false
         },
         {
-            "name": "Python: Current File",
+            "name": "Python: gen_coe",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
                 "../kodak_dataset/no_border_low_res.ppm",
                 "-w",
-                "32"
+                "32",
+                "-o",
+                "../HDL/hw_tests/no_border_low_res.coe"
             ],
             "console": "integratedTerminal",
             "justMyCode": true

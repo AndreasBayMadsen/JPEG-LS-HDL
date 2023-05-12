@@ -11,15 +11,18 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="60.167666666 ms"></ZoomStartTime>
-      <ZoomEndTime time="203.967666667 ms"></ZoomEndTime>
-      <Cursor1Time time="180.001000000 ms"></Cursor1Time>
+      <ZoomStartTime time="1,715,419.542 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,716,873.543 ns"></ZoomEndTime>
+      <Cursor1Time time="1,716,264.206 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="192"></NameColumnWidth>
-      <ValueColumnWidth column_width="88"></ValueColumnWidth>
+      <ValueColumnWidth column_width="80"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="26" />
+   <wave_markers>
+      <marker label="" time="1716264206" />
+   </wave_markers>
    <wvobject type="group" fp_name="group250">
       <obj_property name="label">Camera</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -55,6 +58,7 @@
    <wvobject type="group" fp_name="group57">
       <obj_property name="label">Collector</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/pixel_collector/A">
          <obj_property name="ElementShortName">A[15:0]</obj_property>
          <obj_property name="ObjectShortName">A[15:0]</obj_property>
@@ -87,6 +91,7 @@
    <wvobject type="group" fp_name="group65">
       <obj_property name="label">Gradient</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_full_sim/DUT/mod_1_r/grad/A">
          <obj_property name="ElementShortName">A[4:0]</obj_property>
          <obj_property name="ObjectShortName">A[4:0]</obj_property>

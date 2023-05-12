@@ -12,10 +12,15 @@ def main(file_pth, read_width, output_pth):
     img = cv2.imread(file_pth)
 
     # Turn into RGB565
+        # Extract colors
     blue_img, green_img, red_img = cv2.split(img)
     red_img     = red_img//(2**3)
     green_img   = green_img//(2**2)
     blue_img    = blue_img//(2**3)
+        # Change to 16-bit
+    red_img     = red_img.astype('uint16')
+    green_img   = green_img.astype('uint16')
+    blue_img    = blue_img.astype('uint16')
     rgb565_img  = red_img*(2**11) + green_img*(2**5) + blue_img*(2**0)
 
     # Write .coe file
