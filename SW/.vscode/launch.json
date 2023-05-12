@@ -5,13 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: system_test",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "../kodak_dataset/no_border_low_res.png",
+                "-ptx",
+                "/dev/ttyUSB2",
+                "-o",
+                "../kodak_dataset/system_test_results/"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Python: transmit_image",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
                 "../kodak_dataset/no_border_low_res.ppm",
-                "-ptx", "/dev/ttyUSB1"
+                "-ptx",
+                "/dev/ttyUSB1"
             ],
             "console": "integratedTerminal",
             "justMyCode": false

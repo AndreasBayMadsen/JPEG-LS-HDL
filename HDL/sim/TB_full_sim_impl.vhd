@@ -68,15 +68,8 @@ architecture Behavioral of TB_full_sim_impl is
     -- Constant declarations
         -- Base
     constant PCLK_FREQ_MHZ  : REAL      := 12.0;
-    constant IMAGE_FILE_1   : STRING    := "../../../../../../../kodak_dataset/no_border.ppm";
-    constant IMAGE_FILE_2   : STRING    := "../../../../../../../kodak_dataset/kodim01.ppm";
-    constant IMAGE_HEIGHT   : INTEGER   := 512;
-    constant IMAGE_WIDTH    : INTEGER   := 768;
-    
-        -- Module settings
-    constant L_max_r    : INTEGER   := 20;
-    constant L_max_g    : INTEGER   := 24;
-    constant L_max_b    : INTEGER   := 20;
+    constant IMAGE_FILE_1   : STRING    := "../../../../../../../kodak_dataset/no_border_low_res.ppm";
+    constant IMAGE_FILE_2   : STRING    := "../../../../../../../kodak_dataset/no_border_low_res.ppm";
     
     -- Signal declarations
         -- Global signals

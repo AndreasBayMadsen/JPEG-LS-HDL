@@ -76,8 +76,8 @@ architecture Behavioral of JPEG_LS_module_top_impl is
     attribute DONT_TOUCH of JPEG_LS_module  : component is "yes";
     
     -- Constant declarations
-    constant IMAGE_HEIGHT   : INTEGER   := 512;
-    constant IMAGE_WIDTH    : INTEGER   := 768;
+    constant IMAGE_HEIGHT   : INTEGER   := 320;
+    constant IMAGE_WIDTH    : INTEGER   := 240;
     
     constant L_max_r    : INTEGER   := 20;
     constant L_max_g    : INTEGER   := 24;

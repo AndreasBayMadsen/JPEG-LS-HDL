@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="3,041,298.434 ns"></ZoomStartTime>
-      <ZoomEndTime time="3,041,951.435 ns"></ZoomEndTime>
-      <Cursor1Time time="3,041,503.434 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000000000 ms"></ZoomStartTime>
+      <ZoomEndTime time="90.286278588 ms"></ZoomEndTime>
+      <Cursor1Time time="3.251406410 ms"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="262"></NameColumnWidth>
-      <ValueColumnWidth column_width="84"></ValueColumnWidth>
+      <ValueColumnWidth column_width="76"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="17" />
+   <WVObjectSize size="24" />
    <wvobject type="group" fp_name="group241">
       <obj_property name="label">Camera</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -254,7 +254,6 @@
    <wvobject type="group" fp_name="group216">
       <obj_property name="label">Encoder</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_full_sim_impl/DUT/unit/encoded_r">
          <obj_property name="ElementShortName">encoded_r[19:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_r[19:0]</obj_property>
@@ -265,5 +264,33 @@
          <obj_property name="ObjectShortName">encoded_size_r[5:0]</obj_property>
          <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
+   </wvobject>
+   <wvobject fp_name="divider193" type="divider">
+      <obj_property name="label">Output</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_full_sim_impl/DUT/unit/encoded_r">
+      <obj_property name="ElementShortName">encoded_r[19:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_r[19:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_full_sim_impl/DUT/unit/encoded_g">
+      <obj_property name="ElementShortName">encoded_g[23:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_g[23:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_full_sim_impl/DUT/unit/encoded_b">
+      <obj_property name="ElementShortName">encoded_b[19:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_b[19:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_full_sim_impl/DUT/unit/encoded_size_r">
+      <obj_property name="ElementShortName">encoded_size_r[5:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_size_r[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_full_sim_impl/DUT/unit/encoded_size_g">
+      <obj_property name="ElementShortName">encoded_size_g[5:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_size_g[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_full_sim_impl/DUT/unit/encoded_size_b">
+      <obj_property name="ElementShortName">encoded_size_b[5:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_size_b[5:0]</obj_property>
    </wvobject>
 </wave_config>
