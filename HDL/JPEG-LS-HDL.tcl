@@ -16,9 +16,12 @@
 #*****************************************************************************************
 # Check file required for this script exists
 proc checkRequiredFiles { origin_dir} {
+  set status true
   set files [list \
+ "[file normalize "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"]"\
+ "[file normalize "$origin_dir/hw_tests/HWT_cam_sim.vhd"]"\
+ "[file normalize "$origin_dir/ip/context_modeller_bram/context_modeller_bram.xci"]"\
  "[file normalize "$origin_dir/ip/collector_bram/collector_bram.xci"]"\
- "[file normalize "$origin_dir/src/JPEG_LS_module.vhd"]"\
  "[file normalize "$origin_dir/src/collector.vhd"]"\
  "[file normalize "$origin_dir/src/context_modeller.vhd"]"\
  "[file normalize "$origin_dir/src/context_updater.vhd"]"\
@@ -31,27 +34,27 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/src/pipeline_module_3.vhd"]"\
  "[file normalize "$origin_dir/src/pipeline_module_4.vhd"]"\
  "[file normalize "$origin_dir/src/prediction_adder.vhd"]"\
- "[file normalize "$origin_dir/src/JPEG_LS_module_top_impl.vhd"]"\
- "[file normalize "$origin_dir/src/JPEG_LS_module_top.vhd"]"\
- "[file normalize "$origin_dir/src/btn_pulse.vhd"]"\
- "[file normalize "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"]"\
- "[file normalize "$origin_dir/hw_tests/HWT_cam_sim.vhd"]"\
- "[file normalize "$origin_dir/src/debounce.vhd"]"\
+ "[file normalize "$origin_dir/src/JPEG_LS_module.vhd"]"\
  "[file normalize "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"]"\
  "[file normalize "$origin_dir/src/output_buffer.vhd"]"\
  "[file normalize "$origin_dir/src/clk_divider.vhd"]"\
  "[file normalize "$origin_dir/src/uart_module.vhd"]"\
  "[file normalize "$origin_dir/src/output_uart_sender.vhd"]"\
+ "[file normalize "$origin_dir/src/debounce.vhd"]"\
+ "[file normalize "$origin_dir/src/JPEG_LS_module_top_impl.vhd"]"\
+ "[file normalize "$origin_dir/src/btn_pulse.vhd"]"\
+ "[file normalize "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"]"\
+ "[file normalize "$origin_dir/src/JPEG_LS_module_top.vhd"]"\
  "[file normalize "$origin_dir/src/golomb_top.vhd"]"\
  "[file normalize "$origin_dir/hw_tests/no_border_low_res.coe"]"\
  "[file normalize "$origin_dir/hw_tests/HWT_collector.vhd"]"\
  "[file normalize "$origin_dir/ip/HWT_collector_bram/HWT_collector_bram.xci"]"\
  "[file normalize "$origin_dir/ip/HWT_collector_ila/HWT_collector_ila.xci"]"\
  "[file normalize "$origin_dir/ip/HWT_collector_clk/HWT_collector_clk.xci"]"\
- "[file normalize "$origin_dir/ip/context_modeller_bram/context_modeller_bram.xci"]"\
- "[file normalize "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"]"\
  "[file normalize "$origin_dir/constr/timing.xdc"]"\
  "[file normalize "$origin_dir/constr/PYNQ-Z2 v1.0.xdc"]"\
+ "[file normalize "$origin_dir/constr/TB_full_sim_impl.xdc"]"\
+ "[file normalize "$origin_dir/constr/block_timing.xdc"]"\
  "[file normalize "$origin_dir/sim/TB_HWT_cam_sim.vhd"]"\
  "[file normalize "$origin_dir/src/collector.vhd"]"\
  "[file normalize "$origin_dir/src/fixed_predictor.vhd"]"\
@@ -215,7 +218,7 @@ set_property -name "webtalk.questa_export_sim" -value "51" -objects $obj
 set_property -name "webtalk.riviera_export_sim" -value "51" -objects $obj
 set_property -name "webtalk.vcs_export_sim" -value "51" -objects $obj
 set_property -name "webtalk.xsim_export_sim" -value "51" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "665" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "670" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_CDC XPM_FIFO XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -226,8 +229,10 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
 set files [list \
+ [file normalize "${origin_dir}/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"] \
+ [file normalize "${origin_dir}/hw_tests/HWT_cam_sim.vhd"] \
+ [file normalize "${origin_dir}/ip/context_modeller_bram/context_modeller_bram.xci"] \
  [file normalize "${origin_dir}/ip/collector_bram/collector_bram.xci"] \
- [file normalize "${origin_dir}/src/JPEG_LS_module.vhd"] \
  [file normalize "${origin_dir}/src/collector.vhd"] \
  [file normalize "${origin_dir}/src/context_modeller.vhd"] \
  [file normalize "${origin_dir}/src/context_updater.vhd"] \
@@ -240,17 +245,17 @@ set files [list \
  [file normalize "${origin_dir}/src/pipeline_module_3.vhd"] \
  [file normalize "${origin_dir}/src/pipeline_module_4.vhd"] \
  [file normalize "${origin_dir}/src/prediction_adder.vhd"] \
- [file normalize "${origin_dir}/src/JPEG_LS_module_top_impl.vhd"] \
- [file normalize "${origin_dir}/src/JPEG_LS_module_top.vhd"] \
- [file normalize "${origin_dir}/src/btn_pulse.vhd"] \
- [file normalize "${origin_dir}/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"] \
- [file normalize "${origin_dir}/hw_tests/HWT_cam_sim.vhd"] \
- [file normalize "${origin_dir}/src/debounce.vhd"] \
+ [file normalize "${origin_dir}/src/JPEG_LS_module.vhd"] \
  [file normalize "${origin_dir}/ip/output_buffer_bram/output_buffer_bram.xci"] \
  [file normalize "${origin_dir}/src/output_buffer.vhd"] \
  [file normalize "${origin_dir}/src/clk_divider.vhd"] \
  [file normalize "${origin_dir}/src/uart_module.vhd"] \
  [file normalize "${origin_dir}/src/output_uart_sender.vhd"] \
+ [file normalize "${origin_dir}/src/debounce.vhd"] \
+ [file normalize "${origin_dir}/src/JPEG_LS_module_top_impl.vhd"] \
+ [file normalize "${origin_dir}/src/btn_pulse.vhd"] \
+ [file normalize "${origin_dir}/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"] \
+ [file normalize "${origin_dir}/src/JPEG_LS_module_top.vhd"] \
  [file normalize "${origin_dir}/src/golomb_top.vhd"] \
  [file normalize "${origin_dir}/hw_tests/no_border_low_res.coe"] \
  [file normalize "${origin_dir}/hw_tests/HWT_collector.vhd"] \
@@ -261,7 +266,7 @@ set files [list \
 add_files -norecurse -fileset $obj $files
 
 # Set 'sources_1' fileset file properties for remote files
-set file "$origin_dir/ip/collector_bram/collector_bram.xci"
+set file "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
@@ -270,10 +275,28 @@ if { ![get_property "is_locked" $file_obj] } {
   set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
 }
 
-set file "$origin_dir/src/JPEG_LS_module.vhd"
+set file "$origin_dir/hw_tests/HWT_cam_sim.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/ip/context_modeller_bram/context_modeller_bram.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
+
+set file "$origin_dir/ip/collector_bram/collector_bram.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+if { ![get_property "is_locked" $file_obj] } {
+  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
+}
 
 set file "$origin_dir/src/collector.vhd"
 set file [file normalize $file]
@@ -335,36 +358,7 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
-set file "$origin_dir/src/JPEG_LS_module_top_impl.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/src/JPEG_LS_module_top.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/src/btn_pulse.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
-set file "$origin_dir/hw_tests/HWT_cam_sim.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/src/debounce.vhd"
+set file "$origin_dir/src/JPEG_LS_module.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -398,10 +392,39 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
+set file "$origin_dir/src/debounce.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/JPEG_LS_module_top_impl.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/src/btn_pulse.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
+set_property -name "is_enabled" -value "0" -objects $file_obj
+set_property -name "registered_with_manager" -value "1" -objects $file_obj
+
+set file "$origin_dir/src/JPEG_LS_module_top.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+set_property -name "is_enabled" -value "0" -objects $file_obj
+
 set file "$origin_dir/src/golomb_top.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
+set_property -name "is_enabled" -value "0" -objects $file_obj
 
 set file "$origin_dir/hw_tests/HWT_collector.vhd"
 set file [file normalize $file]
@@ -437,50 +460,8 @@ set_property -name "registered_with_manager" -value "1" -objects $file_obj
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
 set_property -name "dataflow_viewer_settings" -value "min_width=16" -objects $obj
-set_property -name "top" -value "JPEG_LS_module_top_impl" -objects $obj
+set_property -name "top" -value "BD_pl_test_wrapper" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
-
-# Set 'sources_1' fileset object
-set obj [get_filesets sources_1]
-set files [list \
- [file normalize "${origin_dir}/ip/context_modeller_bram/context_modeller_bram.xci"] \
-]
-add_files -norecurse -fileset $obj $files
-
-# Set 'sources_1' fileset file properties for remote files
-set file "$origin_dir/ip/context_modeller_bram/context_modeller_bram.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
-
-# Set 'sources_1' fileset file properties for local files
-# None
-
-# Set 'sources_1' fileset object
-set obj [get_filesets sources_1]
-set files [list \
- [file normalize "${origin_dir}/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"] \
-]
-add_files -norecurse -fileset $obj $files
-
-# Set 'sources_1' fileset file properties for remote files
-set file "$origin_dir/ip/TB_HWT_cam_sim_bram/TB_HWT_cam_sim_bram.xci"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
-set_property -name "generate_files_for_reference" -value "0" -objects $file_obj
-set_property -name "registered_with_manager" -value "1" -objects $file_obj
-if { ![get_property "is_locked" $file_obj] } {
-  set_property -name "synth_checkpoint_mode" -value "Singular" -objects $file_obj
-}
-
-
-# Set 'sources_1' fileset file properties for local files
-# None
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -532,6 +513,23 @@ if {[string equal [get_filesets -quiet block_constr] ""]} {
 # Set 'block_constr' fileset object
 set obj [get_filesets block_constr]
 
+# Add/Import constrs file and set constrs file properties
+set file "[file normalize "$origin_dir/constr/TB_full_sim_impl.xdc"]"
+set file_added [add_files -norecurse -fileset $obj [list $file]]
+set file "$origin_dir/constr/TB_full_sim_impl.xdc"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_constr] [list "*$file"]]
+set_property -name "file_type" -value "XDC" -objects $file_obj
+
+# Add/Import constrs file and set constrs file properties
+set file "[file normalize "$origin_dir/constr/block_timing.xdc"]"
+set file_added [add_files -norecurse -fileset $obj [list $file]]
+set file "$origin_dir/constr/block_timing.xdc"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets block_constr] [list "*$file"]]
+set_property -name "file_type" -value "XDC" -objects $file_obj
+set_property -name "is_enabled" -value "0" -objects $file_obj
+
 # Set 'block_constr' fileset properties
 set obj [get_filesets block_constr]
 
@@ -548,6 +546,7 @@ set obj [get_filesets sim_1]
 set obj [get_filesets sim_1]
 set_property -name "top" -value "output_uart_sender" -objects $obj
 set_property -name "top_arch" -value "Behavioral" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_file" -value "src/output_uart_sender.vhd" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
@@ -638,6 +637,7 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 set obj [get_filesets block_tests]
 set_property -name "nl.mode" -value "funcsim" -objects $obj
 set_property -name "top" -value "TB_HWT_cam_sim" -objects $obj
+set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 set_property -name "xsim.simulate.runtime" -value "1ms" -objects $obj
 
@@ -693,7 +693,6 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 # Set 'full_simulation' fileset properties
 set obj [get_filesets full_simulation]
 set_property -name "nl.mode" -value "funcsim" -objects $obj
-set_property -name "sim_mode" -value "post-implementation" -objects $obj
 set_property -name "top" -value "TB_full_sim_impl" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
@@ -747,33 +746,24 @@ set_property -name "top" -value "TB_golomb_coder_impl" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
+# Set 'utils_1' fileset object
+set obj [get_filesets utils_1]
+# Set 'utils_1' fileset file properties for remote files
+# None
+
+# Set 'utils_1' fileset file properties for local files
+# None
+
+# Set 'utils_1' fileset properties
+set obj [get_filesets utils_1]
+
+
 # Adding sources referenced in BDs, if not already added
-if { [get_files btn_pulse.vhd] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/src/btn_pulse.vhd"
-}
 if { [get_files HWT_cam_sim_clk.xci] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/ip/HWT_cam_sim_clk/HWT_cam_sim_clk.xci"
 }
 if { [get_files HWT_cam_sim.vhd] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/hw_tests/HWT_cam_sim.vhd"
-}
-if { [get_files debounce.vhd] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/src/debounce.vhd"
-}
-if { [get_files output_buffer_bram.xci] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
-}
-if { [get_files output_buffer.vhd] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/src/output_buffer.vhd"
-}
-if { [get_files clk_divider.vhd] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/src/clk_divider.vhd"
-}
-if { [get_files uart_module.vhd] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/src/uart_module.vhd"
-}
-if { [get_files output_uart_sender.vhd] == "" } {
-  import_files -quiet -fileset sources_1 "$origin_dir/src/output_uart_sender.vhd"
 }
 if { [get_files context_modeller_bram.xci] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/ip/context_modeller_bram/context_modeller_bram.xci"
@@ -820,13 +810,34 @@ if { [get_files prediction_adder.vhd] == "" } {
 if { [get_files JPEG_LS_module.vhd] == "" } {
   import_files -quiet -fileset sources_1 "$origin_dir/src/JPEG_LS_module.vhd"
 }
+if { [get_files output_buffer_bram.xci] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/ip/output_buffer_bram/output_buffer_bram.xci"
+}
+if { [get_files output_buffer.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/output_buffer.vhd"
+}
+if { [get_files clk_divider.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/clk_divider.vhd"
+}
+if { [get_files uart_module.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/uart_module.vhd"
+}
+if { [get_files output_uart_sender.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/output_uart_sender.vhd"
+}
+if { [get_files debounce.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/debounce.vhd"
+}
+if { [get_files debounce.vhd] == "" } {
+  import_files -quiet -fileset sources_1 "$origin_dir/src/debounce.vhd"
+}
 
 
 # Proc to create BD BD_pl_test
 proc cr_bd_BD_pl_test { parentCell } {
 # The design that will be created by this Tcl proc contains the following 
 # module references:
-# HWT_cam_sim, JPEG_LS_module, btn_pulse, output_buffer, output_uart_sender, debounce
+# HWT_cam_sim, JPEG_LS_module, debounce, output_buffer, output_uart_sender, debounce
 
 
 
@@ -845,6 +856,7 @@ proc cr_bd_BD_pl_test { parentCell } {
   if { $bCheckIPs == 1 } {
      set list_check_ips "\ 
   xilinx.com:ip:blk_mem_gen:8.4\
+  xilinx.com:ip:ila:6.2\
   xilinx.com:ip:util_vector_logic:2.0\
   "
 
@@ -873,7 +885,7 @@ proc cr_bd_BD_pl_test { parentCell } {
      set list_check_mods "\ 
   HWT_cam_sim\
   JPEG_LS_module\
-  btn_pulse\
+  debounce\
   output_buffer\
   output_uart_sender\
   debounce\
@@ -939,38 +951,6 @@ proc cr_bd_BD_pl_test { parentCell } {
   set rst [ create_bd_port -dir I rst ]
   set uart_tx [ create_bd_port -dir O uart_tx ]
 
-  # Create instance: HWT_cam_sim_0, and set properties
-  set block_name HWT_cam_sim
-  set block_cell_name HWT_cam_sim_0
-  if { [catch {set HWT_cam_sim_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $HWT_cam_sim_0 eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-    set_property -dict [list \
-    CONFIG.image_height {240} \
-    CONFIG.image_width {320} \
-  ] $HWT_cam_sim_0
-
-
-  # Create instance: JPEG_LS_module_0, and set properties
-  set block_name JPEG_LS_module
-  set block_cell_name JPEG_LS_module_0
-  if { [catch {set JPEG_LS_module_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $JPEG_LS_module_0 eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-    set_property -dict [list \
-    CONFIG.image_height {240} \
-    CONFIG.image_width {320} \
-  ] $JPEG_LS_module_0
-
-
   # Create instance: PL_test_cam_rom, and set properties
   set PL_test_cam_rom [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 PL_test_cam_rom ]
   set_property -dict [list \
@@ -988,17 +968,78 @@ proc cr_bd_BD_pl_test { parentCell } {
   ] $PL_test_cam_rom
 
 
-  # Create instance: btn_pulse_0, and set properties
-  set block_name btn_pulse
-  set block_cell_name btn_pulse_0
-  if { [catch {set btn_pulse_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+  # Create instance: camera_ILA, and set properties
+  set camera_ILA [ create_bd_cell -type ip -vlnv xilinx.com:ip:ila:6.2 camera_ILA ]
+  set_property -dict [list \
+    CONFIG.ALL_PROBE_SAME_MU_CNT {5} \
+    CONFIG.C_DATA_DEPTH {1024} \
+    CONFIG.C_MONITOR_TYPE {Native} \
+    CONFIG.C_NUM_OF_PROBES {4} \
+    CONFIG.C_PROBE0_WIDTH {1} \
+    CONFIG.C_PROBE1_WIDTH {8} \
+  ] $camera_ILA
+
+
+  # Create instance: camera_simulator, and set properties
+  set block_name HWT_cam_sim
+  set block_cell_name camera_simulator
+  if { [catch {set camera_simulator [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
-   } elseif { $btn_pulse_0 eq "" } {
+   } elseif { $camera_simulator eq "" } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
-  
+    set_property -dict [list \
+    CONFIG.image_height {240} \
+    CONFIG.image_width {320} \
+  ] $camera_simulator
+
+
+  # Create instance: compression_module, and set properties
+  set block_name JPEG_LS_module
+  set block_cell_name compression_module
+  if { [catch {set compression_module [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $compression_module eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+    set_property -dict [list \
+    CONFIG.image_height {240} \
+    CONFIG.image_width {320} \
+  ] $compression_module
+
+
+  # Create instance: compressor_ila, and set properties
+  set compressor_ila [ create_bd_cell -type ip -vlnv xilinx.com:ip:ila:6.2 compressor_ila ]
+  set_property -dict [list \
+    CONFIG.ALL_PROBE_SAME_MU_CNT {5} \
+    CONFIG.C_MONITOR_TYPE {Native} \
+    CONFIG.C_NUM_OF_PROBES {8} \
+    CONFIG.C_PROBE2_WIDTH {20} \
+    CONFIG.C_PROBE3_WIDTH {24} \
+    CONFIG.C_PROBE4_WIDTH {20} \
+    CONFIG.C_PROBE5_WIDTH {6} \
+    CONFIG.C_PROBE6_WIDTH {6} \
+    CONFIG.C_PROBE7_WIDTH {6} \
+  ] $compressor_ila
+
+
+  # Create instance: enable_debounce, and set properties
+  set block_name debounce
+  set block_cell_name enable_debounce
+  if { [catch {set enable_debounce [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $enable_debounce eq "" } {
+     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+    set_property CONFIG.CLK_FREQ_MHZ {12} $enable_debounce
+
+
   # Create instance: output_buffer_0, and set properties
   set block_name output_buffer
   set block_cell_name output_buffer_0
@@ -1010,6 +1051,17 @@ proc cr_bd_BD_pl_test { parentCell } {
      return 1
    }
   
+  # Create instance: output_buffer_ila, and set properties
+  set output_buffer_ila [ create_bd_cell -type ip -vlnv xilinx.com:ip:ila:6.2 output_buffer_ila ]
+  set_property -dict [list \
+    CONFIG.ALL_PROBE_SAME_MU_CNT {5} \
+    CONFIG.C_MONITOR_TYPE {Native} \
+    CONFIG.C_NUM_OF_PROBES {6} \
+    CONFIG.C_PROBE2_WIDTH {1} \
+    CONFIG.C_PROBE3_WIDTH {64} \
+  ] $output_buffer_ila
+
+
   # Create instance: output_uart_sender_0, and set properties
   set block_name output_uart_sender
   set block_cell_name output_uart_sender_0
@@ -1021,53 +1073,53 @@ proc cr_bd_BD_pl_test { parentCell } {
      return 1
    }
   
-  # Create instance: reset_btn, and set properties
+  # Create instance: reset_debounce, and set properties
   set block_name debounce
-  set block_cell_name reset_btn
-  if { [catch {set reset_btn [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+  set block_cell_name reset_debounce
+  if { [catch {set reset_debounce [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
-   } elseif { $reset_btn eq "" } {
+   } elseif { $reset_debounce eq "" } {
      catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
   
-  # Create instance: util_vector_logic_0, and set properties
-  set util_vector_logic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0 ]
+  # Create instance: reset_inverter, and set properties
+  set reset_inverter [ create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 reset_inverter ]
   set_property -dict [list \
     CONFIG.C_OPERATION {not} \
     CONFIG.C_SIZE {1} \
-  ] $util_vector_logic_0
+  ] $reset_inverter
 
 
   # Create interface connections
-  connect_bd_intf_net -intf_net HWT_cam_sim_0_BRAM_interface [get_bd_intf_pins HWT_cam_sim_0/BRAM_interface] [get_bd_intf_pins PL_test_cam_rom/BRAM_PORTA]
+  connect_bd_intf_net -intf_net HWT_cam_sim_0_BRAM_interface [get_bd_intf_pins PL_test_cam_rom/BRAM_PORTA] [get_bd_intf_pins camera_simulator/BRAM_interface]
 
   # Create port connections
-  connect_bd_net -net HWT_cam_sim_0_href [get_bd_pins HWT_cam_sim_0/href] [get_bd_pins JPEG_LS_module_0/href]
-  connect_bd_net -net HWT_cam_sim_0_pclk [get_bd_pins HWT_cam_sim_0/pclk] [get_bd_pins JPEG_LS_module_0/pclk] [get_bd_pins btn_pulse_0/clk] [get_bd_pins output_buffer_0/pclk] [get_bd_pins output_uart_sender_0/pclk]
-  connect_bd_net -net HWT_cam_sim_0_pixel [get_bd_pins HWT_cam_sim_0/pixel] [get_bd_pins JPEG_LS_module_0/pixel]
-  connect_bd_net -net HWT_cam_sim_0_vsync [get_bd_pins HWT_cam_sim_0/vsync] [get_bd_pins JPEG_LS_module_0/vsync]
-  connect_bd_net -net JPEG_LS_module_0_encoded_b [get_bd_pins output_buffer_0/encoded_b]
-  connect_bd_net -net JPEG_LS_module_0_encoded_g [get_bd_pins output_buffer_0/encoded_g]
-  connect_bd_net -net JPEG_LS_module_0_encoded_r [get_bd_pins output_buffer_0/encoded_r]
-  connect_bd_net -net JPEG_LS_module_0_encoded_size_b [get_bd_pins output_buffer_0/encoded_size_b]
-  connect_bd_net -net JPEG_LS_module_0_encoded_size_g [get_bd_pins output_buffer_0/encoded_size_g]
-  connect_bd_net -net JPEG_LS_module_0_encoded_size_r [get_bd_pins output_buffer_0/encoded_size_r]
-  connect_bd_net -net JPEG_LS_module_0_new_pixel [get_bd_pins JPEG_LS_module_0/new_pixel] [get_bd_pins output_buffer_0/new_pixel]
-  connect_bd_net -net JPEG_LS_module_0_valid_data [get_bd_pins JPEG_LS_module_0/valid_data] [get_bd_pins output_buffer_0/valid_data]
-  connect_bd_net -net axi_gpio_0_gpio2_io_o [get_bd_pins HWT_cam_sim_0/resetn] [get_bd_pins JPEG_LS_module_0/resetn] [get_bd_pins output_buffer_0/resetn] [get_bd_pins output_uart_sender_0/resetn] [get_bd_pins util_vector_logic_0/Res]
-  connect_bd_net -net btn_pulse_0_out1 [get_bd_pins HWT_cam_sim_0/enable] [get_bd_pins btn_pulse_0/out1]
-  connect_bd_net -net clk_0_1 [get_bd_ports clk] [get_bd_pins HWT_cam_sim_0/clk] [get_bd_pins output_uart_sender_0/clk] [get_bd_pins reset_btn/clk]
-  connect_bd_net -net en_1 [get_bd_ports en] [get_bd_pins btn_pulse_0/in1]
-  connect_bd_net -net output_buffer_0_dout [get_bd_pins output_buffer_0/dout] [get_bd_pins output_uart_sender_0/dout]
-  connect_bd_net -net output_buffer_0_end_of_data [get_bd_ports LED0] [get_bd_pins output_buffer_0/end_of_data] [get_bd_pins output_uart_sender_0/end_of_data]
-  connect_bd_net -net output_buffer_0_new_data_ready [get_bd_ports LED3] [get_bd_pins output_buffer_0/new_data_ready] [get_bd_pins output_uart_sender_0/new_data_ready]
-  connect_bd_net -net output_buffer_0_read_allowed [get_bd_ports LED1] [get_bd_pins output_buffer_0/read_allowed] [get_bd_pins output_uart_sender_0/read_allowed]
-  connect_bd_net -net output_uart_sender_0_request_next [get_bd_ports LED2] [get_bd_pins output_buffer_0/request_next] [get_bd_pins output_uart_sender_0/request_next]
+  connect_bd_net -net HWT_cam_sim_0_href [get_bd_pins camera_ILA/probe2] [get_bd_pins camera_simulator/href] [get_bd_pins compression_module/href]
+  connect_bd_net -net HWT_cam_sim_0_pclk [get_bd_pins camera_ILA/probe0] [get_bd_pins camera_simulator/pclk] [get_bd_pins compression_module/pclk] [get_bd_pins enable_debounce/clk] [get_bd_pins output_buffer_0/pclk] [get_bd_pins output_buffer_ila/probe0] [get_bd_pins output_uart_sender_0/pclk]
+  connect_bd_net -net HWT_cam_sim_0_pixel [get_bd_pins camera_ILA/probe1] [get_bd_pins camera_simulator/pixel] [get_bd_pins compression_module/pixel]
+  connect_bd_net -net HWT_cam_sim_0_vsync [get_bd_pins camera_ILA/probe3] [get_bd_pins camera_simulator/vsync] [get_bd_pins compression_module/vsync]
+  connect_bd_net -net JPEG_LS_module_0_encoded_b [get_bd_pins compression_module/encoded_b] [get_bd_pins compressor_ila/probe4] [get_bd_pins output_buffer_0/encoded_b]
+  connect_bd_net -net JPEG_LS_module_0_encoded_g [get_bd_pins compression_module/encoded_g] [get_bd_pins compressor_ila/probe3] [get_bd_pins output_buffer_0/encoded_g]
+  connect_bd_net -net JPEG_LS_module_0_encoded_r [get_bd_pins compression_module/encoded_r] [get_bd_pins compressor_ila/probe2] [get_bd_pins output_buffer_0/encoded_r]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_b [get_bd_pins compression_module/encoded_size_b] [get_bd_pins compressor_ila/probe7] [get_bd_pins output_buffer_0/encoded_size_b]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_g [get_bd_pins compression_module/encoded_size_g] [get_bd_pins compressor_ila/probe6] [get_bd_pins output_buffer_0/encoded_size_g]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_r [get_bd_pins compression_module/encoded_size_r] [get_bd_pins compressor_ila/probe5] [get_bd_pins output_buffer_0/encoded_size_r]
+  connect_bd_net -net JPEG_LS_module_0_new_pixel [get_bd_pins compression_module/new_pixel] [get_bd_pins compressor_ila/probe0] [get_bd_pins output_buffer_0/new_pixel]
+  connect_bd_net -net JPEG_LS_module_0_valid_data [get_bd_pins compression_module/valid_data] [get_bd_pins compressor_ila/probe1] [get_bd_pins output_buffer_0/valid_data]
+  connect_bd_net -net axi_gpio_0_gpio2_io_o [get_bd_pins camera_simulator/resetn] [get_bd_pins compression_module/resetn] [get_bd_pins output_buffer_0/resetn] [get_bd_pins output_uart_sender_0/resetn] [get_bd_pins reset_inverter/Res]
+  connect_bd_net -net clk_0_1 [get_bd_ports clk] [get_bd_pins camera_ILA/clk] [get_bd_pins camera_simulator/clk] [get_bd_pins compressor_ila/clk] [get_bd_pins output_buffer_ila/clk] [get_bd_pins output_uart_sender_0/clk] [get_bd_pins reset_debounce/clk]
+  connect_bd_net -net en_1 [get_bd_ports en] [get_bd_pins enable_debounce/sig_in]
+  connect_bd_net -net enable_debounce_sig_out [get_bd_pins camera_simulator/enable] [get_bd_pins enable_debounce/sig_out]
+  connect_bd_net -net output_buffer_0_dout [get_bd_pins output_buffer_0/dout] [get_bd_pins output_buffer_ila/probe3] [get_bd_pins output_uart_sender_0/dout]
+  connect_bd_net -net output_buffer_0_end_of_data [get_bd_ports LED0] [get_bd_pins output_buffer_0/end_of_data] [get_bd_pins output_buffer_ila/probe5] [get_bd_pins output_uart_sender_0/end_of_data]
+  connect_bd_net -net output_buffer_0_new_data_ready [get_bd_ports LED3] [get_bd_pins output_buffer_0/new_data_ready] [get_bd_pins output_buffer_ila/probe4] [get_bd_pins output_uart_sender_0/new_data_ready]
+  connect_bd_net -net output_buffer_0_read_allowed [get_bd_ports LED1] [get_bd_pins output_buffer_0/read_allowed] [get_bd_pins output_buffer_ila/probe2] [get_bd_pins output_uart_sender_0/read_allowed]
+  connect_bd_net -net output_uart_sender_0_request_next [get_bd_ports LED2] [get_bd_pins output_buffer_0/request_next] [get_bd_pins output_buffer_ila/probe1] [get_bd_pins output_uart_sender_0/request_next]
   connect_bd_net -net output_uart_sender_0_sig [get_bd_ports uart_tx] [get_bd_pins output_uart_sender_0/sig]
-  connect_bd_net -net reset_btn_sig_out [get_bd_pins reset_btn/sig_out] [get_bd_pins util_vector_logic_0/Op1]
-  connect_bd_net -net sig_in_0_1 [get_bd_ports rst] [get_bd_pins reset_btn/sig_in]
+  connect_bd_net -net reset_btn_sig_out [get_bd_pins reset_debounce/sig_out] [get_bd_pins reset_inverter/Op1]
+  connect_bd_net -net sig_in_0_1 [get_bd_ports rst] [get_bd_pins reset_debounce/sig_in]
 
   # Create address segments
 
@@ -1094,36 +1146,65 @@ catch {
  set_param runs.disableIDRFlowPropertyConstraints 1
 }
 
-# Create 'synth_1' run (if not found)
-if {[string equal [get_runs -quiet synth_1] ""]} {
-    create_run -name synth_1 -part xc7z020clg400-1 -flow {Vivado Synthesis 2022} -strategy "Vivado Synthesis Defaults" -report_strategy {No Reports} -constrset block_constr
+# Create 'run_BD_pl_test' run (if not found)
+if {[string equal [get_runs -quiet run_BD_pl_test] ""]} {
+    create_run -name run_BD_pl_test -part xc7z020clg400-1 -flow {Vivado Synthesis 2022} -strategy "Vivado Synthesis Defaults" -report_strategy {No Reports} -constrset full_system
 } else {
-  set_property strategy "Vivado Synthesis Defaults" [get_runs synth_1]
-  set_property flow "Vivado Synthesis 2022" [get_runs synth_1]
+  set_property strategy "Vivado Synthesis Defaults" [get_runs run_BD_pl_test]
+  set_property flow "Vivado Synthesis 2022" [get_runs run_BD_pl_test]
 }
-set obj [get_runs synth_1]
+set obj [get_runs run_BD_pl_test]
 set_property set_report_strategy_name 1 $obj
 set_property report_strategy {Vivado Synthesis Default Reports} $obj
 set_property set_report_strategy_name 0 $obj
-# Create 'synth_1_synth_report_utilization_0' report (if not found)
-if { [ string equal [get_report_configs -of_objects [get_runs synth_1] synth_1_synth_report_utilization_0] "" ] } {
-  create_report_config -report_name synth_1_synth_report_utilization_0 -report_type report_utilization:1.0 -steps synth_design -runs synth_1
+# Create 'run_BD_pl_test_synth_report_utilization_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs run_BD_pl_test] run_BD_pl_test_synth_report_utilization_0] "" ] } {
+  create_report_config -report_name run_BD_pl_test_synth_report_utilization_0 -report_type report_utilization:1.0 -steps synth_design -runs run_BD_pl_test
 }
-set obj [get_report_configs -of_objects [get_runs synth_1] synth_1_synth_report_utilization_0]
+set obj [get_report_configs -of_objects [get_runs run_BD_pl_test] run_BD_pl_test_synth_report_utilization_0]
 if { $obj != "" } {
 
 }
-set obj [get_runs synth_1]
-set_property -name "constrset" -value "block_constr" -objects $obj
+set obj [get_runs run_BD_pl_test]
+set_property -name "constrset" -value "full_system" -objects $obj
+set_property -name "incremental_checkpoint" -value "$proj_dir/JPEG-LS-HDL.srcs/utils_1/imports/run_BD_pl_test/BD_pl_test_wrapper.dcp" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
+set_property -name "auto_incremental_checkpoint.directory" -value "$proj_dir/JPEG-LS-HDL.srcs/utils_1/imports/synth_1" -objects $obj
+set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
+
+# Create 'run_TB_full_sim_impl' run (if not found)
+if {[string equal [get_runs -quiet run_TB_full_sim_impl] ""]} {
+    create_run -name run_TB_full_sim_impl -part xc7z020clg400-1 -flow {Vivado Synthesis 2022} -strategy "Vivado Synthesis Defaults" -report_strategy {No Reports} -constrset block_constr
+} else {
+  set_property strategy "Vivado Synthesis Defaults" [get_runs run_TB_full_sim_impl]
+  set_property flow "Vivado Synthesis 2022" [get_runs run_TB_full_sim_impl]
+}
+set obj [get_runs run_TB_full_sim_impl]
+set_property set_report_strategy_name 1 $obj
+set_property report_strategy {Vivado Synthesis Default Reports} $obj
+set_property set_report_strategy_name 0 $obj
+# Create 'run_TB_full_sim_impl_synth_report_utilization_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs run_TB_full_sim_impl] run_TB_full_sim_impl_synth_report_utilization_0] "" ] } {
+  create_report_config -report_name run_TB_full_sim_impl_synth_report_utilization_0 -report_type report_utilization:1.0 -steps synth_design -runs run_TB_full_sim_impl
+}
+set obj [get_report_configs -of_objects [get_runs run_TB_full_sim_impl] run_TB_full_sim_impl_synth_report_utilization_0]
+if { $obj != "" } {
+
+}
+set obj [get_runs run_TB_full_sim_impl]
+set_property -name "constrset" -value "block_constr" -objects $obj
+set_property -name "needs_refresh" -value "1" -objects $obj
+set_property -name "incremental_checkpoint" -value "$proj_dir/JPEG-LS-HDL.srcs/utils_1/imports/run_TB_full_sim_impl/BD_pl_test_wrapper.dcp" -objects $obj
+set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
+set_property -name "auto_incremental_checkpoint.directory" -value "$proj_dir/JPEG-LS-HDL.srcs/utils_1/imports/synth_2" -objects $obj
 set_property -name "strategy" -value "Vivado Synthesis Defaults" -objects $obj
 
 # set the current synth run
-current_run -synthesis [get_runs synth_1]
+current_run -synthesis [get_runs run_BD_pl_test]
 
 # Create 'impl_1' run (if not found)
 if {[string equal [get_runs -quiet impl_1] ""]} {
-    create_run -name impl_1 -part xc7z020clg400-1 -flow {Vivado Implementation 2022} -strategy "Vivado Implementation Defaults" -report_strategy {No Reports} -constrset block_constr -parent_run synth_1
+    create_run -name impl_1 -part xc7z020clg400-1 -flow {Vivado Implementation 2022} -strategy "Vivado Implementation Defaults" -report_strategy {No Reports} -constrset full_system -parent_run run_BD_pl_test
 } else {
   set_property strategy "Vivado Implementation Defaults" [get_runs impl_1]
   set_property flow "Vivado Implementation 2022" [get_runs impl_1]
@@ -1337,7 +1418,229 @@ set_property -name "options.warn_on_violation" -value "1" -objects $obj
 
 }
 set obj [get_runs impl_1]
+set_property -name "constrset" -value "full_system" -objects $obj
+set_property -name "strategy" -value "Vivado Implementation Defaults" -objects $obj
+set_property -name "steps.write_bitstream.args.readback_file" -value "0" -objects $obj
+set_property -name "steps.write_bitstream.args.verbose" -value "0" -objects $obj
+
+# Create 'impl_2' run (if not found)
+if {[string equal [get_runs -quiet impl_2] ""]} {
+    create_run -name impl_2 -part xc7z020clg400-1 -flow {Vivado Implementation 2022} -strategy "Vivado Implementation Defaults" -report_strategy {No Reports} -constrset block_constr -parent_run run_TB_full_sim_impl
+} else {
+  set_property strategy "Vivado Implementation Defaults" [get_runs impl_2]
+  set_property flow "Vivado Implementation 2022" [get_runs impl_2]
+}
+set obj [get_runs impl_2]
+set_property set_report_strategy_name 1 $obj
+set_property report_strategy {Vivado Implementation Default Reports} $obj
+set_property set_report_strategy_name 0 $obj
+# Create 'impl_2_init_report_timing_summary_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_init_report_timing_summary_0] "" ] } {
+  create_report_config -report_name impl_2_init_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps init_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_init_report_timing_summary_0]
+if { $obj != "" } {
+set_property -name "is_enabled" -value "0" -objects $obj
+set_property -name "options.max_paths" -value "10" -objects $obj
+set_property -name "options.report_unconstrained" -value "1" -objects $obj
+
+}
+# Create 'impl_2_opt_report_drc_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_opt_report_drc_0] "" ] } {
+  create_report_config -report_name impl_2_opt_report_drc_0 -report_type report_drc:1.0 -steps opt_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_opt_report_drc_0]
+if { $obj != "" } {
+
+}
+# Create 'impl_2_opt_report_timing_summary_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_opt_report_timing_summary_0] "" ] } {
+  create_report_config -report_name impl_2_opt_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps opt_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_opt_report_timing_summary_0]
+if { $obj != "" } {
+set_property -name "is_enabled" -value "0" -objects $obj
+set_property -name "options.max_paths" -value "10" -objects $obj
+set_property -name "options.report_unconstrained" -value "1" -objects $obj
+
+}
+# Create 'impl_2_power_opt_report_timing_summary_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_power_opt_report_timing_summary_0] "" ] } {
+  create_report_config -report_name impl_2_power_opt_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps power_opt_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_power_opt_report_timing_summary_0]
+if { $obj != "" } {
+set_property -name "is_enabled" -value "0" -objects $obj
+set_property -name "options.max_paths" -value "10" -objects $obj
+set_property -name "options.report_unconstrained" -value "1" -objects $obj
+
+}
+# Create 'impl_2_place_report_io_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_io_0] "" ] } {
+  create_report_config -report_name impl_2_place_report_io_0 -report_type report_io:1.0 -steps place_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_io_0]
+if { $obj != "" } {
+
+}
+# Create 'impl_2_place_report_utilization_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_utilization_0] "" ] } {
+  create_report_config -report_name impl_2_place_report_utilization_0 -report_type report_utilization:1.0 -steps place_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_utilization_0]
+if { $obj != "" } {
+
+}
+# Create 'impl_2_place_report_control_sets_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_control_sets_0] "" ] } {
+  create_report_config -report_name impl_2_place_report_control_sets_0 -report_type report_control_sets:1.0 -steps place_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_control_sets_0]
+if { $obj != "" } {
+set_property -name "options.verbose" -value "1" -objects $obj
+
+}
+# Create 'impl_2_place_report_incremental_reuse_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_incremental_reuse_0] "" ] } {
+  create_report_config -report_name impl_2_place_report_incremental_reuse_0 -report_type report_incremental_reuse:1.0 -steps place_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_incremental_reuse_0]
+if { $obj != "" } {
+set_property -name "is_enabled" -value "0" -objects $obj
+
+}
+# Create 'impl_2_place_report_incremental_reuse_1' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_incremental_reuse_1] "" ] } {
+  create_report_config -report_name impl_2_place_report_incremental_reuse_1 -report_type report_incremental_reuse:1.0 -steps place_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_incremental_reuse_1]
+if { $obj != "" } {
+set_property -name "is_enabled" -value "0" -objects $obj
+
+}
+# Create 'impl_2_place_report_timing_summary_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_timing_summary_0] "" ] } {
+  create_report_config -report_name impl_2_place_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps place_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_place_report_timing_summary_0]
+if { $obj != "" } {
+set_property -name "is_enabled" -value "0" -objects $obj
+set_property -name "options.max_paths" -value "10" -objects $obj
+set_property -name "options.report_unconstrained" -value "1" -objects $obj
+
+}
+# Create 'impl_2_post_place_power_opt_report_timing_summary_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_post_place_power_opt_report_timing_summary_0] "" ] } {
+  create_report_config -report_name impl_2_post_place_power_opt_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps post_place_power_opt_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_post_place_power_opt_report_timing_summary_0]
+if { $obj != "" } {
+set_property -name "is_enabled" -value "0" -objects $obj
+set_property -name "options.max_paths" -value "10" -objects $obj
+set_property -name "options.report_unconstrained" -value "1" -objects $obj
+
+}
+# Create 'impl_2_phys_opt_report_timing_summary_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_phys_opt_report_timing_summary_0] "" ] } {
+  create_report_config -report_name impl_2_phys_opt_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps phys_opt_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_phys_opt_report_timing_summary_0]
+if { $obj != "" } {
+set_property -name "is_enabled" -value "0" -objects $obj
+set_property -name "options.max_paths" -value "10" -objects $obj
+set_property -name "options.report_unconstrained" -value "1" -objects $obj
+
+}
+# Create 'impl_2_route_report_drc_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_drc_0] "" ] } {
+  create_report_config -report_name impl_2_route_report_drc_0 -report_type report_drc:1.0 -steps route_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_drc_0]
+if { $obj != "" } {
+
+}
+# Create 'impl_2_route_report_methodology_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_methodology_0] "" ] } {
+  create_report_config -report_name impl_2_route_report_methodology_0 -report_type report_methodology:1.0 -steps route_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_methodology_0]
+if { $obj != "" } {
+
+}
+# Create 'impl_2_route_report_power_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_power_0] "" ] } {
+  create_report_config -report_name impl_2_route_report_power_0 -report_type report_power:1.0 -steps route_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_power_0]
+if { $obj != "" } {
+
+}
+# Create 'impl_2_route_report_route_status_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_route_status_0] "" ] } {
+  create_report_config -report_name impl_2_route_report_route_status_0 -report_type report_route_status:1.0 -steps route_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_route_status_0]
+if { $obj != "" } {
+
+}
+# Create 'impl_2_route_report_timing_summary_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_timing_summary_0] "" ] } {
+  create_report_config -report_name impl_2_route_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps route_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_timing_summary_0]
+if { $obj != "" } {
+set_property -name "options.max_paths" -value "10" -objects $obj
+set_property -name "options.report_unconstrained" -value "1" -objects $obj
+
+}
+# Create 'impl_2_route_report_incremental_reuse_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_incremental_reuse_0] "" ] } {
+  create_report_config -report_name impl_2_route_report_incremental_reuse_0 -report_type report_incremental_reuse:1.0 -steps route_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_incremental_reuse_0]
+if { $obj != "" } {
+
+}
+# Create 'impl_2_route_report_clock_utilization_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_clock_utilization_0] "" ] } {
+  create_report_config -report_name impl_2_route_report_clock_utilization_0 -report_type report_clock_utilization:1.0 -steps route_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_clock_utilization_0]
+if { $obj != "" } {
+
+}
+# Create 'impl_2_route_report_bus_skew_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_bus_skew_0] "" ] } {
+  create_report_config -report_name impl_2_route_report_bus_skew_0 -report_type report_bus_skew:1.1 -steps route_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_route_report_bus_skew_0]
+if { $obj != "" } {
+set_property -name "options.warn_on_violation" -value "1" -objects $obj
+
+}
+# Create 'impl_2_post_route_phys_opt_report_timing_summary_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_post_route_phys_opt_report_timing_summary_0] "" ] } {
+  create_report_config -report_name impl_2_post_route_phys_opt_report_timing_summary_0 -report_type report_timing_summary:1.0 -steps post_route_phys_opt_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_post_route_phys_opt_report_timing_summary_0]
+if { $obj != "" } {
+set_property -name "options.max_paths" -value "10" -objects $obj
+set_property -name "options.report_unconstrained" -value "1" -objects $obj
+set_property -name "options.warn_on_violation" -value "1" -objects $obj
+
+}
+# Create 'impl_2_post_route_phys_opt_report_bus_skew_0' report (if not found)
+if { [ string equal [get_report_configs -of_objects [get_runs impl_2] impl_2_post_route_phys_opt_report_bus_skew_0] "" ] } {
+  create_report_config -report_name impl_2_post_route_phys_opt_report_bus_skew_0 -report_type report_bus_skew:1.1 -steps post_route_phys_opt_design -runs impl_2
+}
+set obj [get_report_configs -of_objects [get_runs impl_2] impl_2_post_route_phys_opt_report_bus_skew_0]
+if { $obj != "" } {
+set_property -name "options.warn_on_violation" -value "1" -objects $obj
+
+}
+set obj [get_runs impl_2]
 set_property -name "constrset" -value "block_constr" -objects $obj
+set_property -name "needs_refresh" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Implementation Defaults" -objects $obj
 set_property -name "steps.write_bitstream.args.readback_file" -value "0" -objects $obj
 set_property -name "steps.write_bitstream.args.verbose" -value "0" -objects $obj
@@ -1387,7 +1690,7 @@ if {[string equal [get_dashboard_gadgets  [ list "utilization_1" ] ] ""]} {
 create_dashboard_gadget -name {utilization_1} -type utilization
 }
 set obj [get_dashboard_gadgets [ list "utilization_1" ] ]
-set_property -name "reports" -value "synth_1#synth_1_synth_report_utilization_0" -objects $obj
+set_property -name "reports" -value "run_BD_pl_test#run_BD_pl_test_synth_report_utilization_0" -objects $obj
 set_property -name "run.step" -value "synth_design" -objects $obj
 set_property -name "run.type" -value "synthesis" -objects $obj
 
