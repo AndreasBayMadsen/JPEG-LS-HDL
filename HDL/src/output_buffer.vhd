@@ -243,9 +243,8 @@ begin
                             -- Shift register.
                             reg_int <= (others => '0');
                             
-                            
-                            reg_int(reg_int'high downto bram_width) <= reg_int(reg_int'high - reg_size_right downto bram_width - reg_size_right);
-                            reg_int(reg_int'high downto reg_int'length - reg_size_right) <= (others => '0');
+                            reg_int(reg_int'high downto bram_width) <= reg_int(reg_int'high - reg_size_right downto bram_width - reg_size_right);   -- NOTE: These two lines are copied below and can maybe be removed
+                            reg_int(reg_int'high downto 2*bram_width + reg_size_right) <= (others => '0');
                             
                             reg_size_left <= reg_size_right;
                             
@@ -261,7 +260,12 @@ begin
                             reg_int(L_max_r + 2 * bram_width - to_integer(encoded_size_r_int_buf) - 1 downto 2 * bram_width - to_integer(encoded_size_r_int_buf))
                             <= encoded_r_buf;
                             
-                            reg_int(reg_int'high downto 2 * bram_width) <= reg_int(reg_int'high downto 2 * bram_width);
+                            if reg_size_left = bram_width then
+                                reg_int(reg_int'high downto 2*bram_width) <= reg_int(reg_int'high - reg_size_right downto 2*bram_width - reg_size_right);
+                                reg_int(reg_int'high downto 2*bram_width + reg_size_right) <= (others => '0');
+                            else
+                                reg_int(reg_int'high downto 2 * bram_width) <= reg_int(reg_int'high downto 2 * bram_width);
+                            end if;
                         
                             reg_size_right <= reg_size_right_com;
                         else

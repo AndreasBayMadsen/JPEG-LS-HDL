@@ -84,7 +84,7 @@ begin
     begin
         wait for 1 ms;
         en <= '1';
-        wait for 1 ms;
+        wait for 11 ms;
         en <= '0';
         
         wait;

@@ -292,7 +292,7 @@ begin
     ram_reset       <= '0';
     ram_clk         <= not pclk_int;
     ram_en          <= '1';
-    ram_addr        <= std_logic_vector(ram_addr_int);
+    ram_addr        <= std_logic_vector(ram_addr_int);  -- NOTE: Needs to be left-shifted by two when interfacing with PS
     ram_write_data  <= (others=>'0');
     ram_we          <= (others=>'0');
 

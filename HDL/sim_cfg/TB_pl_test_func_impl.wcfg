@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="TB_pl_test_func_synth.wdb" id="1">
+      <db_ref path="TB_pl_test_behav.wdb" id="1">
          <top_modules>
             <top_module name="TB_pl_test" />
             <top_module name="glbl" />
@@ -11,160 +11,268 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="2,550,313.566 ns"></ZoomStartTime>
-      <ZoomEndTime time="2,550,436.167 ns"></ZoomEndTime>
-      <Cursor1Time time="2,550,410.766 ns"></Cursor1Time>
+      <ZoomStartTime time="21,080,233.833 ns"></ZoomStartTime>
+      <ZoomEndTime time="21,080,858.834 ns"></ZoomEndTime>
+      <Cursor1Time time="21,080,337.999 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="262"></NameColumnWidth>
-      <ValueColumnWidth column_width="124"></ValueColumnWidth>
+      <ValueColumnWidth column_width="112"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="7" />
-   <wvobject type="group" fp_name="group125">
-      <obj_property name="label">PL IO</obj_property>
+   <WVObjectSize size="32" />
+   <wave_markers>
+      <marker label="" time="12551337998" />
+   </wave_markers>
+   <wvobject fp_name="divider441" type="divider">
+      <obj_property name="label">PL Inputs/Outputs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/rst">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/en">
+      <obj_property name="ElementShortName">en</obj_property>
+      <obj_property name="ObjectShortName">en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/uart_tx">
+      <obj_property name="ElementShortName">uart_tx</obj_property>
+      <obj_property name="ObjectShortName">uart_tx</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider177" type="divider">
+      <obj_property name="label">Camera simulator</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/camera_simulator/pclk">
+      <obj_property name="ElementShortName">pclk</obj_property>
+      <obj_property name="ObjectShortName">pclk</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/camera_simulator/pixel">
+      <obj_property name="ElementShortName">pixel[7:0]</obj_property>
+      <obj_property name="ObjectShortName">pixel[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/camera_simulator/href">
+      <obj_property name="ElementShortName">href</obj_property>
+      <obj_property name="ObjectShortName">href</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/camera_simulator/vsync">
+      <obj_property name="ElementShortName">vsync</obj_property>
+      <obj_property name="ObjectShortName">vsync</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group197">
+      <obj_property name="label">Internal</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="logic" fp_name="/TB_pl_test/LED0">
-         <obj_property name="ElementShortName">LED0</obj_property>
-         <obj_property name="ObjectShortName">LED0</obj_property>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/camera_simulator/U0/fsm_state">
+         <obj_property name="ElementShortName">fsm_state</obj_property>
+         <obj_property name="ObjectShortName">fsm_state</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/LED1">
-         <obj_property name="ElementShortName">LED1</obj_property>
-         <obj_property name="ObjectShortName">LED1</obj_property>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/camera_simulator/U0/enable">
+         <obj_property name="ElementShortName">enable</obj_property>
+         <obj_property name="ObjectShortName">enable</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/clk">
-         <obj_property name="ElementShortName">clk</obj_property>
-         <obj_property name="ObjectShortName">clk</obj_property>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/camera_simulator/U0/row_count">
+         <obj_property name="ElementShortName">row_count</obj_property>
+         <obj_property name="ObjectShortName">row_count</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/en">
-         <obj_property name="ElementShortName">en</obj_property>
-         <obj_property name="ObjectShortName">en</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/rst">
-         <obj_property name="ElementShortName">rst</obj_property>
-         <obj_property name="ObjectShortName">rst</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/uart_tx">
-         <obj_property name="ElementShortName">uart_tx</obj_property>
-         <obj_property name="ObjectShortName">uart_tx</obj_property>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/camera_simulator/U0/col_count">
+         <obj_property name="ElementShortName">col_count</obj_property>
+         <obj_property name="ObjectShortName">col_count</obj_property>
       </wvobject>
    </wvobject>
-   <wvobject type="group" fp_name="group149">
-      <obj_property name="label">HWT_CAM output</obj_property>
+   <wvobject fp_name="divider182" type="divider">
+      <obj_property name="label">Compression module</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/HWT_cam_sim_0/pclk">
-         <obj_property name="ElementShortName">pclk</obj_property>
-         <obj_property name="ObjectShortName">pclk</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/HWT_cam_sim_0/pixel">
-         <obj_property name="ElementShortName">pixel[7:0]</obj_property>
-         <obj_property name="ObjectShortName">pixel[7:0]</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/HWT_cam_sim_0/href">
-         <obj_property name="ElementShortName">href</obj_property>
-         <obj_property name="ObjectShortName">href</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/HWT_cam_sim_0/vsync">
-         <obj_property name="ElementShortName">vsync</obj_property>
-         <obj_property name="ObjectShortName">vsync</obj_property>
-      </wvobject>
    </wvobject>
-   <wvobject type="group" fp_name="group126">
-      <obj_property name="label">Module Output</obj_property>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/compression_module/new_pixel">
+      <obj_property name="ElementShortName">new_pixel</obj_property>
+      <obj_property name="ObjectShortName">new_pixel</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/compression_module/valid_data">
+      <obj_property name="ElementShortName">valid_data</obj_property>
+      <obj_property name="ObjectShortName">valid_data</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/compression_module/encoded_r">
+      <obj_property name="ElementShortName">encoded_r[19:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_r[19:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/compression_module/encoded_g">
+      <obj_property name="ElementShortName">encoded_g[23:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_g[23:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/compression_module/encoded_b">
+      <obj_property name="ElementShortName">encoded_b[19:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_b[19:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/compression_module/encoded_size_r">
+      <obj_property name="ElementShortName">encoded_size_r[5:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_size_r[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/compression_module/encoded_size_g">
+      <obj_property name="ElementShortName">encoded_size_g[5:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_size_g[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/compression_module/encoded_size_b">
+      <obj_property name="ElementShortName">encoded_size_b[5:0]</obj_property>
+      <obj_property name="ObjectShortName">encoded_size_b[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider442" type="divider">
+      <obj_property name="label">Output buffer</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/new_pixel">
+      <obj_property name="ElementShortName">new_pixel</obj_property>
+      <obj_property name="ObjectShortName">new_pixel</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/valid_data">
+      <obj_property name="ElementShortName">valid_data</obj_property>
+      <obj_property name="ObjectShortName">valid_data</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group201">
+      <obj_property name="label">Inputs</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/new_pixel">
-         <obj_property name="ElementShortName">new_pixel</obj_property>
-         <obj_property name="ObjectShortName">new_pixel</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/valid_data">
-         <obj_property name="ElementShortName">valid_data</obj_property>
-         <obj_property name="ObjectShortName">valid_data</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/encoded_r">
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/encoded_r">
          <obj_property name="ElementShortName">encoded_r[19:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_r[19:0]</obj_property>
          <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/encoded_g">
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/encoded_g">
          <obj_property name="ElementShortName">encoded_g[23:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_g[23:0]</obj_property>
          <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/encoded_b">
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/encoded_b">
          <obj_property name="ElementShortName">encoded_b[19:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_b[19:0]</obj_property>
          <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/encoded_size_r">
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/encoded_size_r">
          <obj_property name="ElementShortName">encoded_size_r[5:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_size_r[5:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/encoded_size_g">
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/encoded_size_g">
          <obj_property name="ElementShortName">encoded_size_g[5:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_size_g[5:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/JPEG_LS_module_0/encoded_size_b">
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/encoded_size_b">
          <obj_property name="ElementShortName">encoded_size_b[5:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_size_b[5:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
    </wvobject>
-   <wvobject type="group" fp_name="group141">
-      <obj_property name="label">Buffer output</obj_property>
+   <wvobject type="group" fp_name="group217">
+      <obj_property name="label">Shift registers</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/read_allowed">
-         <obj_property name="ElementShortName">read_allowed</obj_property>
-         <obj_property name="ObjectShortName">read_allowed</obj_property>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/reg_int">
+         <obj_property name="ElementShortName">reg_int[191:0]</obj_property>
+         <obj_property name="ObjectShortName">reg_int[191:0]</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/dout">
-         <obj_property name="ElementShortName">dout[63:0]</obj_property>
-         <obj_property name="ObjectShortName">dout[63:0]</obj_property>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/reg_size_left">
+         <obj_property name="ElementShortName">reg_size_left</obj_property>
+         <obj_property name="ObjectShortName">reg_size_left</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/new_data_ready">
-         <obj_property name="ElementShortName">new_data_ready</obj_property>
-         <obj_property name="ObjectShortName">new_data_ready</obj_property>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/reg_size_right">
+         <obj_property name="ElementShortName">reg_size_right</obj_property>
+         <obj_property name="ObjectShortName">reg_size_right</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/end_of_data">
-         <obj_property name="ElementShortName">end_of_data</obj_property>
-         <obj_property name="ObjectShortName">end_of_data</obj_property>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/reg_size_right_com">
+         <obj_property name="ElementShortName">reg_size_right_com</obj_property>
+         <obj_property name="ObjectShortName">reg_size_right_com</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/reg_size_overflow">
+         <obj_property name="ElementShortName">reg_size_overflow</obj_property>
+         <obj_property name="ObjectShortName">reg_size_overflow</obj_property>
       </wvobject>
    </wvobject>
-   <wvobject type="group" fp_name="group146">
-      <obj_property name="label">Sender output</obj_property>
+   <wvobject type="group" fp_name="group210">
+      <obj_property name="label">Write FSM</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_uart_sender_0/sig">
-         <obj_property name="ElementShortName">sig</obj_property>
-         <obj_property name="ObjectShortName">sig</obj_property>
+      <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/writer_state">
+         <obj_property name="ElementShortName">writer_state</obj_property>
+         <obj_property name="ObjectShortName">writer_state</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_uart_sender_0/request_next">
-         <obj_property name="ElementShortName">request_next</obj_property>
-         <obj_property name="ObjectShortName">request_next</obj_property>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/encoded_r_buf">
+         <obj_property name="ElementShortName">encoded_r_buf[19:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_r_buf[19:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/encoded_g_buf">
+         <obj_property name="ElementShortName">encoded_g_buf[23:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_g_buf[23:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/encoded_b_buf">
+         <obj_property name="ElementShortName">encoded_b_buf[19:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_b_buf[19:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/encoded_size_r_int_buf">
+         <obj_property name="ElementShortName">encoded_size_r_int_buf[5:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_size_r_int_buf[5:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/encoded_size_g_int_buf">
+         <obj_property name="ElementShortName">encoded_size_g_int_buf[5:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_size_g_int_buf[5:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/encoded_size_b_int_buf">
+         <obj_property name="ElementShortName">encoded_size_b_int_buf[5:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_size_b_int_buf[5:0]</obj_property>
       </wvobject>
    </wvobject>
-   <wvobject type="group" fp_name="group700">
-      <obj_property name="label">Buffer internal</obj_property>
+   <wvobject type="group" fp_name="group212">
+      <obj_property name="label">RAM interface</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/we">
+         <obj_property name="ElementShortName">we</obj_property>
+         <obj_property name="ObjectShortName">we</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/bram_addr">
+         <obj_property name="ElementShortName">bram_addr[13:0]</obj_property>
+         <obj_property name="ObjectShortName">bram_addr[13:0]</obj_property>
+      </wvobject>
       <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/bram_din">
          <obj_property name="ElementShortName">bram_din[63:0]</obj_property>
          <obj_property name="ObjectShortName">bram_din[63:0]</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/reg_int">
-         <obj_property name="ElementShortName">reg_int[191:0]</obj_property>
-         <obj_property name="ObjectShortName">reg_int[191:0]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/bram_dout">
+         <obj_property name="ElementShortName">bram_dout[63:0]</obj_property>
+         <obj_property name="ObjectShortName">bram_dout[63:0]</obj_property>
       </wvobject>
    </wvobject>
-   <wvobject type="group" fp_name="group374">
-      <obj_property name="label">Sender internals</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
-      <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_uart_sender_0/U0/dout">
-         <obj_property name="ElementShortName">dout[63:0]</obj_property>
-         <obj_property name="ObjectShortName">dout[63:0]</obj_property>
-      </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/read_allowed">
+      <obj_property name="ElementShortName">read_allowed</obj_property>
+      <obj_property name="ObjectShortName">read_allowed</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/request_next">
+      <obj_property name="ElementShortName">request_next</obj_property>
+      <obj_property name="ObjectShortName">request_next</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/new_data_ready">
+      <obj_property name="ElementShortName">new_data_ready</obj_property>
+      <obj_property name="ObjectShortName">new_data_ready</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/end_of_data">
+      <obj_property name="ElementShortName">end_of_data</obj_property>
+      <obj_property name="ObjectShortName">end_of_data</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/dout">
+      <obj_property name="ElementShortName">dout[63:0]</obj_property>
+      <obj_property name="ObjectShortName">dout[63:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
    </wvobject>
 </wave_config>
