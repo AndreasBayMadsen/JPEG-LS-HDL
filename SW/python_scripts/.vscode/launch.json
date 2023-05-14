@@ -5,6 +5,32 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: expand_ascii_dump",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                // "/home/andreas/Desktop/Implementation_verification/Implementation/Python/ASCII/no_border_low_res.txt",  // Input file
+                "/home/andreas/Desktop/Implementation_verification/Implementation/CuteCom/ASCII/no_border_low_res.txt", // Input file
+                "/home/andreas/Desktop/Implementation_verification/David_Clunie/ASCII_files/no_border_low_res.txt"      // Reference file
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: jls_to_ppm",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "/home/andreas/Desktop/Implementation_verification/Implementation/Python/Bitstream/no_border_low_res.jls",
+                "-d",
+                "../decode/rawnjl2_decode"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Python: jls_to_ascii",
             "type": "python",
             "request": "launch",

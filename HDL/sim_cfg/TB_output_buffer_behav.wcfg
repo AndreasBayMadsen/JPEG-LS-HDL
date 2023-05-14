@@ -11,84 +11,129 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="733.720 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,218.559 ns"></ZoomEndTime>
-      <Cursor1Time time="916.652 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="5,450.001 ns"></ZoomEndTime>
+      <Cursor1Time time="1,334.328 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="202"></NameColumnWidth>
-      <ValueColumnWidth column_width="281"></ValueColumnWidth>
+      <ValueColumnWidth column_width="277"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="31" />
-   <wvobject type="logic" fp_name="/TB_output_buffer/pclk">
-      <obj_property name="ElementShortName">pclk</obj_property>
-      <obj_property name="ObjectShortName">pclk</obj_property>
+   <WVObjectSize size="24" />
+   <wvobject fp_name="divider355" type="divider">
+      <obj_property name="label">Writing</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/TB_output_buffer/en">
-      <obj_property name="ElementShortName">en</obj_property>
-      <obj_property name="ObjectShortName">en</obj_property>
+   <wvobject type="group" fp_name="group380">
+      <obj_property name="label">Inputs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/TB_output_buffer/pclk">
+         <obj_property name="ElementShortName">pclk</obj_property>
+         <obj_property name="ObjectShortName">pclk</obj_property>
+         <obj_property name="CustomSignalColor">#00FF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_output_buffer/en">
+         <obj_property name="ElementShortName">en</obj_property>
+         <obj_property name="ObjectShortName">en</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_output_buffer/valid_data">
+         <obj_property name="ElementShortName">valid_data</obj_property>
+         <obj_property name="ObjectShortName">valid_data</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_output_buffer/encoded_r">
+         <obj_property name="ElementShortName">encoded_r[19:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_r[19:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_output_buffer/encoded_g">
+         <obj_property name="ElementShortName">encoded_g[23:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_g[23:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_output_buffer/encoded_b">
+         <obj_property name="ElementShortName">encoded_b[19:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_b[19:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_output_buffer/encoded_size_r">
+         <obj_property name="ElementShortName">encoded_size_r[5:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_size_r[5:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_output_buffer/encoded_size_g">
+         <obj_property name="ElementShortName">encoded_size_g[5:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_size_g[5:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_output_buffer/encoded_size_b">
+         <obj_property name="ElementShortName">encoded_size_b[5:0]</obj_property>
+         <obj_property name="ObjectShortName">encoded_size_b[5:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject type="logic" fp_name="/TB_output_buffer/valid_data">
-      <obj_property name="ElementShortName">valid_data</obj_property>
-      <obj_property name="ObjectShortName">valid_data</obj_property>
+   <wvobject type="group" fp_name="group379">
+      <obj_property name="label">Writer FSM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="other" fp_name="/TB_output_buffer/DUT/writer_state">
+         <obj_property name="ElementShortName">writer_state</obj_property>
+         <obj_property name="ObjectShortName">writer_state</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_output_buffer/DUT/reg_size_right">
+         <obj_property name="ElementShortName">reg_size_right</obj_property>
+         <obj_property name="ObjectShortName">reg_size_right</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/TB_output_buffer/DUT/reg_size_left">
+         <obj_property name="ElementShortName">reg_size_left</obj_property>
+         <obj_property name="ObjectShortName">reg_size_left</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject type="array" fp_name="/TB_output_buffer/encoded_r">
-      <obj_property name="ElementShortName">encoded_r[19:0]</obj_property>
-      <obj_property name="ObjectShortName">encoded_r[19:0]</obj_property>
+   <wvobject fp_name="divider357" type="divider">
+      <obj_property name="label">Reading</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/TB_output_buffer/encoded_g">
-      <obj_property name="ElementShortName">encoded_g[23:0]</obj_property>
-      <obj_property name="ObjectShortName">encoded_g[23:0]</obj_property>
+   <wvobject type="logic" fp_name="/TB_output_buffer/DUT/read_allow">
+      <obj_property name="ElementShortName">read_allow</obj_property>
+      <obj_property name="ObjectShortName">read_allow</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/TB_output_buffer/encoded_b">
-      <obj_property name="ElementShortName">encoded_b[19:0]</obj_property>
-      <obj_property name="ObjectShortName">encoded_b[19:0]</obj_property>
+   <wvobject type="logic" fp_name="/TB_output_buffer/new_data_ready">
+      <obj_property name="ElementShortName">new_data_ready</obj_property>
+      <obj_property name="ObjectShortName">new_data_ready</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/TB_output_buffer/encoded_size_r">
-      <obj_property name="ElementShortName">encoded_size_r[5:0]</obj_property>
-      <obj_property name="ObjectShortName">encoded_size_r[5:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject type="logic" fp_name="/TB_output_buffer/end_of_data">
+      <obj_property name="ElementShortName">end_of_data</obj_property>
+      <obj_property name="ObjectShortName">end_of_data</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/TB_output_buffer/encoded_size_g">
-      <obj_property name="ElementShortName">encoded_size_g[5:0]</obj_property>
-      <obj_property name="ObjectShortName">encoded_size_g[5:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject type="logic" fp_name="/TB_output_buffer/request_next">
+      <obj_property name="ElementShortName">request_next</obj_property>
+      <obj_property name="ObjectShortName">request_next</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/TB_output_buffer/encoded_size_b">
-      <obj_property name="ElementShortName">encoded_size_b[5:0]</obj_property>
-      <obj_property name="ObjectShortName">encoded_size_b[5:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject type="logic" fp_name="/TB_output_buffer/read_allowed">
+      <obj_property name="ElementShortName">read_allowed</obj_property>
+      <obj_property name="ObjectShortName">read_allowed</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_output_buffer/dout">
+      <obj_property name="ElementShortName">dout[63:0]</obj_property>
+      <obj_property name="ObjectShortName">dout[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider356" type="divider">
+      <obj_property name="label">Internal signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/TB_output_buffer/DUT/reg_empty">
       <obj_property name="ElementShortName">reg_empty</obj_property>
       <obj_property name="ObjectShortName">reg_empty</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/TB_output_buffer/DUT/reg_int">
-      <obj_property name="ElementShortName">reg_int[127:0]</obj_property>
-      <obj_property name="ObjectShortName">reg_int[127:0]</obj_property>
+      <obj_property name="ElementShortName">reg_int[191:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_int[191:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/TB_output_buffer/DUT/reg_size_left">
-      <obj_property name="ElementShortName">reg_size_left[6:0]</obj_property>
-      <obj_property name="ObjectShortName">reg_size_left[6:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_output_buffer/DUT/reg_size_right_com">
-      <obj_property name="ElementShortName">reg_size_right_com[6:0]</obj_property>
-      <obj_property name="ObjectShortName">reg_size_right_com[6:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_output_buffer/DUT/reg_size_right">
-      <obj_property name="ElementShortName">reg_size_right[6:0]</obj_property>
-      <obj_property name="ObjectShortName">reg_size_right[6:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject type="other" fp_name="/TB_output_buffer/DUT/reg_size_right_com">
+      <obj_property name="ElementShortName">reg_size_right_com</obj_property>
+      <obj_property name="ObjectShortName">reg_size_right_com</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/TB_output_buffer/DUT/reg_size_overflow">
       <obj_property name="ElementShortName">reg_size_overflow</obj_property>
       <obj_property name="ObjectShortName">reg_size_overflow</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/TB_output_buffer/DUT/writer_state">
-      <obj_property name="ElementShortName">writer_state</obj_property>
-      <obj_property name="ObjectShortName">writer_state</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/TB_output_buffer/request_next">
       <obj_property name="ElementShortName">request_next</obj_property>
@@ -125,29 +170,5 @@
    <wvobject type="array" fp_name="/TB_output_buffer/DUT/bram_dout">
       <obj_property name="ElementShortName">bram_dout[63:0]</obj_property>
       <obj_property name="ObjectShortName">bram_dout[63:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_output_buffer/DUT/read_allow">
-      <obj_property name="ElementShortName">read_allow</obj_property>
-      <obj_property name="ObjectShortName">read_allow</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_output_buffer/new_data_ready">
-      <obj_property name="ElementShortName">new_data_ready</obj_property>
-      <obj_property name="ObjectShortName">new_data_ready</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_output_buffer/end_of_data">
-      <obj_property name="ElementShortName">end_of_data</obj_property>
-      <obj_property name="ObjectShortName">end_of_data</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_output_buffer/request_next">
-      <obj_property name="ElementShortName">request_next</obj_property>
-      <obj_property name="ObjectShortName">request_next</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_output_buffer/read_allowed">
-      <obj_property name="ElementShortName">read_allowed</obj_property>
-      <obj_property name="ObjectShortName">read_allowed</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_output_buffer/dout">
-      <obj_property name="ElementShortName">dout[63:0]</obj_property>
-      <obj_property name="ObjectShortName">dout[63:0]</obj_property>
    </wvobject>
 </wave_config>

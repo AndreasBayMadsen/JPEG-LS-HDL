@@ -111,11 +111,18 @@ architecture Behavioral of output_buffer is
     type writer_enum is (WAIT_NEW_INPUT, UPDATE);
     signal writer_state : writer_enum;
     
-    
     -- Convert STD_LOGIC_VECTOR to UNSIGNED.
     signal encoded_size_r_int : UNSIGNED(k_width_r downto 0);
     signal encoded_size_g_int : UNSIGNED(k_width_g downto 0);
     signal encoded_size_b_int : UNSIGNED(k_width_b downto 0);
+    
+    -- Buffer signals
+    signal encoded_r_buf            : STD_LOGIC_VECTOR(L_max_r - 1 downto 0)    := (others=>'0');
+    signal encoded_g_buf            : STD_LOGIC_VECTOR(L_max_g - 1 downto 0)    := (others=>'0');
+    signal encoded_b_buf            : STD_LOGIC_VECTOR(L_max_b - 1 downto 0)    := (others=>'0');
+    signal encoded_size_r_int_buf   : UNSIGNED(k_width_r downto 0)              := (others=>'0');
+    signal encoded_size_g_int_buf   : UNSIGNED(k_width_g downto 0)              := (others=>'0');
+    signal encoded_size_b_int_buf   : UNSIGNED(k_width_b downto 0)              := (others=>'0');
     
 begin
 
@@ -135,7 +142,7 @@ begin
     
     reg_empty <= '1' when reg_size_right + reg_size_left = 0 else '0';
     
-    reg_size_right_com  <= to_integer(encoded_size_r_int) + to_integer(encoded_size_g_int) + to_integer(encoded_size_b_int);
+    reg_size_right_com  <= to_integer(encoded_size_r_int_buf) + to_integer(encoded_size_g_int_buf) + to_integer(encoded_size_b_int_buf);
     
     reg_size_overflow <= '1' when bram_width < reg_size_right + reg_size_left else '0';
     
@@ -151,6 +158,13 @@ begin
                 write_pointer <= (others => '0');
                 reg_int <= (others => '0');
                 writer_state <= WAIT_NEW_INPUT;
+                
+                encoded_r_buf   <= (others=>'0');
+                encoded_g_buf   <= (others=>'0');
+                encoded_b_buf   <= (others=>'0');
+                encoded_size_r_int_buf  <= (others=>'0');
+                encoded_size_g_int_buf  <= (others=>'0');
+                encoded_size_b_int_buf  <= (others=>'0');
             
             else
             
@@ -199,7 +213,15 @@ begin
 
                                 end if;
                             end if;
-                            writer_state <= UPDATE;
+                            
+                            -- Buffer inputs and change state
+                            encoded_r_buf           <= encoded_r;
+                            encoded_g_buf           <= encoded_g;
+                            encoded_b_buf           <= encoded_b;
+                            encoded_size_r_int_buf  <= encoded_size_r_int;
+                            encoded_size_g_int_buf  <= encoded_size_g_int;
+                            encoded_size_b_int_buf  <= encoded_size_b_int;
+                            writer_state    <= UPDATE;
                         end if;
                        
                         if valid_data = '0' and reg_empty = '1' then
@@ -232,12 +254,12 @@ begin
                         -- Load encoded into register.
                         if valid_data = '1' then
                         
-                            reg_int(L_max_b + 2 * bram_width - (to_integer(encoded_size_r_int) + to_integer(encoded_size_g_int) + to_integer(encoded_size_b_int)) - 1 downto 2 * bram_width - (to_integer(encoded_size_r_int) + to_integer(encoded_size_g_int) + to_integer(encoded_size_b_int)))
-                            <= encoded_b;
-                            reg_int(L_max_g + 2 * bram_width - (to_integer(encoded_size_r_int) + to_integer(encoded_size_g_int)) - 1 downto 2 * bram_width - (to_integer(encoded_size_r_int) + to_integer(encoded_size_g_int)))
-                            <= encoded_g;
-                            reg_int(L_max_r + 2 * bram_width - to_integer(encoded_size_r_int) - 1 downto 2 * bram_width - to_integer(encoded_size_r_int))
-                            <= encoded_r;
+                            reg_int(L_max_b + 2 * bram_width - (to_integer(encoded_size_r_int_buf) + to_integer(encoded_size_g_int_buf) + to_integer(encoded_size_b_int_buf)) - 1 downto 2 * bram_width - (to_integer(encoded_size_r_int_buf) + to_integer(encoded_size_g_int_buf) + to_integer(encoded_size_b_int_buf)))
+                            <= encoded_b_buf;
+                            reg_int(L_max_g + 2 * bram_width - (to_integer(encoded_size_r_int_buf) + to_integer(encoded_size_g_int_buf)) - 1 downto 2 * bram_width - (to_integer(encoded_size_r_int_buf) + to_integer(encoded_size_g_int_buf)))
+                            <= encoded_g_buf;
+                            reg_int(L_max_r + 2 * bram_width - to_integer(encoded_size_r_int_buf) - 1 downto 2 * bram_width - to_integer(encoded_size_r_int_buf))
+                            <= encoded_r_buf;
                             
                             reg_int(reg_int'high downto 2 * bram_width) <= reg_int(reg_int'high downto 2 * bram_width);
                         

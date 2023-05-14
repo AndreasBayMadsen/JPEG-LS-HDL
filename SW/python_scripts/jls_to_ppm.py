@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import cv2
 import argparse
 import os
@@ -91,14 +92,27 @@ def jls_to_ppm(input_file: str | Path, output_file: str | Path =None, *, size: T
     print("Error:", error.decode("utf-8"))
         
         
-def main():
+# def main():
+
+#     path = Path("../../data_tmp/cutecom.log")
+#     decoder_path = "../decode/rawnjl2_decode"
     
-    path = Path("../../data_tmp/cutecom.log")
-    decoder_path = "../decode/rawnjl2_decode"
-    
-    #output_path = Path(".")
-    jls_to_ppm(path, size=(320, 240), decoder_path=decoder_path, bits=(5,6,5), limit=(20,24,20))#, output_path)
+#     #output_path = Path(".")
+#     jls_to_ppm(path, size=(320, 240), decoder_path=decoder_path, bits=(5,6,5), limit=(20,24,20))#, output_path)
 
         
 if __name__ == "__main__":
-    main()
+    # Run argument parser
+    parser = argparse.ArgumentParser(description="Program used to decompress a '.jls' file into a '.ppm' file")
+    parser.add_argument('jls_path', help="Path to the '.jls' file")
+    parser.add_argument('-o', '--ppm_path', required=False, default=None, help="Path of the output '.ppm' file")
+    parser.add_argument('-d', '--decoder_path', required=False, default="decode/rawnjl2_decode", help="Path of the decoder to use")
+    parser.add_argument('-wi', '--width', required=False, default=320, help="Width to resize image")
+    parser.add_argument('-hi', '--height', required=False, default=240, help="Height to resize image")
+
+    args = parser.parse_args()
+
+    jls_to_ppm(args.jls_path, args.ppm_path,
+               decoder_path=args.decoder_path,
+               size=(args.width, args.height),
+               bits=(5,6,5), limit=(20,24,20))
