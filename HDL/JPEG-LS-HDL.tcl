@@ -72,10 +72,10 @@ proc checkRequiredFiles { origin_dir} {
  "[file normalize "$origin_dir/sim_cfg/TB_HWT_cam_sim_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_output_buffer_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_output_uart_sender_behav.wcfg"]"\
+ "[file normalize "$origin_dir/sim/TB_pl_test.vhd"]"\
  "[file normalize "$origin_dir/sim/camera_simulator.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim_impl.vhd"]"\
  "[file normalize "$origin_dir/sim/TB_full_sim.vhd"]"\
- "[file normalize "$origin_dir/sim/TB_pl_test.vhd"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_behav.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_pl_test_func_impl.wcfg"]"\
  "[file normalize "$origin_dir/sim_cfg/TB_full_sim_impl_func_synth.wcfg"]"\
@@ -218,7 +218,7 @@ set_property -name "webtalk.questa_export_sim" -value "51" -objects $obj
 set_property -name "webtalk.riviera_export_sim" -value "51" -objects $obj
 set_property -name "webtalk.vcs_export_sim" -value "51" -objects $obj
 set_property -name "webtalk.xsim_export_sim" -value "51" -objects $obj
-set_property -name "webtalk.xsim_launch_sim" -value "672" -objects $obj
+set_property -name "webtalk.xsim_launch_sim" -value "684" -objects $obj
 set_property -name "xpm_libraries" -value "XPM_CDC XPM_FIFO XPM_MEMORY" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
@@ -632,10 +632,10 @@ if {[string equal [get_filesets -quiet full_simulation] ""]} {
 # Set 'full_simulation' fileset object
 set obj [get_filesets full_simulation]
 set files [list \
+ [file normalize "${origin_dir}/sim/TB_pl_test.vhd"] \
  [file normalize "${origin_dir}/sim/camera_simulator.vhd"] \
  [file normalize "${origin_dir}/sim/TB_full_sim_impl.vhd"] \
  [file normalize "${origin_dir}/sim/TB_full_sim.vhd"] \
- [file normalize "${origin_dir}/sim/TB_pl_test.vhd"] \
  [file normalize "${origin_dir}/sim_cfg/TB_full_sim_behav.wcfg"] \
  [file normalize "${origin_dir}/sim_cfg/TB_pl_test_func_impl.wcfg"] \
  [file normalize "${origin_dir}/sim_cfg/TB_full_sim_impl_func_synth.wcfg"] \
@@ -644,6 +644,11 @@ set files [list \
 add_files -norecurse -fileset $obj $files
 
 # Set 'full_simulation' fileset file properties for remote files
+set file "$origin_dir/sim/TB_pl_test.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 set file "$origin_dir/sim/camera_simulator.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
@@ -655,11 +660,6 @@ set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 set file "$origin_dir/sim/TB_full_sim.vhd"
-set file [file normalize $file]
-set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
-set_property -name "file_type" -value "VHDL" -objects $file_obj
-
-set file "$origin_dir/sim/TB_pl_test.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets full_simulation] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -676,7 +676,7 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 # Set 'full_simulation' fileset properties
 set obj [get_filesets full_simulation]
 set_property -name "nl.mode" -value "funcsim" -objects $obj
-set_property -name "top" -value "TB_full_sim_impl" -objects $obj
+set_property -name "top" -value "TB_pl_test" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
@@ -839,7 +839,6 @@ proc cr_bd_BD_pl_test { parentCell } {
   if { $bCheckIPs == 1 } {
      set list_check_ips "\ 
   xilinx.com:ip:blk_mem_gen:8.4\
-  xilinx.com:ip:ila:6.2\
   xilinx.com:ip:util_vector_logic:2.0\
   "
 
@@ -951,18 +950,6 @@ proc cr_bd_BD_pl_test { parentCell } {
   ] $PL_test_cam_rom
 
 
-  # Create instance: camera_ILA, and set properties
-  set camera_ILA [ create_bd_cell -type ip -vlnv xilinx.com:ip:ila:6.2 camera_ILA ]
-  set_property -dict [list \
-    CONFIG.ALL_PROBE_SAME_MU_CNT {5} \
-    CONFIG.C_DATA_DEPTH {1024} \
-    CONFIG.C_MONITOR_TYPE {Native} \
-    CONFIG.C_NUM_OF_PROBES {4} \
-    CONFIG.C_PROBE0_WIDTH {1} \
-    CONFIG.C_PROBE1_WIDTH {8} \
-  ] $camera_ILA
-
-
   # Create instance: camera_simulator, and set properties
   set block_name HWT_cam_sim
   set block_cell_name camera_simulator
@@ -995,21 +982,6 @@ proc cr_bd_BD_pl_test { parentCell } {
   ] $compression_module
 
 
-  # Create instance: compressor_ila, and set properties
-  set compressor_ila [ create_bd_cell -type ip -vlnv xilinx.com:ip:ila:6.2 compressor_ila ]
-  set_property -dict [list \
-    CONFIG.ALL_PROBE_SAME_MU_CNT {5} \
-    CONFIG.C_MONITOR_TYPE {Native} \
-    CONFIG.C_NUM_OF_PROBES {8} \
-    CONFIG.C_PROBE2_WIDTH {20} \
-    CONFIG.C_PROBE3_WIDTH {24} \
-    CONFIG.C_PROBE4_WIDTH {20} \
-    CONFIG.C_PROBE5_WIDTH {6} \
-    CONFIG.C_PROBE6_WIDTH {6} \
-    CONFIG.C_PROBE7_WIDTH {6} \
-  ] $compressor_ila
-
-
   # Create instance: enable_debounce, and set properties
   set block_name debounce
   set block_cell_name enable_debounce
@@ -1034,17 +1006,6 @@ proc cr_bd_BD_pl_test { parentCell } {
      return 1
    }
   
-  # Create instance: output_buffer_ila, and set properties
-  set output_buffer_ila [ create_bd_cell -type ip -vlnv xilinx.com:ip:ila:6.2 output_buffer_ila ]
-  set_property -dict [list \
-    CONFIG.ALL_PROBE_SAME_MU_CNT {5} \
-    CONFIG.C_MONITOR_TYPE {Native} \
-    CONFIG.C_NUM_OF_PROBES {6} \
-    CONFIG.C_PROBE2_WIDTH {1} \
-    CONFIG.C_PROBE3_WIDTH {64} \
-  ] $output_buffer_ila
-
-
   # Create instance: output_uart_sender_0, and set properties
   set block_name output_uart_sender
   set block_cell_name output_uart_sender_0
@@ -1079,27 +1040,27 @@ proc cr_bd_BD_pl_test { parentCell } {
   connect_bd_intf_net -intf_net HWT_cam_sim_0_BRAM_interface [get_bd_intf_pins PL_test_cam_rom/BRAM_PORTA] [get_bd_intf_pins camera_simulator/BRAM_interface]
 
   # Create port connections
-  connect_bd_net -net HWT_cam_sim_0_href [get_bd_pins camera_ILA/probe2] [get_bd_pins camera_simulator/href] [get_bd_pins compression_module/href]
-  connect_bd_net -net HWT_cam_sim_0_pclk [get_bd_pins camera_ILA/probe0] [get_bd_pins camera_simulator/pclk] [get_bd_pins compression_module/pclk] [get_bd_pins enable_debounce/clk] [get_bd_pins output_buffer_0/pclk] [get_bd_pins output_buffer_ila/probe0] [get_bd_pins output_uart_sender_0/pclk]
-  connect_bd_net -net HWT_cam_sim_0_pixel [get_bd_pins camera_ILA/probe1] [get_bd_pins camera_simulator/pixel] [get_bd_pins compression_module/pixel]
-  connect_bd_net -net HWT_cam_sim_0_vsync [get_bd_pins camera_ILA/probe3] [get_bd_pins camera_simulator/vsync] [get_bd_pins compression_module/vsync]
-  connect_bd_net -net JPEG_LS_module_0_encoded_b [get_bd_pins compression_module/encoded_b] [get_bd_pins compressor_ila/probe4] [get_bd_pins output_buffer_0/encoded_b]
-  connect_bd_net -net JPEG_LS_module_0_encoded_g [get_bd_pins compression_module/encoded_g] [get_bd_pins compressor_ila/probe3] [get_bd_pins output_buffer_0/encoded_g]
-  connect_bd_net -net JPEG_LS_module_0_encoded_r [get_bd_pins compression_module/encoded_r] [get_bd_pins compressor_ila/probe2] [get_bd_pins output_buffer_0/encoded_r]
-  connect_bd_net -net JPEG_LS_module_0_encoded_size_b [get_bd_pins compression_module/encoded_size_b] [get_bd_pins compressor_ila/probe7] [get_bd_pins output_buffer_0/encoded_size_b]
-  connect_bd_net -net JPEG_LS_module_0_encoded_size_g [get_bd_pins compression_module/encoded_size_g] [get_bd_pins compressor_ila/probe6] [get_bd_pins output_buffer_0/encoded_size_g]
-  connect_bd_net -net JPEG_LS_module_0_encoded_size_r [get_bd_pins compression_module/encoded_size_r] [get_bd_pins compressor_ila/probe5] [get_bd_pins output_buffer_0/encoded_size_r]
-  connect_bd_net -net JPEG_LS_module_0_new_pixel [get_bd_pins compression_module/new_pixel] [get_bd_pins compressor_ila/probe0] [get_bd_pins output_buffer_0/new_pixel]
-  connect_bd_net -net JPEG_LS_module_0_valid_data [get_bd_pins compression_module/valid_data] [get_bd_pins compressor_ila/probe1] [get_bd_pins output_buffer_0/valid_data]
+  connect_bd_net -net HWT_cam_sim_0_href [get_bd_pins camera_simulator/href] [get_bd_pins compression_module/href]
+  connect_bd_net -net HWT_cam_sim_0_pclk [get_bd_pins camera_simulator/pclk] [get_bd_pins compression_module/pclk] [get_bd_pins enable_debounce/clk] [get_bd_pins output_buffer_0/pclk] [get_bd_pins output_uart_sender_0/pclk]
+  connect_bd_net -net HWT_cam_sim_0_pixel [get_bd_pins camera_simulator/pixel] [get_bd_pins compression_module/pixel]
+  connect_bd_net -net HWT_cam_sim_0_vsync [get_bd_pins camera_simulator/vsync] [get_bd_pins compression_module/vsync]
+  connect_bd_net -net JPEG_LS_module_0_encoded_b [get_bd_pins compression_module/encoded_b] [get_bd_pins output_buffer_0/encoded_b]
+  connect_bd_net -net JPEG_LS_module_0_encoded_g [get_bd_pins compression_module/encoded_g] [get_bd_pins output_buffer_0/encoded_g]
+  connect_bd_net -net JPEG_LS_module_0_encoded_r [get_bd_pins compression_module/encoded_r] [get_bd_pins output_buffer_0/encoded_r]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_b [get_bd_pins compression_module/encoded_size_b] [get_bd_pins output_buffer_0/encoded_size_b]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_g [get_bd_pins compression_module/encoded_size_g] [get_bd_pins output_buffer_0/encoded_size_g]
+  connect_bd_net -net JPEG_LS_module_0_encoded_size_r [get_bd_pins compression_module/encoded_size_r] [get_bd_pins output_buffer_0/encoded_size_r]
+  connect_bd_net -net JPEG_LS_module_0_new_pixel [get_bd_pins compression_module/new_pixel] [get_bd_pins output_buffer_0/new_pixel]
+  connect_bd_net -net JPEG_LS_module_0_valid_data [get_bd_pins compression_module/valid_data] [get_bd_pins output_buffer_0/valid_data]
   connect_bd_net -net axi_gpio_0_gpio2_io_o [get_bd_pins camera_simulator/resetn] [get_bd_pins compression_module/resetn] [get_bd_pins output_buffer_0/resetn] [get_bd_pins output_uart_sender_0/resetn] [get_bd_pins reset_inverter/Res]
-  connect_bd_net -net clk_0_1 [get_bd_ports clk] [get_bd_pins camera_ILA/clk] [get_bd_pins camera_simulator/clk] [get_bd_pins compressor_ila/clk] [get_bd_pins output_buffer_ila/clk] [get_bd_pins output_uart_sender_0/clk] [get_bd_pins reset_debounce/clk]
+  connect_bd_net -net clk_0_1 [get_bd_ports clk] [get_bd_pins camera_simulator/clk] [get_bd_pins output_uart_sender_0/clk] [get_bd_pins reset_debounce/clk]
   connect_bd_net -net en_1 [get_bd_ports en] [get_bd_pins enable_debounce/sig_in]
   connect_bd_net -net enable_debounce_sig_out [get_bd_pins camera_simulator/enable] [get_bd_pins enable_debounce/sig_out]
-  connect_bd_net -net output_buffer_0_dout [get_bd_pins output_buffer_0/dout] [get_bd_pins output_buffer_ila/probe3] [get_bd_pins output_uart_sender_0/dout]
-  connect_bd_net -net output_buffer_0_end_of_data [get_bd_ports LED0] [get_bd_pins output_buffer_0/end_of_data] [get_bd_pins output_buffer_ila/probe5] [get_bd_pins output_uart_sender_0/end_of_data]
-  connect_bd_net -net output_buffer_0_new_data_ready [get_bd_ports LED3] [get_bd_pins output_buffer_0/new_data_ready] [get_bd_pins output_buffer_ila/probe4] [get_bd_pins output_uart_sender_0/new_data_ready]
-  connect_bd_net -net output_buffer_0_read_allowed [get_bd_ports LED1] [get_bd_pins output_buffer_0/read_allowed] [get_bd_pins output_buffer_ila/probe2] [get_bd_pins output_uart_sender_0/read_allowed]
-  connect_bd_net -net output_uart_sender_0_request_next [get_bd_ports LED2] [get_bd_pins output_buffer_0/request_next] [get_bd_pins output_buffer_ila/probe1] [get_bd_pins output_uart_sender_0/request_next]
+  connect_bd_net -net output_buffer_0_dout [get_bd_pins output_buffer_0/dout] [get_bd_pins output_uart_sender_0/dout]
+  connect_bd_net -net output_buffer_0_end_of_data [get_bd_ports LED0] [get_bd_pins output_buffer_0/end_of_data] [get_bd_pins output_uart_sender_0/end_of_data]
+  connect_bd_net -net output_buffer_0_new_data_ready [get_bd_ports LED3] [get_bd_pins output_buffer_0/new_data_ready] [get_bd_pins output_uart_sender_0/new_data_ready]
+  connect_bd_net -net output_buffer_0_read_allowed [get_bd_ports LED1] [get_bd_pins output_buffer_0/read_allowed] [get_bd_pins output_uart_sender_0/read_allowed]
+  connect_bd_net -net output_uart_sender_0_request_next [get_bd_ports LED2] [get_bd_pins output_buffer_0/request_next] [get_bd_pins output_uart_sender_0/request_next]
   connect_bd_net -net output_uart_sender_0_sig [get_bd_ports uart_tx] [get_bd_pins output_uart_sender_0/sig]
   connect_bd_net -net reset_btn_sig_out [get_bd_pins reset_debounce/sig_out] [get_bd_pins reset_inverter/Op1]
   connect_bd_net -net sig_in_0_1 [get_bd_ports rst] [get_bd_pins reset_debounce/sig_in]
@@ -1150,7 +1111,6 @@ if { $obj != "" } {
 }
 set obj [get_runs run_BD_pl_test]
 set_property -name "constrset" -value "full_system" -objects $obj
-set_property -name "needs_refresh" -value "1" -objects $obj
 set_property -name "incremental_checkpoint" -value "$proj_dir/JPEG-LS-HDL.srcs/utils_1/imports/run_BD_pl_test/BD_pl_test_wrapper.dcp" -objects $obj
 set_property -name "auto_incremental_checkpoint" -value "1" -objects $obj
 set_property -name "auto_incremental_checkpoint.directory" -value "$proj_dir/JPEG-LS-HDL.srcs/utils_1/imports/synth_1" -objects $obj
@@ -1403,7 +1363,6 @@ set_property -name "options.warn_on_violation" -value "1" -objects $obj
 }
 set obj [get_runs impl_1]
 set_property -name "constrset" -value "full_system" -objects $obj
-set_property -name "needs_refresh" -value "1" -objects $obj
 set_property -name "strategy" -value "Vivado Implementation Defaults" -objects $obj
 set_property -name "steps.write_bitstream.args.readback_file" -value "0" -objects $obj
 set_property -name "steps.write_bitstream.args.verbose" -value "0" -objects $obj
