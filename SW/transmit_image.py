@@ -102,7 +102,7 @@ def main(image_path, width, height, port_tx, port_rx, baud_tx, baud_rx, output_p
         port_rx = port_tx
         baud_rx = baud_tx
         
-    receive_image(port_rx, baud_rx, output_path)
+    receive_image(port_rx, baud_rx, output_path, int(width)*int(height)*16)
 
 if __name__ == "__main__":
     # Run argument parser

@@ -33,6 +33,10 @@ library UNISIM;
 use UNISIM.VComponents.all;
 
 entity output_uart_sender is
+    Generic (   inter_frame_delay   : INTEGER   := 100;
+                pclk_freq_MHz       : INTEGER   := 12;
+                baud                : INTEGER   := 115200
+                );
     Port (  
             resetn          : in  STD_LOGIC;
             pclk            : in  STD_LOGIC;
@@ -68,6 +72,8 @@ architecture Behavioral of output_uart_sender is
                clk_div : out STD_LOGIC);
     end component;
     
+    constant delay_compare  : INTEGER   := (inter_frame_delay + 10)*pclk_freq_MHz*1000000/baud;
+    
     signal data_uart                : STD_LOGIC_VECTOR (7 downto 0);  
     signal clk_uart_temp            : STD_LOGIC;
     signal clk_uart                 : STD_LOGIC;
@@ -75,6 +81,7 @@ architecture Behavioral of output_uart_sender is
     signal new_data_uart            : STD_LOGIC := '0';
     signal data_is_send_uart_shift  : STD_LOGIC_VECTOR(1 downto 0) := "11";
     signal clk_uart_shift           : STD_LOGIC_VECTOR(1 downto 0) := "11";
+    signal inter_frame_delay_counter    : INTEGER   := 0;
     
     signal buffer_data              : STD_LOGIC_VECTOR (63 downto 0) := (others => '0');
     signal data_byte_idx            : UNSIGNED(2 downto 0) := (others => '0');
@@ -86,7 +93,7 @@ begin
 
     uart_clk : clk_divider
     Generic map (   base_freq => 125000000,
-                    out_freq  => 1843200     -- 115200 baud        
+                    out_freq  => 16*baud     -- 115200 baud        
                     )
     Port map (  rst => '0',
                 clk => clk,
@@ -116,6 +123,7 @@ begin
             new_data_uart          <= '0';
             data_is_send_uart_shift  <= (others => '1');
             clk_uart_shift         <= (others => '1');
+            inter_frame_delay_counter   <= 0;
             
             buffer_data            <= (others => '0');
             data_byte_idx          <= (others => '0');
@@ -123,6 +131,9 @@ begin
             tx_states <= WAITING;
         
         elsif rising_edge(pclk) then
+            -- Counter
+            inter_frame_delay_counter <= inter_frame_delay_counter + 1;
+        
             data_is_send_uart_shift <= data_is_send_uart_shift(0) & data_is_send_uart;
             clk_uart_shift <= clk_uart_shift(0) & clk_uart;
             request_next <= '0';
@@ -155,13 +166,14 @@ begin
                 
                     if clk_uart_shift = "01" then
                         tx_states <= WAIT_SEND;
+                        inter_frame_delay_counter <= 0;
                     end if;
                     
                 when WAIT_SEND =>
                     if clk_uart_shift = "01" then
                         new_data_uart <= '0';
                     end if;
-                    if data_is_send_uart_shift = "01" then
+                    if inter_frame_delay_counter = delay_compare then
                     
                         if data_byte_idx /= 7 then
                             tx_states <= SEND;

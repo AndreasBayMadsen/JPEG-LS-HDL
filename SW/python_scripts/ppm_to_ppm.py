@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import cv2
 import argparse
 import os
@@ -37,8 +38,8 @@ def ppm_to_ppm(input_file:str|Path, output_files:str|Path=None, *, scale:Tuple[f
         
 def main():
     
-    path = Path("../../data_tmp/kodim23.ppm")
-    output_path = Path("../../data_tmp/kodim23_rescaled.ppm")
+    path = Path("/home/andreas/Desktop/Implementation_verification/Implementation/Digilent/Bitstreams/no_border_low_res_decode.ppm")
+    output_path = Path("/home/andreas/Desktop/Implementation_verification/Implementation/Digilent/Bitstreams/no_border_low_res_decode_rescaled.ppm")
     ppm_to_ppm(path, output_path, scale=(2 ** (8.0 - 5.0), 2 ** (8.0 - 6.0), 2 ** (8.0 - 5.0)))
         
 if __name__ == "__main__":
