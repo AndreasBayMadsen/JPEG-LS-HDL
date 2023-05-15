@@ -10,6 +10,7 @@ from pathlib import Path
 
 from python_scripts.png_to_ppm import png_to_ppm
 from python_scripts.jls_to_ppm import jls_to_ppm
+from python_scripts.ppm_to_ppm import ppm_to_ppm
 from transmit_image import transmit_image, receive_image
 
 def half_round(num, prec):
@@ -51,7 +52,7 @@ def main(args):
             
             ppm_file = os.path.join(output_path, name_wo_ext + ".ppm")
             
-            scale=(args.red_bits/8.0, args.green_bits/8.0, args.blue_bits/8.0)
+            scale=(2**(args.red_bits - 8.0), 2**(args.green_bits - 8.0), 2**(args.blue_bits - 8.0))
             
             png_to_ppm(png_file, ppm_file, size=size, scale=scale)
             
@@ -92,6 +93,12 @@ def main(args):
                 print(f"OpenCV error: {str(e)}")
                 result = False
                 
+            rescaled_ppm_file = os.path.join(output_path, name_wo_ext + "_rescaled.ppm")
+            
+            scale=(2**(8.0 - args.red_bits), 2**(8.0 - args.green_bits), 2**(8.0 - args.blue_bits))
+            
+            ppm_to_ppm(decoded_ppm_file, rescaled_ppm_file, scale=scale)
+            
             # Print the result
             if result:
                 # Find compression ratio
