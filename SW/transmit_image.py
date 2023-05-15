@@ -11,7 +11,7 @@ import numpy as np
 from bitarray import bitarray
 from pathlib import Path
 
-def receive_image(port: str, baud: int, output_path: str | Path):
+def receive_image(port: str, baud: int, output_path: str | Path, expected_size: int=0):
    
     print(f"Output path: {output_path}")
 
@@ -27,20 +27,28 @@ def receive_image(port: str, baud: int, output_path: str | Path):
 
     print(f"Starting receiving from port {port}")
     # Receive compressed bitstream
-    bits = bitarray()
+    bit_array = bitarray(expected_size)
+    idx = 0
+    
     while True:
         read_data = ser_rx.read()
 
         if len(read_data) < 1:
             break
         else:
+            bits = bitarray()
             bits.frombytes(read_data)
+            bit_array[idx:idx+8] = bits
+            idx = idx + 8
 
     ser_rx.close()
 
+    # Slice unused bits.
+    bit_array = bit_array[0:idx]
+
     # Write binary data to file
     with open(output_path, 'wb') as ofile:
-        bits.tofile(ofile)
+        bit_array.tofile(ofile)
 
 def transmit_image(image_path: str, width: int, height: int, port: str, baud: int ):
     

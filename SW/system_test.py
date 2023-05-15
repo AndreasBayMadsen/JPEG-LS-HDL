@@ -67,7 +67,9 @@ def main(args):
                 port_rx = args.port_rx
                 baud_rx = args.baud_rx
                 
-            receive_image(port_rx, baud_rx, jls_file)
+            expected_size = 8 * size[0] * size[1] * 3
+                
+            receive_image(port_rx, baud_rx, jls_file, expected_size)
             
             decoded_ppm_file = os.path.join(output_path, name_wo_ext + "_decode.ppm")
             
