@@ -3,6 +3,8 @@ vitis_project*
 *.tmp
 .Xil
 
+*.bkp
+
 **/data_tmp/*
 
 **/__pycache__/*
