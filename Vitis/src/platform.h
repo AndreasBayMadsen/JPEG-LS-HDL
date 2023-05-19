@@ -17,6 +17,6 @@
  * Description: 	Initializes the hardware
  * Arguments:
  *****************************************/
-void init_hw(XUartPs* uart_handle, XBram* bram_handle, XGpio* gpio_handle);
+void init_hw(XUartPs* uart_handle, XBram* bram_handle, XGpio* gpio_handle, XGpio* flag_gpio_handle, XGpio* bit_gpio_handle);
 
 #endif

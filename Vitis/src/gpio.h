@@ -14,7 +14,7 @@
  * Function name: 	gpio_init()
  * Description: 	Initializes the GPIO
  *****************************************/
-void gpio_init(XGpio* handle);
+void gpio_init(XGpio* handle, XGpio* flag_gpio_handle, XGpio* bit_gpio_handle);
 
 /*****************************************
  * Function name: 	gpio_set()

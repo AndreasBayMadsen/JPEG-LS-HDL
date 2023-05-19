@@ -78,13 +78,13 @@ architecture Behavioral of HWT_cam_sim is
     attribute X_INTERFACE_INFO of ram_write_data    : signal is "xilinx.com:interface:bram:1.0 BRAM_interface DIN";
     attribute X_INTERFACE_INFO of ram_we            : signal is "xilinx.com:interface:bram:1.0 BRAM_interface WE";
     attribute X_INTERFACE_PARAMETER : STRING;
-    attribute X_INTERFACE_PARAMETER of ram_reset        : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_clk          : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_en           : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_addr         : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_read_data    : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_write_data   : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
-    attribute X_INTERFACE_PARAMETER of ram_we           : SIGNAL is "MASTER_TYPE OTHER, MEM_ECC NONE";
+    attribute X_INTERFACE_PARAMETER of ram_reset        : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC ECC_NONE";
+    attribute X_INTERFACE_PARAMETER of ram_clk          : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC ECC_NONE";
+    attribute X_INTERFACE_PARAMETER of ram_en           : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC ECC_NONE";
+    attribute X_INTERFACE_PARAMETER of ram_addr         : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC ECC_NONE";
+    attribute X_INTERFACE_PARAMETER of ram_read_data    : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC ECC_NONE";
+    attribute X_INTERFACE_PARAMETER of ram_write_data   : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC ECC_NONE";
+    attribute X_INTERFACE_PARAMETER of ram_we           : SIGNAL is "MASTER_TYPE BRAM_CTRL, MEM_ECC ECC_NONE";
     
     attribute ASYNC_REG : STRING;
         
@@ -292,7 +292,7 @@ begin
     ram_reset       <= '0';
     ram_clk         <= not pclk_int;
     ram_en          <= '1';
-    ram_addr        <= std_logic_vector(ram_addr_int);  -- NOTE: Needs to be left-shifted by two when interfacing with PS
+    ram_addr        <= std_logic_vector(shift_left(ram_addr_int, 2));  -- NOTE: Needs to be left-shifted by two when interfacing with PS
     ram_write_data  <= (others=>'0');
     ram_we          <= (others=>'0');
 

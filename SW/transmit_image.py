@@ -64,6 +64,9 @@ def transmit_image(image_path: str, width: int, height: int, port: str, baud: in
     red_img     = np.asarray(red_img).astype('uint16')
     green_img   = np.asarray(green_img).astype('uint16')
     blue_img    = np.asarray(blue_img).astype('uint16')
+    red_img     = red_img//(2**3)
+    green_img   = green_img//(2**2)
+    blue_img    = blue_img//(2**3)
     rgb565_img  = red_img*(2**11) + green_img*(2**5) + blue_img*(2**0)
     rgb565_img  = np.asarray(rgb565_img).astype('uint16')
 
@@ -77,10 +80,8 @@ def transmit_image(image_path: str, width: int, height: int, port: str, baud: in
     print(f"Starting transmission to {port = }...")
 
     # Transmit image
-    orig_array = []
     for row in range(rgb565_img.shape[0]):
         for col in range(rgb565_img.shape[1]):
-            orig_array.append(rgb565_img[row][col])
             values = bytearray(struct.pack("H", rgb565_img[row][col]))  # Convert into two bytes
             temp = bytearray(len(values))
             temp[0::2] = values[1::2]

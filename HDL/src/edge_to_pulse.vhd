@@ -31,13 +31,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity btn_pulse is
+entity edge_to_pulse is
     Port ( clk : in STD_LOGIC;
            in1 : in STD_LOGIC;
            out1 : out STD_LOGIC);
-end btn_pulse;
+end edge_to_pulse;
 
-architecture Behavioral of btn_pulse is
+architecture Behavioral of edge_to_pulse is
 
     signal in_shift : STD_LOGIC_VECTOR(1 downto 0) := (others => '1');
 

@@ -140,18 +140,32 @@ architecture Behavioral of uart_tx_module is
     constant overhead : integer := 5;
     
     
-    signal tx_register : STD_LOGIC_VECTOR(data_size + 1 downto 0);
+    signal tx_register : STD_LOGIC_VECTOR(data_size + 2 downto 0);
     signal tx_idx : integer range 0 to data_size + overhead := 0;
     
     signal tx_cnt : unsigned(3 downto 0) := (others => '0');
     
     signal new_data_pulse_shift   : STD_LOGIC_VECTOR(1 downto 0) := "11";
     
+    signal parity_bit   : STD_LOGIC := '0';
+    
     
     type tx_enum is (WAITING, SEND);
     signal tx_states : tx_enum := WAITING;
 
 begin
+
+    -- Odd parity bit
+    parity: process(data)
+        variable parity_v : std_logic_vector(data_size downto 0) := (others=>'0');
+    begin
+        parity_v := (others=>'0');
+    
+        for i in 0 to data_size-1 loop
+            parity_v(i+1) := parity_v(i) XOR data(i);
+        end loop;
+        parity_bit <= parity_v(data_size);
+    end process;
 
     process(clk, rst)
         
@@ -181,7 +195,7 @@ begin
                         tx_cnt <= (others => '0');
                         tx_idx <= 0;
                         
-                        tx_register <= "1" & data & "0";
+                        tx_register <= "1" & parity_bit & data & "0";
                         
                     end if;
                 

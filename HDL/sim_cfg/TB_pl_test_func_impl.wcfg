@@ -11,18 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="21,080,233.833 ns"></ZoomStartTime>
-      <ZoomEndTime time="21,080,858.834 ns"></ZoomEndTime>
-      <Cursor1Time time="21,080,337.999 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000000000 ms"></ZoomStartTime>
+      <ZoomEndTime time="31.288810247 ms"></ZoomEndTime>
+      <Cursor1Time time="20.465212937 ms"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="262"></NameColumnWidth>
-      <ValueColumnWidth column_width="112"></ValueColumnWidth>
+      <ValueColumnWidth column_width="108"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="32" />
-   <wave_markers>
-      <marker label="" time="12551337998" />
-   </wave_markers>
    <wvobject fp_name="divider441" type="divider">
       <obj_property name="label">PL Inputs/Outputs</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -138,7 +135,6 @@
    <wvobject type="group" fp_name="group201">
       <obj_property name="label">Inputs</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/encoded_r">
          <obj_property name="ElementShortName">encoded_r[19:0]</obj_property>
          <obj_property name="ObjectShortName">encoded_r[19:0]</obj_property>
@@ -173,7 +169,6 @@
    <wvobject type="group" fp_name="group217">
       <obj_property name="label">Shift registers</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/reg_int">
          <obj_property name="ElementShortName">reg_int[191:0]</obj_property>
          <obj_property name="ObjectShortName">reg_int[191:0]</obj_property>
@@ -201,7 +196,6 @@
    <wvobject type="group" fp_name="group210">
       <obj_property name="label">Write FSM</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="other" fp_name="/TB_pl_test/dut/BD_pl_test_i/output_buffer_0/U0/writer_state">
          <obj_property name="ElementShortName">writer_state</obj_property>
          <obj_property name="ObjectShortName">writer_state</obj_property>
