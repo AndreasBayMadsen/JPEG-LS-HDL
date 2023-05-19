@@ -64,9 +64,6 @@ def transmit_image(image_path: str, width: int, height: int, port: str, baud: in
     red_img     = np.asarray(red_img).astype('uint16')
     green_img   = np.asarray(green_img).astype('uint16')
     blue_img    = np.asarray(blue_img).astype('uint16')
-    red_img     = red_img//(2**3)
-    green_img   = green_img//(2**2)
-    blue_img    = blue_img//(2**3)
     rgb565_img  = red_img*(2**11) + green_img*(2**5) + blue_img*(2**0)
     rgb565_img  = np.asarray(rgb565_img).astype('uint16')
 

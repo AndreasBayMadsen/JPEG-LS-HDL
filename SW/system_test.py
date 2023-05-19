@@ -22,7 +22,7 @@ def half_round(num, prec):
 
 def main(args):
 
-    size = (args.width, args.height)
+    size = (int(args.width), int(args.height))
     
     if os.path.isdir(args.image_path):
         path = Path(args.image_path)
@@ -52,7 +52,7 @@ def main(args):
             
             ppm_file = os.path.join(output_path, name_wo_ext + ".ppm")
             
-            scale=(2**(args.red_bits - 8.0), 2**(args.green_bits - 8.0), 2**(args.blue_bits - 8.0))
+            scale=(2**(int(args.red_bits) - 8.0), 2**(int(args.green_bits) - 8.0), 2**(int(args.blue_bits) - 8.0))
             
             png_to_ppm(png_file, ppm_file, size=size, scale=scale)
             
@@ -84,20 +84,12 @@ def main(args):
             # Compare two ppm files.
             img1 = cv2.imread(str(ppm_file))
             img2 = cv2.imread(str(decoded_ppm_file))
+            difference  = cv2.subtract(img1, img2)
+            result      = not np.any(difference)
 
-            try:
-                # Compare the images
-                difference = cv2.subtract(img1, img2)
-                result = not cv2.countNonZero(difference)
-
-            except cv2.error as e:
-                print(f"Comparison of ppm's for {png_file=} failed")
-                print(f"OpenCV error: {str(e)}")
-                result = False
-                
             rescaled_ppm_file = os.path.join(output_path, name_wo_ext + "_rescaled.ppm")
             
-            scale=(2**(8.0 - args.red_bits), 2**(8.0 - args.green_bits), 2**(8.0 - args.blue_bits))
+            scale=(2**(8.0 - int(args.red_bits)), 2**(8.0 - int(args.green_bits)), 2**(8.0 - int(args.blue_bits)))
             
             ppm_to_ppm(decoded_ppm_file, rescaled_ppm_file, scale=scale)
             
@@ -108,7 +100,7 @@ def main(args):
                 raw_size        = os.path.getsize(ppm_file)*16/24    # Take RGB565 into account
                 comp_ratio = half_round(raw_size/compressed_size, 4)
                 
-                print("Compression success for {png_file = }")
+                print(f"Compression success for {png_file = }")
                 print(f"Compression ratio: {comp_ratio*100}%")
                 
                 compress_file.write(f"{png_file}, {comp_ratio}\n")
