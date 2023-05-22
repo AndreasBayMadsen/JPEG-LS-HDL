@@ -39,7 +39,7 @@ entity JPEG_LS_module is
                 L_max_r         : INTEGER   := 20;      -- Maximum code size per pixel
                 L_max_g         : INTEGER   := 24;
                 L_max_b         : INTEGER   := 20;
-                k_width_r       : INTEGER   := 5;
+                k_width_r       : INTEGER   := 5;       -- TODO: k_width should be calculated from color_res instead.
                 k_width_g       : INTEGER   := 5;
                 k_width_b       : INTEGER   := 5;
                 fps_downscale   : INTEGER   := 1

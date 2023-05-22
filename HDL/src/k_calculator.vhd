@@ -48,7 +48,7 @@ end k_calculator;
 architecture Behavioral of k_calculator is
 
     -- Constant declarations
-    constant MAX_SHIFT  : INTEGER   := 2**k_width - 1;
+    constant MAX_SHIFT  : INTEGER   := 2**k_width - 1; --TODO: MAX_SHIFT should be color_res
 
     -- Signal declarations
     signal N_shift  : UNSIGNED(N'length+MAX_SHIFT-1 downto 0)   := (others=>'0');

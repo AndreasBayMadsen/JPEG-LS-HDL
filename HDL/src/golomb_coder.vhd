@@ -35,7 +35,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity golomb_coder is
     Generic (
         k_width     :   integer := 5;
-        beta_max    :   integer := 8;
+        beta_max    :   integer := 8;  --TODO: More correct name is just beta
         L_max       :   integer := 32
     );
     Port ( pclk         : in STD_LOGIC                          := '1';
@@ -67,7 +67,7 @@ begin
         if (unary_val < to_unsigned(unary_limit, unary_val'length)) then    -- Code length within limits
             
             -- Calculate binary-coded value
-            for idx in beta_max-1 downto 0 loop
+            for idx in beta_max-1 downto 0 loop -- TODO: Should be beta_max
                 if idx = k then
                     encoded(idx) <= '1';
                 elsif idx < to_integer(k) then
