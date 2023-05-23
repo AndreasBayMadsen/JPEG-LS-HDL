@@ -5,6 +5,27 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: crop_image",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "/home/andreas/Desktop/ProfileProject/JPEG-LS-HDL/el_salvador_dataset",
+                "-x",
+                "8",
+                "-y",
+                "40",
+                "-wi",
+                "280",
+                "-hi",
+                "240",
+                "-o",
+                "/home/andreas/Desktop/ProfileProject/JPEG-LS-HDL/verification/el_salvador_cropped"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Python: expand_ascii_dump",
             "type": "python",
             "request": "launch",
@@ -12,7 +33,7 @@
             "args": [
                 // "/home/andreas/Desktop/Implementation_verification/Implementation/Python/ASCII/no_border_low_res.txt",  // Input file
                 "/home/andreas/Desktop/Implementation_verification/Implementation/CuteCom/ASCII/no_border_low_res.txt", // Input file
-                "/home/andreas/Desktop/Implementation_verification/David_Clunie/ASCII_files/no_border_low_res.txt"      // Reference file
+                "/home/andreas/Desktop/Implementation_verification/David_Clunie/ASCII_files/no_border_low_res.txt" // Reference file
             ],
             "console": "integratedTerminal",
             "justMyCode": true

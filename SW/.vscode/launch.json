@@ -38,7 +38,7 @@
                 "-brx",
                 "115200",
                 "-o",
-                "../verification/el_salvador", // Output path
+                "../verification/el_salvador_cropped", // Output path
                 "-rT1",
                 "3",
                 "-rT2",
@@ -69,7 +69,7 @@
                 "6",
                 "-bbit",
                 "5",
-                "../el_salvador_dataset/" // Input path
+                "../el_salvador_dataset_cropped/" // Input path
             ],
             "console": "integratedTerminal",
             "justMyCode": true
