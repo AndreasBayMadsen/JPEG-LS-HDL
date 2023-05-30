@@ -1,0 +1,3 @@
+BD_camera_1: Nothing special
+BD_camera_2: ILA added to output of camera multiplexer
+BD_camera_3: ILA added to camera configurer + global synthesis (tri-state buffers were removed)
